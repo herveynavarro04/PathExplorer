@@ -10,8 +10,4 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	public static int test(){
-		return 0;
-	}
-
 }
