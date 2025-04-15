@@ -14,7 +14,7 @@ export default function CursosCard({ title, description, duracion, institucion, 
 
     return (
       <>
-          <div className="rounded-xl p-6 shadow-md relative bg-gradient-to-tl from-[#4C49ED] to-[#6F1DAA]">
+          <div className="rounded-xl p-6 shadow-md relative bg-gradient-to-tl from-[#006b75] via-[#7B2FE0] to-[#3A005F]">
             
             <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-t from-white/10 to-white/0 z-10 flex items-center px-6">
               <h2 className="text-white text-xl font-medium">

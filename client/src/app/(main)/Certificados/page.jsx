@@ -19,22 +19,9 @@ export default function Page() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-800 via-purple-900 to-indigo-900 text-white">
-      <div className="flex">
-        {/* Sidebar */}
-        <div className="hidden md:block w-64 p-4">
-          {/* ... */}
-        </div>
-
-        {/* Contenido principal */}
-        <div className="flex-1">
-          {/* Header */}
-          <div className="h-16 border-b border-purple-700 flex items-center px-4">
-            {/* ... */}
-          </div>
-
+    <main className="min-h-screen text-white">
           {/* Contenido de la página */}
-          <div className="p-8">
+          <div className="p-5">
             <h1 className="text-3xl font-bold mb-8">Certificados</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -51,8 +38,6 @@ export default function Page() {
               <AgregarCertCard onAddCerts={handleAgregarCerts} />
             </div>
           </div>
-        </div>
-      </div>
     </main>
   );
 }
