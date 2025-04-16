@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
   };
 
   return (
-    <div className={`relative flex min-h-screen flex-col overflow-x-hidden ${isSidebarOpen ? 'overflow-hidden md:overflow-auto' : ''}`}>
+    <div className={`relative flex min-h-screen h-full flex-col overflow-x-hidden ${isSidebarOpen ? 'overflow-hidden md:overflow-auto' : ''}`}>
       <Header onToggleSidebar={handleToggleSidebar} />
       {isSidebarOpen && (
         <div
@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
       <div className="flex flex-1 md:pt-20 pt-14">
         <Navbar isOpen={isSidebarOpen} />
 
-        <main className="flex-1 overflow-auto z-10 relative">
+        <main className="flex-1 overflow-auto lg:overflow-hidden z-10 relative">
           {children}
         </main>
       </div>
