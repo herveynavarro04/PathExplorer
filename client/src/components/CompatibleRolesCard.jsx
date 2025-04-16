@@ -12,7 +12,7 @@ const CompatibleRolesCard = () => {
         loop
         playsInline
       >
-        <source src="/gradientback.mp4" type="video/mp4" />
+        <source src="/Timeline 1.mp4" type="video/mp4" />
       </video>
 
       <div className="absolute inset-0 bg-black/30 z-10" />

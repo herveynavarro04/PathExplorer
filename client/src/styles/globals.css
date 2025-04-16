@@ -11,6 +11,20 @@
   }
 }
 
+@media (max-width: 1023px) {
+  html, body {
+    height: auto;
+    overflow-y: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  html, body {
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
 html,
 body {
   background-image: var(--background);
@@ -18,7 +32,6 @@ body {
   background-size: cover;
   background-attachment: fixed;
   background-color: #0f070f;
-  min-height: 100%;
   margin: 0;
   padding: 0;
   color: var(--foreground);
@@ -26,6 +39,6 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  overscroll-behavior-y: none;
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
