@@ -1,0 +1,25 @@
+{
+    "TechnicalSkills": [
+      "Python", "Java", "JavaScript", "TypeScript", "C", "C++", "C#", "Go", "Rust", "Ruby", "Swift", "Kotlin", "PHP", "Perl", "R", "Matlab", "Scala", "Dart", "Haskell", "Lua", "Objective-C",
+      "HTML5", "CSS3", "React.js", "Next.js", "Angular", "Vue.js", "Svelte", "Tailwind CSS", "Bootstrap", "SASS", "LESS", "Material UI", "jQuery", "Handlebars.js",
+      "Node.js", "Express.js", "Spring Boot", "Django", "Flask", ".NET", "Ruby on Rails", "Laravel", "Phoenix", "Koa", "FastAPI", "NestJS",
+      "React Native", "Flutter", "Android SDK", "iOS SDK", "Xamarin", "Cordova", "Ionic",
+      "MySQL", "PostgreSQL", "MongoDB", "SQLite", "Oracle", "Microsoft SQL Server", "Redis", "Cassandra", "DynamoDB", "Elasticsearch", "Firebase Realtime DB", "Neo4j",
+      "Docker", "Kubernetes", "Jenkins", "GitHub Actions", "GitLab CI/CD", "Travis CI", "CircleCI", "Terraform", "Ansible", "Vagrant", "Bash Scripting", "Azure DevOps", "ArgoCD",
+      "AWS", "Azure", "Google Cloud Platform", "DigitalOcean", "Heroku", "Firebase", "Netlify", "Vercel", "Linode", "Cloudflare Workers",
+      "Git", "GitHub", "GitLab", "Bitbucket", "SVN", "Mercurial",
+      "Jest", "Mocha", "Chai", "Jasmine", "Cypress", "Selenium", "Puppeteer", "JUnit", "PyTest", "RSpec", "Postman", "TestNG", "Playwright",
+      "Pandas", "NumPy", "Scikit-learn", "TensorFlow", "Keras", "PyTorch", "OpenCV", "Matplotlib", "Seaborn", "NLTK", "spaCy", "XGBoost", "LightGBM", "StatsModels",
+      "Apache Hadoop", "Apache Spark", "Kafka", "Hive", "Pig", "Airflow", "Presto", "Snowflake", "Power BI", "Tableau", "Looker", "Google Data Studio",
+      "Wireshark", "Metasploit", "Nmap", "Burp Suite", "OWASP ZAP", "Snort", "Splunk", "SIEM", "Kali Linux", "Firewalls", "IDS/IPS",
+      "TCP/IP", "DNS", "HTTP/HTTPS", "Load Balancing", "CDNs", "VPN", "SSH", "FTP", "Routing", "Switching",
+      "Windows", "macOS", "Linux", "Ubuntu", "Debian", "Red Hat", "CentOS", "Fedora", "Android", "iOS",
+      "RESTful APIs", "GraphQL", "gRPC", "SOAP", "Webhooks", "OAuth", "OpenAPI", "Swagger", "Insomnia",
+      "Visual Studio Code", "IntelliJ IDEA", "PyCharm", "Eclipse", "Android Studio", "Xcode", "Notepad++", "Sublime Text", "Figma", "JIRA", "Confluence",
+      "Hugging Face Transformers", "OpenAI API", "LangChain", "LLM Fine-Tuning", "AutoML", "YOLO",
+      "Solidity", "Ethereum", "Smart Contracts", "Web3.js", "Hardhat", "Truffle", "IPFS", "Chainlink", "Metamask", "Rust for Solana",
+      "Unity", "Unreal Engine", "Godot", "Cocos2d", "GameMaker Studio", "Blender", "OpenGL", "WebGL", "GDScript",
+      "Adobe XD", "Sketch", "Photoshop", "Illustrator", "Zeplin", "InVision", "Framer", "Balsamiq",
+      "Trello", "Asana", "ClickUp", "Monday.com", "Notion", "Slack", "Microsoft Project", "Agile", "Scrum", "Kanban"
+    ]
+  }
