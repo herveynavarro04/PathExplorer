@@ -1,6 +1,4 @@
 
-'use client';
-
 import Card from '@/components/Card';
 import CompatibleRolesCard from '@/components/CompatibleRolesCard';
 
