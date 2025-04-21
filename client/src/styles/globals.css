@@ -4,7 +4,6 @@
   --background: linear-gradient(180deg, #0f070f 2%, #3b1e3c 100%);
 }
 
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: linear-gradient(180deg, #0f070f 10%, #3b1e3c 90%);
@@ -12,17 +11,33 @@
 }
 
 @media (max-width: 1023px) {
-  html, body {
+  html,
+  body {
     height: auto;
     overflow-y: auto;
   }
 }
 
 @media (min-width: 1024px) {
-  html, body {
+  html,
+  body {
     height: 100vh;
     overflow: hidden;
   }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
 html,
