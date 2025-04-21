@@ -19,7 +19,7 @@ const ProfileCardClient = ({ profile }) => {
         <div className="flex flex-col items-center">
           <div className="relative w-[140px] h-[140px] mb-4">
             <Image
-              src={profile.image}
+              src={profile?.url_foto || '/profile.png'}
               alt="Foto de perfil"
               fill
               className="rounded-full object-cover"
@@ -34,15 +34,15 @@ const ProfileCardClient = ({ profile }) => {
         <div className="flex-1 space-y-6 text-left">
           <div>
             <p className="text-md font-light">Nombre</p>
-            <p className="font-medium text-[#8ca7d7]">{profile.name}</p>
+            <p className="font-medium text-[#8ca7d7]">{profile.nombre}</p>
           </div>
           <div>
             <p className="text-md font-light">Puesto en proyecto actual</p>
-            <p className="text-[#8ca7d7]">{profile.role}</p>
+            <p className="text-[#8ca7d7]">{profile.puesto}</p>
           </div>
           <div>
             <p className="text-md font-light">Correo</p>
-            <p className="text-[#8ca7d7]">{profile.email}</p>
+            <p className="text-[#8ca7d7]">{profile.correo}</p>
           </div>
           <PasswordEditor />
         </div>

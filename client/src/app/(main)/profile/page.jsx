@@ -1,7 +1,7 @@
 
 import ProfileCardServer from '@components/ProfileCardServer';
-import TechSkillsCard from '@components/TechSkillsCard';
-import SoftSkillsCard from '@components/SoftSkillsCard';
+import TechSkillsCardServer from './TechSkillsCardServer';
+import SoftSkillsCardServer from './SoftSkillsCardServer';
 import ChargeabilityCard from '@components/ChargeabilityCard';
 
 export default function ProfilePage() {
@@ -15,10 +15,10 @@ export default function ProfilePage() {
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         
-        <TechSkillsCard/>
+        <TechSkillsCardServer/>
 
         <div className="w-full">
-          <SoftSkillsCard/>
+          <SoftSkillsCardServer/>
         </div>
       </section>
     </div>

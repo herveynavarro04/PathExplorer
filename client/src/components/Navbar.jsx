@@ -12,7 +12,7 @@ export default function Navbar({ isOpen }) {
   return (
     <aside
       className={clsx(
-        'fixed left-0 z-40 h-full w-64 bg-[#0f070f] transition-transform duration-300 md:relative md:translate-x-0 md:bg-transparent overflow-y-auto',
+        'fixed left-0 z-40 h-full md:h-[40rem] w-64 bg-[#0f070f] transition-transform duration-300 md:relative md:translate-x-0 md:bg-transparent overflow-y-auto',
         isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       )}
     >

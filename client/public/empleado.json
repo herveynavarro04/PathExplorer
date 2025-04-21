@@ -1,0 +1,119 @@
+{
+    "empleados": [
+      {
+        "id_empleado": 1,
+        "correo": "sergio@accenture.com",
+        "contrasena": "123",
+        "url_foto": "http://localhost:3000/profile.png",
+        "nombre": "Sergio Tomás Vargas Villarreal"
+      }
+    ],
+    "habilidades": [
+      {
+        "id_habilidad": 101,
+        "nombre": "OLA",
+        "tipo": "Técnica"
+      },
+      {
+        "id_habilidad": 102,
+        "nombre": "Liderazgo",
+        "tipo": "Blanda"
+      },
+      {
+        "id_habilidad": 103,
+        "nombre": "React",
+        "tipo": "Técnica"
+      },
+      {
+        "id_habilidad": 104,
+        "nombre": "Trabajo en equipo",
+        "tipo": "Blanda"
+      },
+      {
+        "id_habilidad": 105,
+        "nombre": "SQL",
+        "tipo": "Técnica"
+      },
+      {
+        "id_habilidad": 106,
+        "nombre": "Resolución de problemas",
+        "tipo": "Blanda"
+      },
+      {
+        "id_habilidad": 107,
+        "nombre": "Node.js",
+        "tipo": "Técnica"
+      },
+      {
+        "id_habilidad": 108,
+        "nombre": "Pensamiento crítico",
+        "tipo": "Blanda"
+      }
+    ],
+    "empleado_habilidades": [
+      { "id_empleado": 1, "id_habilidad": 101 },
+      { "id_empleado": 1, "id_habilidad": 102 },
+      { "id_empleado": 1, "id_habilidad": 103 },
+      { "id_empleado": 1, "id_habilidad": 104 }
+    ],
+    "proyectos": [
+    {
+      "id_proyecto": 201,
+      "nombre": "Sistema de Gestión Interna",
+      "descripcion": "Aplicación web interna para gestión de empleados, proyectos y reportes.",
+      "fecha_inicio": "2024-01-15",
+      "fecha_fin": "2024-06-30",
+      "duración": "6 meses",
+      "tipo": "Interno",
+      "cliente": "Accenture",
+      "vigente": true,
+      "lleno": false,
+      "limite_empleados": 5,
+      "id_metodología": 1,
+      "id_project_manager": 99
+    }
+  ],
+  "empleado_proyecto": [
+    {
+      "id_empleado": 1,
+      "id_proyecto": 201,
+      "puesto": "Desarrollador Full Stack"
+    }
+  ],
+  "proyecto_empleado": [
+    {
+      "id_proyecto_empleado": 1,
+      "id_empleado": 1,
+      "id_proyecto": 201,
+      "cargabilidad": 0.8,
+      "id_puesto": 2
+    }
+  ],
+  "tecnologias": [
+    {
+      "id_tecnología": 1,
+      "nombre": "React"
+    },
+    {
+      "id_tecnología": 2,
+      "nombre": "Node.js"
+    }
+  ],
+  "proyecto_tecnologias": [
+    {
+      "id_proyecto": 201,
+      "id_tecnología": 1
+    },
+    {
+      "id_proyecto": 201,
+      "id_tecnología": 2
+    }
+  ],
+  "project_managers": [
+  {
+    "id_project_manager": 99,
+    "nombre": "Sofía Schneider"
+  }
+]
+}
+  
