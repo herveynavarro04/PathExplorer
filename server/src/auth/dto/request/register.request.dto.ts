@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class RegisterRequestDto {
   @IsEmail()
@@ -10,8 +10,8 @@ export class RegisterRequestDto {
   password: string;
 
   @IsString()
-  @IsNotEmpty()
-  img_url: string;
+  @IsOptional()
+  img_url?: string;
 
   @IsString()
   @IsNotEmpty()
