@@ -10,7 +10,7 @@ export class RegisterRequestDto {
   password: string;
 
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   img_url: string;
 
   @IsString()
