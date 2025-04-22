@@ -48,4 +48,8 @@ export class UsersService {
       throw new InternalServerErrorException('Failed to validate user');
     }
   }
+
+  async getProfileInfo(id: string): Promise<UserEntity>{
+    
+  }
 }

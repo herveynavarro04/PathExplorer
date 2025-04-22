@@ -29,6 +29,4 @@ export class AuthController {
   async status(): Promise<object> {
     return { message: 'Authorized', statusCode: 200 };
   }
-
-  
 }
