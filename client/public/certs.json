@@ -1,0 +1,74 @@
+{
+    "certs": [
+        {
+            "id": 1,
+            "title": "Introducción a Python",
+            "description": "Principios básicos del lenguaje de programación, Python.",
+            "fecha": "05/03/2022",
+            "url": "https://www.coursera.org/learn/python"
+        },
+        {
+            "id": 2,
+            "title": "Desarrollo Web con React",
+            "description": "Curso completo sobre React.js y su ecosistema.",
+            "fecha": "10/06/2022",
+            "url": "https://www.udemy.com/course/react-the-complete-guide-incl-redux/"
+        },
+        {
+            "id": 3,
+            "title": "Bases de Datos SQL",
+            "description": "Fundamentos de bases de datos relacionales y SQL.",
+            "fecha": "15/08/2022",
+            "url": "https://www.codecademy.com/learn/learn-sql"
+        },
+        {
+            "id": 4,
+            "title": "Desarrollo de Aplicaciones",
+            "description": "Creación de aplicaciones móviles con Flutter.",
+            "fecha": "20/11/2022",
+            "url": "https://flutter.dev/docs/get-started/codelab"
+        },
+        {
+            "id": 5,
+            "title": "Machine Learning",
+            "description": "Introducción al aprendizaje automático y sus aplicaciones.",
+            "fecha": "01/02/2023",
+            "url": "https://www.coursera.org/learn/machine-learning"
+        },
+        {
+            "id": 6,
+            "title": "DevOps y CI/CD",
+            "description": "Prácticas de DevOps y herramientas de integración continua.",
+            "fecha": "15/06/2023",
+            "url": "https://www.udacity.com/course/devops-nanodegree--nd9991"
+        },
+        {
+            "id": 7,
+            "title": "Ciberseguridad",
+            "description": "Fundamentos de ciberseguridad y protección de datos.",
+            "fecha": "10/09/2023",
+            "url": "https://www.cybrary.it/course/cybersecurity-fundamentals/"
+        },
+        {
+            "id": 8,
+            "title": "Inteligencia Artificial",
+            "description": "Conceptos básicos de IA y sus aplicaciones en la industria.",
+            "fecha": "01/12/2023",
+            "url": "https://www.edx.org/course/artificial-intelligence-ai"
+        },
+        {
+            "id": 9,
+            "title": "Blockchain y Criptomonedas",
+            "description": "Introducción a la tecnología blockchain y su impacto en las finanzas.",
+            "fecha": "15/01/2024",
+            "url": "https://www.coursera.org/learn/blockchain-basics"
+        },
+        {
+            "id": 10,
+            "title": "Desarrollo de Videojuegos",
+            "description": "Creación de videojuegos utilizando Unity y C#.",
+            "fecha": "01/03/2024",
+            "url": "https://www.udemy.com/course/unitycourse/"
+        }
+    ]
+}

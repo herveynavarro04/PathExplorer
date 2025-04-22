@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 
 export default function CursosCard({ title, description, duracion, institucion, fecha }) {

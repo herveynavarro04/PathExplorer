@@ -1,0 +1,84 @@
+{
+    "cursos": [
+        {
+            "id": 1,
+            "title": "Introducción a Python",
+            "description": "Principios básicos del lenguaje de programación, Python.",
+            "duracion": "3 meses",
+            "institucion": "IBM",
+            "fecha": "05/03/2022"
+        },
+        {
+            "id": 2,
+            "title": "Desarrollo Web con React",
+            "description": "Curso completo sobre React.js y su ecosistema.",
+            "duracion": "4 meses",
+            "institucion": "Coursera",
+            "fecha": "10/06/2022"
+        },
+        {
+            "id": 3,
+            "title": "Bases de Datos SQL",
+            "description": "Fundamentos de bases de datos relacionales y SQL.",
+            "duracion": "2 meses",
+            "institucion": "Udemy",
+            "fecha": "15/08/2022"
+        },
+        {
+            "id": 4,
+            "title": "Desarrollo de Aplicaciones",
+            "description": "Creación de aplicaciones móviles con Flutter.",
+            "duracion": "5 meses",
+            "institucion": "Platzi",
+            "fecha": "20/11/2022"
+        },
+        {
+            "id": 5,
+            "title": "Machine Learning",
+            "description": "Introducción al aprendizaje automático y sus aplicaciones.",
+            "duracion": "6 meses",
+            "institucion": "edX",
+            "fecha": "01/02/2023"
+        },
+        {
+            "id": 6,
+            "title": "DevOps y CI/CD",
+            "description": "Prácticas de DevOps y herramientas de integración continua.",
+            "duracion": "4 meses",
+            "institucion": "LinkedIn Learning",
+            "fecha": "15/06/2023"
+        },
+        {
+            "id": 7,
+            "title": "Ciberseguridad",
+            "description": "Fundamentos de ciberseguridad y protección de datos.",
+            "duracion": "3 meses",
+            "institucion": "Cybrary",
+            "fecha": "10/09/2023"
+        },
+        {
+            "id": 8,
+            "title": "UX/UI Design",
+            "description": "Diseño de experiencias de usuario y interfaces.",
+            "duracion": "4 meses",
+            "institucion": "Skillshare",
+            "fecha": "01/12/2023"
+        },
+        {
+            "id": 9,
+            "title": "Cloud Computing",
+            "description": "Introducción a la computación en la nube y sus servicios.",
+            "duracion": "5 meses",
+            "institucion": "AWS Training",
+            "fecha": "15/03/2024"
+        },
+        {
+            "id": 10,
+            "title": "Agile Project Management",
+            "description": "Gestión de proyectos ágiles y Scrum.",
+            "duracion": "3 meses",
+            "institucion": "Scrum Alliance",
+            "fecha": "20/06/2024"
+        }
+    ]
+}

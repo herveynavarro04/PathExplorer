@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useState } from 'react';
 
-export default function CursosCard({ title, description, url, fecha }) {
+export default function CertCard({ title, description, url, fecha }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpand = (e) => {
