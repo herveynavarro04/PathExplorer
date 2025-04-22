@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import React from "react";
 import { useState } from "react";
-import Login from "@components/Login.jsx";
+import Login from "./Login";
 
 const StateLogin = ({ parentWidth }) => {
   const router = useRouter();

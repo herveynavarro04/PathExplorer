@@ -5,10 +5,6 @@ const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
       async authorize(credentials) {
         if (
           credentials.email === "sergio@accenture.com" &&
@@ -29,10 +25,7 @@ const authOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
-  },
-  jwt: {
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

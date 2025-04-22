@@ -1,8 +1,8 @@
 
-import ProfileCardServer from '@components/ProfileCardServer';
+import ProfileCardServer from './ProfileCardServer';
 import TechSkillsCardServer from './TechSkillsCardServer';
 import SoftSkillsCardServer from './SoftSkillsCardServer';
-import ChargeabilityCard from '@components/ChargeabilityCard';
+import ChargeabilityCard from './ChargeabilityCard';
 
 export default function ProfilePage() {
   return (

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import CertCard from "@/components/CertCard";
-import AgregarCertCard from "@/components/AgregarCertCard";
+import AgregarCertCard from "./AgregarCertCard";
+import CertCard from "./CertCard";
 
 export default function Page() {
   const [certs, setCerts] = useState([
