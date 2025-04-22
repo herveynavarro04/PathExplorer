@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import CursosCard from "@/components/CursosCard";
-import AgregarCursoCard from "@/components/AgregarCursoCard";
+import CursosCard from "./CursosCard";
+import AgregarCursoCard from "./AgregarCursoCard";
 
 export default function Page() {
   const [cursos, setCursos] = useState([

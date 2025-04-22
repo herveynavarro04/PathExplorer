@@ -1,6 +1,6 @@
 
 import Card from '@/components/Card';
-import CompatibleRolesCard from '@/components/CompatibleRolesCard';
+import CompatibleRolesCard from './CompatibleRolesCard';
 
 export default function DashboardPage() {
   return (

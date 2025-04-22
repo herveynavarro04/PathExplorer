@@ -1,8 +1,8 @@
 // src/app/Aplicacion/page.js
 "use client";
 import React, { useState } from "react";
-import ProyectoCard from "@/components/ProyectoCard";
-import DetalleProyectoModal from "@/components/DetalleProyectoModal";
+import ProyectoCard from "./ProyectoCard";
+import DetalleProyectoModal from "./DetalleProyectoModal";
 
 export default function Page() {
   const [selectedProyecto, setSelectedProyecto] = useState(null);

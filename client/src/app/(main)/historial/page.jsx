@@ -1,10 +1,10 @@
 "use client";
-import HistoryCard from "@components/HistoryCard";
+import HistoryCard from "./HistoryCard";
 import { CiCirclePlus } from "react-icons/ci";
 
 import React, { useEffect, useState } from "react";
-import HistoryForm from "@components/HistoryForm";
-import DeleteCard from "@components/DeleteCard";
+import HistoryForm from "./HistoryForm";
+import DeleteCard from "./DeleteCard";
 
 const Historial = () => {
   const [openAddHistory, setOpenAddHistory] = useState(false);

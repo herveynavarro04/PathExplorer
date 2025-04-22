@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { FaUserAlt } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
-import StateLogin from "@components/StateLogin";
+import StateLogin from "./StateLogin";
 
 const Page = () => {
   return (
