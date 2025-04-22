@@ -36,7 +36,7 @@ export class AuthService {
         id_employee: id_employee,
         email: userPayload.email,
         password: hashedPassword,
-        img_url: 'client/public/profile.png',
+        img_url: process.env.DEFAULT_PROFILE_IMAGE,
         firstName: userPayload.firstName,
         lastName: userPayload.lastName,
       };
