@@ -15,28 +15,28 @@ import { ProfileUpdateRequestDto } from './dto/request/profileUpdate.request.dto
 import { DeleteProfileResponseDto } from './dto/response/deleteProfile.response.dto';
 import { DeleteProfileRequestDto } from './dto/request/profileDelete.request.dto';
 
-@Controller('user/profile')
+@Controller('user')
 export class ProfileController {
   constructor(private usersService: UsersService) {}
 
-  @Get('')
+  @Get('profile')
   @UseGuards(JwtGuard)
   async getProfile(@Req() req: Request): Promise<ProfileInfoResponseDto> {
     const userId = req.user['userId'];
     return this.usersService.getProfileInfo(userId);
   }
 
-  @Patch('')
+  @Patch('profile')
   @UseGuards(JwtGuard)
   async updateProfile(
     @Body() updatePayload: ProfileUpdateRequestDto,
     @Req() req: Request,
-  ): Promise<ProfileInfoResponseDto> {
+  ): Promise<any> {
     const userId = req.user['userId'];
-    return this.usersService.updateProfileInfo(userId, updatePayload);
+    return this.usersService.updateProfile(userId, updatePayload);
   }
 
-  @Delete('')
+  @Delete('profile')
   @UseGuards(JwtGuard)
   async deleteProfile(
     @Body() userPayload: DeleteProfileRequestDto,
