@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     AuthModule,
+    UsersModule,
     TypeOrmModule.forFeature([]),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
@@ -17,9 +18,8 @@ import { UsersModule } from './users/users.module';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
-    UsersModule,
   ],
   controllers: [],
   providers: [],
