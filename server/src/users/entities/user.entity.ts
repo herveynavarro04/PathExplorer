@@ -1,22 +1,22 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity('employee')
+@Entity('User')
 export class UserEntity {
-  @PrimaryColumn()
-  id_employee: string;
+  @PrimaryColumn({ name: 'userid' })
+  userId: string;
 
-  @Column()
+  @Column({ name: 'email' })
   email: string;
 
   @Column()
   password: string;
 
-  @Column()
-  img_url: string;
+  @Column({ name: 'imgurl' })
+  imgUrl: string;
 
-  @Column()
+  @Column({ name: 'firstname' })
   firstName: string;
 
-  @Column()
+  @Column({ name: 'lastname' })
   lastName: string;
 }

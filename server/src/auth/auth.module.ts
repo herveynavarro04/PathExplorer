@@ -8,11 +8,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../users/entities/user.entity';
 import { JwtGuard } from './Guards/jwt.guards';
 import { UsersModule } from 'src/users/users.module';
-import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [
+    UsersModule,
     PassportModule,
+    UsersModule,
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule.registerAsync({
       useFactory: () => ({
@@ -20,10 +21,9 @@ import { UsersService } from 'src/users/users.service';
         signOptions: { expiresIn: '1h' },
       }),
     }),
-    UsersModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtGuard, UsersService],
+  providers: [AuthService, JwtStrategy, JwtGuard],
   exports: [AuthService],
 })
 export class AuthModule {}

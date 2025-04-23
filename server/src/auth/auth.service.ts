@@ -4,9 +4,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../users/entities/user.entity';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { SignInResponseDto } from './dto/response/signIn.response.dto';
 import { SignInRequestDto } from './dto/request/signIn.request';
@@ -19,11 +17,13 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly authRepository: Repository<UserEntity>,
-    private readonly usersService: UsersService,
+    private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+
+  private hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
+  }
 
   async registerUser(
     userPayload: RegisterRequestDto,
@@ -32,19 +32,19 @@ export class AuthService {
       throw new ConflictException('User with this email already exists');
     }
 
-    const id_employee = uuidv4();
-    const hashedPassword = await bcrypt.hash(userPayload.password, 10);
+    const userId = uuidv4();
+    const hashedPassword = await this.hashPassword(userPayload.password);
     const register: UserEntity = {
-      id_employee: id_employee,
+      userId: userId,
       email: userPayload.email,
       password: hashedPassword,
-      img_url: process.env.DEFAULT_PROFILE_IMAGE,
+      imgUrl: process.env.DEFAULT_PROFILE_IMAGE,
       firstName: userPayload.firstName,
       lastName: userPayload.lastName,
     };
     await this.usersService.registerUser(register);
     return {
-      id_employee: register.id_employee,
+      userId: register.userId,
       email: register.email,
     };
   }
@@ -68,15 +68,15 @@ export class AuthService {
     const { email, password } = userPayload;
     const user = await this.validateUser(email, password);
     const token = this.jwtService.sign({
-      id: user.id_employee,
+      userId: user.userId,
       email: user.email,
     });
     Logger.log('TOKEN GENERATED', {
-      userId: user.id_employee,
+      userId: user.userId,
       accessToken: token,
     });
     return {
-      userId: user.id_employee,
+      userId: user.userId,
       accessToken: token,
     };
   }
