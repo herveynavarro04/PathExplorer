@@ -26,17 +26,12 @@ const Page = () => {
         </div>
         <div className="w-full h-full flex justify-center items-center">
           <Image
-            className="w-[45rem] h-[40rem] object-cover relative right-35 transition duration-300 ease-in-out  hover:scale-110  animate-float  "
+            className="w-[45rem] h-[40rem] object-cover relative right-35 transition duration-300 ease-in-out  hover:scale-110  animate-float animate-pulse opacity-80 "
             src="/logo.svg"
             alt="Accenture logo"
             width={256}
             height={256}
           />
-        </div>
-
-        <div className="fixed flex flex-col gap-[3.7rem] top-[29.3rem] left-[14rem]">
-          <FaUserAlt />
-          <RiLockPasswordFill />
         </div>
       </div>
     </div>

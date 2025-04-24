@@ -1,7 +1,13 @@
-import { FaInfoCircle, FaCheckCircle } from 'react-icons/fa';
+'use client';
+import { useState } from 'react';
 import ProyectoCardServer from './ProyectoCardServer';
+import ProyectoModal from './ProyectoModal';
+import { FaInfoCircle, FaCheckCircle } from 'react-icons/fa';
+
 
 export default function MyProjectsPage() {
+  const [selectedProject, setselectedProject] = useState(null);
+
   return (
     <div className="relative h-full text-white p-5">
       <div className="relative z-30 bg-transparent p-4 flex justify-end">
@@ -29,11 +35,18 @@ export default function MyProjectsPage() {
 
       <div className="relative z-10 w-full max-h-[34rem] overflow-y-scroll no-scrollbar md:max-h-[41rem] md:scrollbar">
         <div className="p-4 space-y-4">
-          <div >
-            <ProyectoCardServer idEmpleado={1} />
-          </div>
+        <ProyectoCardServer
+          idEmpleado={1}
+          onVerMas={(proyecto) => setselectedProject(proyecto)}
+        />
         </div>
       </div>
+      {selectedProject && (
+        <ProyectoModal
+          proyecto={selectedProject}
+          onClose={() => setselectedProject(null)}
+        />
+      )}
     </div>
   );
 }

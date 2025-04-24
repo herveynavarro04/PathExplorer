@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 
 export default function CursosCard({ title, description, duracion, institucion, fecha }) {
@@ -57,7 +58,7 @@ export default function CursosCard({ title, description, duracion, institucion, 
                        from-[#4C49ED] to-[#6F1DAA] w-[700px] h-auto rounded-xl"
                     onClick={(e) => e.stopPropagation()}
                   >
-                  <button className="absolute top-2 right-4 text-white" onClick={handleClose}>
+                  <button className="absolute top-2 right-4 text-white z-20" onClick={handleClose}>
                     X
                   </button>
                   <div className="absolute top-0 left-0 w-full h-20 

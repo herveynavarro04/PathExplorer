@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "title": "Desarrollo de Plataforma E-commerce para Coppel",
+    "resumen": "Implementación de una solución escalable de ventas en línea.",
+    "descripcion": "Plataforma que permite gestionar inventarios, ventas y usuarios con integración a pasarelas de pago y módulos de logística.",
+    "stack": ["React", "NodeJS", "MongoDB"],
+    "inicio": "02 Enero 2025",
+    "fin": "30 Junio 2025",
+    "tipo": "proyecto para cliente",
+    "admin": "Mauricio Lozano"
+  },
+  {
+    "id": 2,
+    "title": "Sistema Interno de Recursos Humanos",
+    "resumen": "Digitalización del proceso de gestión de empleados.",
+    "descripcion": "Aplicación que centraliza la información del personal, gestiona vacaciones, desempeño y capacitaciones.",
+    "stack": ["Angular", "Java", "MySQL"],
+    "inicio": "15 Marzo 2025",
+    "fin": "30 Agosto 2025",
+    "tipo": "proyecto interno",
+    "admin": "Sofía Schneider"
+  },
+  {
+    "id": 3,
+    "title": "Aplicación Móvil para Reservas de Restaurantes",
+    "resumen": "Permite a los usuarios reservar mesas en restaurantes.",
+    "descripcion": "Desarrollo de una app para Android e iOS que permite buscar restaurantes, ver menús y realizar reservaciones en tiempo real.",
+    "stack": ["Flutter", "Firebase"],
+    "inicio": "10 Febrero 2025",
+    "fin": "10 Julio 2025",
+    "tipo": "proyecto para cliente",
+    "admin": "Carlos Méndez"
+  },
+  {
+    "id": 4,
+    "title": "Migración de Sistema Financiero a la Nube",
+    "resumen": "Adaptación de un sistema financiero legacy a infraestructura cloud.",
+    "descripcion": "Proyecto para migrar servicios financieros de on-premise a AWS, optimizando costos y mejorando la escalabilidad.",
+    "stack": ["AWS", "Python", "PostgreSQL"],
+    "inicio": "01 Abril 2025",
+    "fin": "31 Octubre 2025",
+    "tipo": "proyecto para cliente",
+    "admin": "Mauricio Lozano"
+  },
+  {
+    "id": 5,
+    "title": "Implementación de Dashboard de KPIs",
+    "resumen": "Visualización en tiempo real de indicadores clave de negocio.",
+    "descripcion": "Desarrollo de un dashboard interactivo para la toma de decisiones basado en Power BI e integración con bases de datos internas.",
+    "stack": ["Power BI", "SQL Server", "Azure"],
+    "inicio": "05 Mayo 2025",
+    "fin": "15 Agosto 2025",
+    "tipo": "proyecto interno",
+    "admin": "Sofía Schneider"
+  },
+  {
+    "id": 6,
+    "title": "Automatización de Procesos de Marketing",
+    "resumen": "Optimización de campañas y seguimiento automatizado de leads.",
+    "descripcion": "Implementación de herramientas de automatización para campañas de email, segmentación de clientes y reportes personalizados.",
+    "stack": ["HubSpot", "Zapier", "Python"],
+    "inicio": "20 Febrero 2025",
+    "fin": "30 Junio 2025",
+    "tipo": "proyecto para cliente",
+    "admin": "Carlos Méndez"
+  },
+  {
+    "id": 7,
+    "title": "Portal Web para Gestión de Créditos Personales",
+    "resumen": "Facilita la solicitud y administración de créditos en línea.",
+    "descripcion": "Diseño y desarrollo de un portal donde los usuarios pueden simular, solicitar y dar seguimiento a créditos personales.",
+    "stack": ["NextJS", "SpringBoot", "PostgreSQL"],
+    "inicio": "12 Marzo 2025",
+    "fin": "20 Julio 2025",
+    "tipo": "proyecto para cliente",
+    "admin": "Mauricio Lozano"
+  }
+]
