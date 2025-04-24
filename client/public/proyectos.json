@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "title": "Nombre del Proyecto",
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "descripcion": "Descripción larga del proyecto...",
+    "stack": ["NextJS", "SpringBoot", "PostgreSQL"],
+    "inicio": "14 Marzo 2025",
+    "fin": "20 Junio 2025",
+    "tipo": "proyecto interno",
+    "admin": "Sofía Schneider"
+  },
+  {
+    "id": 2,
+    "title": "Frontend para Pagina Web para Bimbo",
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "descripcion": "Descripción larga del proyecto...",
+    "stack": ["npm", "JavaScript", "HTML", "CSS", "React", "Next"],
+    "inicio": "10 Abril 2025",
+    "fin": "20 Septiembre 2025",
+    "tipo": "proyecto interno",
+    "admin": "Mauricio Lozano"
+  },
+  {
+    "id": 3,
+    "title": "Nombre del Proyecto",
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "descripcion": "Descripción larga del proyecto...",
+    "stack": ["NextJS", "SpringBoot", "PostgreSQL"],
+    "inicio": "14 Marzo 2025",
+    "fin": "20 Junio 2025",
+    "tipo": "proyecto interno",
+    "admin": "Sofía Schneider"
+  },
+  {
+    "id": 4,
+    "title": "Frontend para Pagina Web para Bimbo",
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "descripcion": "Descripción larga del proyecto...",
+    "stack": ["npm", "JavaScript", "HTML", "CSS", "React", "Next"],
+    "inicio": "10 Abril 2025",
+    "fin": "20 Septiembre 2025",
+    "tipo": "proyecto interno",
+    "admin": "Mauricio Lozano"
+  },
+  {
+    "id": 5,
+    "title": "Nombre del Proyecto",
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "descripcion": "Descripción larga del proyecto...",
+    "stack": ["NextJS", "SpringBoot", "PostgreSQL"],
+    "inicio": "14 Marzo 2025",
+    "fin": "20 Junio 2025",
+    "tipo": "proyecto interno",
+    "admin": "Sofía Schneider"
+  },
+  {
+    "id": 6,
+    "title": "Frontend para Pagina Web para Bimbo",
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "descripcion": "Descripción larga del proyecto...",
+    "stack": ["npm", "JavaScript", "HTML", "CSS", "React", "Next"],
+    "inicio": "10 Abril 2025",
+    "fin": "20 Septiembre 2025",
+    "tipo": "proyecto interno",
+    "admin": "Mauricio Lozano"
+  },
+  {
+    "id": 7,
+    "title": "Frontend para Pagina Web para Bimbo",
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "descripcion": "Descripción larga del proyecto...",
+    "stack": ["npm", "JavaScript", "HTML", "CSS", "React", "Next"],
+    "inicio": "10 Abril 2025",
+    "fin": "20 Septiembre 2025",
+    "tipo": "proyecto interno",
+    "admin": "Mauricio Lozano"
+  }
+]
