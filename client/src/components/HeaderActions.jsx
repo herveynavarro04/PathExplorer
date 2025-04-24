@@ -5,8 +5,10 @@ import { FaArrowUp } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
 import InfoTooltip from "./InfoTooltip";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function HeaderActions() {
+  const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
 
@@ -21,10 +23,9 @@ export default function HeaderActions() {
   }, []);
 
   const handleLogout = () => {
-    signOut({
-      callbackUrl: "/auth-bridge",
-      redirect: true,
-    });
+    localStorage.removeItem("token");
+    console.log("Token removed from local storage");
+    router.push("/login");
   };
 
   return (
