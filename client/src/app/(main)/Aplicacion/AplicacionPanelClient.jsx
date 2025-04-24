@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import ProyectoCard from "./ProyectoCard";
-import DetalleProyectoModal from "./DetalleProyectoModal";
 
 export default function AplicacionPanelClient() {
   const [proyectos, setProyectos] = useState([]);
@@ -10,7 +9,7 @@ export default function AplicacionPanelClient() {
 
   useEffect(() => {
     const fetchProyectos = async () => {
-      const res = await fetch("/proyectos.json"); // 👈 Desde public
+      const res = await fetch("/proyectos.json");
       const data = await res.json();
       setProyectos(data);
     };
