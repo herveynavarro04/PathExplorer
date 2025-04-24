@@ -71,6 +71,21 @@
       "limite_empleados": 5,
       "id_metodología": 1,
       "id_project_manager": 99
+    },
+    {
+      "id_proyecto": 202,
+      "nombre": "Programa aplicación de gestión Bimbo",
+      "descripcion": "Aplicación web interna para gestión de empleados, proyectos y reportes Aplicación web interna para gestión de empleados, proyectos y reportes.",
+      "fecha_inicio": "2024-01-15",
+      "fecha_fin": "2025-03-12",
+      "duración": "14 meses",
+      "tipo": "Externo",
+      "cliente": "CEMEX",
+      "vigente": false,
+      "lleno": false,
+      "limite_empleados": 5,
+      "id_metodología": 1,
+      "id_project_manager": 91
     }
   ],
   "empleado_proyecto": [
@@ -78,6 +93,11 @@
       "id_empleado": 1,
       "id_proyecto": 201,
       "puesto": "Desarrollador Full Stack"
+    },
+    {
+      "id_empleado": 1,
+      "id_proyecto": 202,
+      "puesto": "Desarrollador NextJS"
     }
   ],
   "proyecto_empleado": [
@@ -107,12 +127,24 @@
     {
       "id_proyecto": 201,
       "id_tecnología": 2
+    },
+    {
+      "id_proyecto": 202,
+      "id_tecnología": 1
+    },
+    {
+      "id_proyecto": 202,
+      "id_tecnología": 2
     }
   ],
   "project_managers": [
   {
     "id_project_manager": 99,
     "nombre": "Sofía Schneider"
+  },
+  {
+    "id_project_manager": 91,
+    "nombre": "Antonio Martínez"
   }
 ]
 }
