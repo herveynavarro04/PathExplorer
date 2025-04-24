@@ -1,5 +1,7 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
+import { FaCheck } from 'react-icons/fa';
 
 export default function ProyectoCardClient({ proyecto, onVerMas }) {
   const formatearFecha = (fecha) => {
@@ -16,30 +18,48 @@ export default function ProyectoCardClient({ proyecto, onVerMas }) {
   };
 
   return (
-    
-    <div className="group relative w-full max-w-4xl h-[22rem] rounded-2xl transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105 overflow-hidden shadow-xl bg-gradient-to-l from-[#006b75] via-[#7B2FE0] to-[#3A005F]">
-    <div className="absolute inset-0 bg-black/30 z-10" />
+    <div className="relative w-full max-w-4xl h-auto rounded-2xl transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105 overflow-hidden shadow-xl bg-gradient-to-l from-[#7B2FE0] to-[#3A005F]">
+      <div className="absolute inset-0 bg-black/30 z-10" />
 
-    <div className="w-full h-20 bg-gradient-to-t from-white/10 to-white/0 z-20 flex items-center justify-center px-6 relative">
-      <h2 className="text-[#c0bdc2] text-md md:text-xl font-medium">
-        {proyecto.nombre}
-      </h2>
-    </div>
-  
-        <div className="relative w-full px-2 pt-5 text-[#d1c9f1]">
-          <p className="text-sm">{proyecto.descripcion}</p>
-          <div className="mt-4">
-            <button
-              className="bg-[#3E0567] hover:bg-purple-800 text-white px-4 py-2 rounded"
-              onClick={onVerMas}
-            >
-              Ver más
-            </button>
-          </div>
+      <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-t from-white/10 to-white/0 z-20 flex items-center justify-between px-6">
+        <h2 className="text-white text-lg md:text-xl font-medium">
+          {proyecto.nombre}
+        </h2>
+        <div className="text-white text-2xl">
+          {proyecto.vigente ? (
+            <Image
+              src="/disc.svg"
+              alt="Proyecto actual"
+              width={24}
+              height={24}
+            />
+          ) : (
+            <FaCheck className="text-gray-300" />
+          )}
         </div>
       </div>
-    );
-  }
+
+      <div className="relative z-20 px-6 pt-24">
+        <div className="bg-white/10 p-4 rounded-md text-sm text-[#d1c9f1]">
+          <p>{proyecto.descripcion}</p>
+        </div>
+
+        <div className="flex justify-end mt-4 mb-4">
+        <button
+          className="bg-[#3E0567] hover:bg-purple-800 text-white px-4 py-2 rounded"
+          onClick={() => onVerMas(proyecto)}
+        >
+          Ver más
+        </button>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
   //   <div className="rounded-2xl p-6 shadow-md bg-gradient-to-tl  from-[#006b75] via-[#7B2FE0] to-[#3A005F] text-white relative overflow-hidden">
   //     <div className="absolute inset-0 bg-black/30 z-0" />
   //     <div className="w-full text-center text-2xl font-semibold mb-4">

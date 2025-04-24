@@ -40,6 +40,36 @@
   animation: float 3s ease-in-out infinite;
 }
 
+@keyframes fadeInModal {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOutModal {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.animate-fadeInModal {
+  animation: fadeInModal 0.25s ease-out forwards;
+}
+
+.animate-fadeOutModal {
+  animation: fadeOutModal 0.35s ease-in forwards;
+}
+
 html,
 body {
   background-image: var(--background);
