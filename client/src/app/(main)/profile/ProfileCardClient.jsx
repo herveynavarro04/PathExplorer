@@ -1,17 +1,15 @@
-'use client';
-
-import Image from 'next/image';
-import ProfileImageEditor from './ProfileImageEditor';
-import PasswordEditor from './PasswordEditor';
+import Image from "next/image";
+import ProfileImageEditor from "./ProfileImageEditor";
+import PasswordEditor from "./PasswordEditor";
 
 const ProfileCardClient = ({ profile }) => {
+  if (!profile?.nombre) return <div>Loading profile...</div>;
   return (
     <div
       className="relative w-full max-w-3xl rounded-3xl p-8
       bg-gradient-to-br  from-[#006b75] via-[#7B2FE0] to-[#3A005F]
       text-[#151515] shadow-2xl flex flex-col md:flex-row items-start gap-8 overflow-hidden
       transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105"
-
     >
       <div className="absolute inset-0 bg-black/30 z-0" />
 
@@ -19,7 +17,7 @@ const ProfileCardClient = ({ profile }) => {
         <div className="flex flex-col items-center">
           <div className="relative w-[140px] h-[140px] mb-4">
             <Image
-              src={profile?.url_foto || '/profile.png'}
+              src={profile.url_foto}
               alt="Foto de perfil"
               fill
               className="rounded-full object-cover"

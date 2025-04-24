@@ -87,3 +87,8 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px #9573a8 inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
