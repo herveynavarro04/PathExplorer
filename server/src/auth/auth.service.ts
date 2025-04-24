@@ -12,28 +12,29 @@ import * as bcrypt from 'bcrypt';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { UsersService } from 'src/users/users.service';
+import { ProfileService } from 'src/users/services/profile.service';
+import { HashingService } from 'src/Utilities/hashing.utilities';
+import { ValidateUserResponseDto } from './dto/response/validateUser.response.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private profileService: ProfileService,
     private jwtService: JwtService,
+    private hashingService: HashingService,
   ) {}
-
-  private hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 10);
-  }
 
   async registerUser(
     userPayload: RegisterRequestDto,
   ): Promise<RegisterResponseDto> {
-    if (await this.usersService.verifyUserExistance(userPayload.email)) {
+    if (await this.profileService.verifyUserExistance(userPayload.email)) {
       throw new ConflictException('User with this email already exists');
     }
 
     const userId = uuidv4();
-    const hashedPassword = await this.hashPassword(userPayload.password);
+    const hashedPassword = await this.hashingService.hashPassword(
+      userPayload.password,
+    );
     const register: UserEntity = {
       userId: userId,
       email: userPayload.email,
@@ -42,15 +43,17 @@ export class AuthService {
       firstName: userPayload.firstName,
       lastName: userPayload.lastName,
     };
-    await this.usersService.registerUser(register);
+    await this.profileService.registerUser(register);
     return {
       userId: register.userId,
-      email: register.email,
     };
   }
 
-  async validateUser(email: string, password: string): Promise<UserEntity> {
-    const user = await this.usersService.findUserbyEmail(email);
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<ValidateUserResponseDto> {
+    const user = await this.profileService.findUserbyEmail(email);
     if (!user) {
       throw new UnauthorizedException('Email or password incorrect');
     }
@@ -71,12 +74,7 @@ export class AuthService {
       userId: user.userId,
       email: user.email,
     });
-    Logger.log('TOKEN GENERATED', {
-      userId: user.userId,
-      accessToken: token,
-    });
     return {
-      userId: user.userId,
       accessToken: token,
     };
   }

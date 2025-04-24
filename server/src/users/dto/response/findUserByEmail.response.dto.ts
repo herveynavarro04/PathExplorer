@@ -1,9 +1,17 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class ProfileInfoResponseDto {
+export class FindUserbyEmailResponseDto {
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
+
   @IsEmail()
   @IsNotEmpty()
   email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 
   @IsString()
   @IsNotEmpty()

@@ -1,8 +1,7 @@
-import { Controller, Get, Post, UseGuards, Body } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInRequestDto } from './dto/request/signIn.request';
 import { SignInResponseDto } from './dto/response/signIn.response.dto';
-import { JwtGuard } from './Guards/jwt.guards';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
 
@@ -22,11 +21,5 @@ export class AuthController {
     @Body() userPayload: SignInRequestDto,
   ): Promise<SignInResponseDto> {
     return this.authService.signIn(userPayload);
-  }
-
-  @Get('status')
-  @UseGuards(JwtGuard)
-  async status(): Promise<object> {
-    return { message: 'Authorized', statusCode: 200 };
   }
 }
