@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
+import { SkillsEntity } from './skills.entity';
+import { IsOptional } from 'class-validator';
 
 @Entity('User')
 export class UserEntity {
@@ -19,4 +21,19 @@ export class UserEntity {
 
   @Column({ name: 'lastname' })
   lastName: string;
+
+  @ManyToMany(() => SkillsEntity, (skill) => skill.user)
+  @IsOptional()
+  @JoinTable({
+    name: 'user_skills',
+    joinColumn: {
+      name: 'userid',
+      referencedColumnName: 'userId',
+    },
+    inverseJoinColumn: {
+      name: 'id_skill',
+      referencedColumnName: 'skillId',
+    },
+  })
+  skills?: SkillsEntity[];
 }
