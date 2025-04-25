@@ -29,7 +29,7 @@ export default function CursosCard({ title, description, duracion, institucion, 
               </p>
                 {!expanded && (
                   <button 
-                    className="bg-[#3E0567] hover:bg-purple-800 text-white px-4 py-2 rounded"
+                    className="bg-[#3E0567] text-white px-4 py-2 rounded cursor-pointer transition duration-300 ease-in-out hover:bg-purple-800 hover:-translate-y-1 hover:scale-110 focus:outline-none active:scale-95"
                     onClick={handleExpand}
                   >
                     Ver más
@@ -58,7 +58,7 @@ export default function CursosCard({ title, description, duracion, institucion, 
                        from-[#4C49ED] to-[#6F1DAA] w-[700px] h-auto rounded-xl"
                     onClick={(e) => e.stopPropagation()}
                   >
-                  <button className="absolute top-2 right-4 text-white z-20" onClick={handleClose}>
+                  <button className="absolute top-2 right-4 text-white z-20 rounded-full px-1 hover:bg-white/20 transition-colors hover:cursor-pointer" onClick={handleClose}>
                     X
                   </button>
                   <div className="absolute top-0 left-0 w-full h-20 
