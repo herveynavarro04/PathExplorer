@@ -16,12 +16,12 @@ export default function Navbar({ isOpen }) {
         isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       )}
     >
-      <nav className="flex flex-col space-y-11 pt-6 pl-6 pb-5 text-white md:text-[#c0bdc2]">
+      <nav className="flex flex-col space-y-11 pt-6 pl-6 pb-5 text-[#b1a5b1]">
         <Link
           href="/dashboard"
           className={clsx(
             'group relative flex items-center gap-5 transition duration-400 ease-in-out hover:scale-105',
-            pathname === '/dashboard' ? 'text-[#9a62a1] scale-105' : 'text-white md:text-[#c0bdc2]',
+            pathname === '/dashboard' ? 'text-[#9a62a1] scale-105' : '',
             'hover:text-[#9a62a1]'
           )}
         >
@@ -42,7 +42,7 @@ export default function Navbar({ isOpen }) {
           href="/profile"
           className={clsx(
             'group relative flex items-center gap-5 transition duration-400 ease-in-out hover:scale-105',
-            pathname.startsWith('/profile') ? 'text-[#9a62a1] scale-105' : 'text-white md:text-[#c0bdc2]',
+            pathname.startsWith('/profile') ? 'text-[#9a62a1] scale-105' : '',
             'hover:text-[#9a62a1]'
           )}
         >
@@ -63,7 +63,7 @@ export default function Navbar({ isOpen }) {
           href="/Aplicacion"
           className={clsx(
             'group relative flex items-center gap-5 transition duration-400 ease-in-out hover:scale-105',
-            pathname.startsWith('/Aplicacion') ? 'text-[#9a62a1] scale-105' : 'text-white md:text-[#c0bdc2]',
+            pathname.startsWith('/Aplicacion') ? 'text-[#9a62a1] scale-105' : '',
             'hover:text-[#9a62a1]'
           )}
         >
@@ -85,7 +85,7 @@ export default function Navbar({ isOpen }) {
           href="/my-projects"
           className={clsx(
             'group relative flex items-center gap-5 transition duration-400 ease-in-out hover:scale-105',
-            pathname.startsWith('/my-projects') ? 'text-[#9a62a1] scale-105' : 'text-white md:text-[#c0bdc2]',
+            pathname.startsWith('/my-projects') ? 'text-[#9a62a1] scale-105' : '',
             'hover:text-[#9a62a1]'
           )}
         >

@@ -4,7 +4,7 @@ export default function ChargeabilityCard() {
   const loadability = 10;
 
   return (
-    <div className="relative w-full max-w-3xl h-60 rounded-2xl overflow-hidden shadow-xl bg-gradient-to-tl from-[#006b75] via-[#7B2FE0] to-[#3A005F] transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105">
+    <div className="relative w-full max-w-3xl h-70 rounded-2xl overflow-hidden shadow-xl bg-gradient-to-tl from-[#006b75] via-[#7B2FE0] to-[#3A005F] transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105">
       <div className="absolute inset-0 bg-black/30 z-10" />
 
       <div className="relative z-20 flex flex-col h-full justify-between">

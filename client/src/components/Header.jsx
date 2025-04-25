@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function Header({ onToggleSidebar, profile }) {
   return (
-    <header className="fixed top-0 z-50 w-full text-white p-3 flex bg-[#0f070f] justify-between items-center shadow-md">
+    <header className="fixed top-0 z-50 w-full text-[#c4adc6] p-3 flex bg-[#0f070f] justify-between items-center shadow-md">
       <div className="flex items-center gap-3 pl-3">
       <MobileSidebarToggle onToggle={onToggleSidebar} />
 

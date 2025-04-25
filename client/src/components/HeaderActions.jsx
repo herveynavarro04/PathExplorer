@@ -31,7 +31,7 @@ export default function HeaderActions() {
   return (
     <div className="relative flex items-center gap-6" ref={dropdownRef}>
       <div className="flex items-center gap-1 text-sm">
-        <FaArrowUp className="text-gray-200" />
+        <FaArrowUp className="text-purple-300" />
         Nivel 12
         <div className="transition duration-300 ease-in-out hover:scale-110">
           <InfoTooltip />
@@ -40,10 +40,10 @@ export default function HeaderActions() {
 
       <button
         aria-label="Settings"
-        className="bg-gray-100 p-2 rounded-full hover:cursor-pointer transition duration-300 ease-in-out hover:scale-125"
+        className="bg-gray-400 p-2 rounded-full hover:cursor-pointer transition duration-300 ease-in-out hover:scale-125"
         onClick={() => setShowDropdown((prev) => !prev)}
       >
-        <FiSettings className="text-gray-600" />
+        <FiSettings className="text-[#8c688e]" />
       </button>
 
       {showDropdown && (
