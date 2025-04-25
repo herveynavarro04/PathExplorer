@@ -41,8 +41,8 @@ const Login = ({
           onInput={(e) => e.target.setCustomValidity("")}
         />
       </div>
-      <div className=" w-full max-w-[20rem] transition duration-300 ease-in-out hover:scale-105 ">
-        <RiLockPasswordFill className="relative top-10 left-3 transform -translate-y-1/2 text-white" />
+      <div className="relative w-full max-w-[20rem] transition duration-300 ease-in-out hover:scale-105 ">
+        <RiLockPasswordFill className="absolute top-6 left-3 transform -translate-y-1/2 text-white" />
 
         <input
           className="w-full bg-[#9573a8] rounded-2xl max-w-[20rem] py-[0.8rem] pl-[2.2rem] focus:outline-none"
