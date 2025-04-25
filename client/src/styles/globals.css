@@ -2,6 +2,8 @@
 
 :root {
   --background: linear-gradient(180deg, #0f070f 2%, #3b1e3c 100%);
+  --font-geist-sans: 'Geist', sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -80,7 +82,7 @@ body {
   margin: 0;
   padding: 0;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans);
   overflow-x: hidden;
 }
 
