@@ -30,7 +30,7 @@ export default function DetalleProyectoModal({ proyecto }) {
   return (
     <>
       {/* Card del proyecto */}
-      <div className="rounded-xl p-6 shadow-md relative bg-gradient-to-l from-[#7B2FE0] to-[#3A005F]">
+      <div className="rounded-xl p-6 shadow-md relative bg-gradient-to-l from-[#7B2FE0] to-[#3A005F] transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-101">
         <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-t from-white/10 to-white/0 z-10 flex items-center px-6">
           <h2 className="text-white text-xl font-medium">{proyecto.title}</h2>
         </div>
@@ -38,7 +38,7 @@ export default function DetalleProyectoModal({ proyecto }) {
         <div className="relative w-full h-full px-2 py-0 pt-21">
           <p className="mb-4 text-[#d1c9f1] text-lg">{proyecto.resumen}</p>
           <button
-            className="bg-[#3E0567] hover:bg-purple-800 text-white px-4 py-2 rounded"
+            className="bg-[#3E0567] hover:bg-purple-800 text-white px-4 py-2 rounded cursor-pointer transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-101"
             onClick={handleExpand}
           >
             Ver más
@@ -56,7 +56,7 @@ export default function DetalleProyectoModal({ proyecto }) {
             className="relative w-[700px] p-6 bg-gradient-to-tl from-[#4C49ED] to-[#6F1DAA] h-auto rounded-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <button className="absolute top-2 right-4 text-white z-20" onClick={handleClose}>
+            <button className="absolute top-2 right-4 text-white z-20 cursor-pointer transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-101" onClick={handleClose}>
               X
             </button>
             <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-t from-white/10 to-white/0 z-10 flex items-center px-6">
@@ -85,7 +85,7 @@ export default function DetalleProyectoModal({ proyecto }) {
               {/* Aplicar a proyecto */}
               {!aplicado && (
                 <button
-                  className="bg-[#3E0567] hover:bg-purple-800 text-white px-4 py-2 rounded"
+                  className="bg-[#3E0567] hover:bg-purple-800 text-white px-4 py-2 rounded cursor-pointer transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-101"
                   onClick={handleAplicar}
                 >
                   Aplicar a proyecto
@@ -107,10 +107,10 @@ export default function DetalleProyectoModal({ proyecto }) {
               ¿Estás seguro de que quieres aplicar a este proyecto?
             </h2>
             <div className="flex justify-end gap-4">
-              <button className="bg-white px-4 py-2 rounded hover:bg-gray-100" onClick={() => setMostrarConfirmacion(false)}>
+              <button className="bg-white px-4 py-2 rounded hover:bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-101" onClick={() => setMostrarConfirmacion(false)}>
                 Cancelar
               </button>
-              <button className="bg-[#3E0567] text-white px-4 py-2 rounded hover:bg-purple-900" onClick={confirmarAplicacion}>
+              <button className="bg-[#3E0567] text-white px-4 py-2 rounded hover:bg-purple-900 cursor-pointer transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-101" onClick={confirmarAplicacion}>
                 Aplicar
               </button>
             </div>
