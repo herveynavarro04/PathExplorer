@@ -28,13 +28,6 @@ export default function AplicacionPanelClient() {
           />
         ))}
       </div>
-
-      {selectedProyecto && (
-        <DetalleProyectoModal
-          proyecto={selectedProyecto}
-          onClose={() => setSelectedProyecto(null)}
-        />
-      )}
     </>
   );
 }
