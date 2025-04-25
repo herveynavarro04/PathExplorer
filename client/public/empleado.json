@@ -146,6 +146,67 @@
     "id_project_manager": 91,
     "nombre": "Antonio Martínez"
   }
-]
+],
+"goals": [
+    {
+      "id_goal": "G001",                         
+      "information": "Finalizar prototipo NextJS", 
+      "term": "2025-02-02",                       
+      "start_date": "2025-01-01T09:00:00Z",      
+      "end_date": "2025-02-02T17:00:00Z",        
+      "completed": true,                        
+      "validated": true,                        
+      "userid": "1",                             
+      "id_reviser": "99"                         
+    },
+    {
+      "id_goal": "G002",
+      "information": "Aprender integración con SAP HANA",
+      "term": "2025-05-15",
+      "start_date": "2025-04-15T09:00:00Z",
+      "end_date": "2025-05-15T17:00:00Z",
+      "completed": false,
+      "validated": true,
+      "userid": "1",
+      "id_reviser": "99"
+    },
+    {
+      "id_goal": "G003",
+      "information": "Aprender PostgreSQL",
+      "term": "2026-01-20",
+      "start_date": "2025-04-15T09:00:00Z",
+      "end_date": "2026-01-20T17:00:00Z",
+      "completed": false,
+      "validated": false,
+      "userid": "1",
+      "id_reviser": "99"
+    }
+    ,
+    {
+      "id_goal": "G004",
+      "information": "Aprender MongoDB para desarrollo de aplicaciones",
+      "term": "2026-01-20",
+      "start_date": "2025-04-15T09:00:00Z",
+      "end_date": "2026-01-20T17:00:00Z",
+      "completed": true,
+      "validated": false,
+      "userid": "1",
+      "id_reviser": "99"
+    }
+  ],
+  "user_interests": [
+    {
+      "userid": "1",
+      "id_skill": "103" 
+    },
+    {
+      "userid": "1",
+      "id_skill": "105" 
+    },
+    {
+      "userid": "1",
+      "id_skill": "107"  
+    }
+  ]
 }
   
