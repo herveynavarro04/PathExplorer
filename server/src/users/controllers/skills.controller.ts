@@ -17,7 +17,6 @@ import { UpdateUserSkillsResponseDto } from '../dto/response/postUserSkills.resp
 @Controller('user/skills')
 export class SkillsController {
   constructor(private skillsService: SkillsService) {}
-
   @Get()
   @UseGuards(JwtGuard)
   async getSkills(): Promise<SkillsResponseDto> {
@@ -41,7 +40,7 @@ export class SkillsController {
     return this.skillsService.postUserSkills(userId, postSkillsPayload);
   }
 
-  @Delete('delete')
+  @Post('delete')
   @UseGuards(JwtGuard)
   async deleteUserSkills(
     @Body() postSkillsPayload: UpdateUserSkillsRequestDto,
