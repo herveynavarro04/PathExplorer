@@ -7,18 +7,18 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
-import { ProfileInfoResponseDto } from '../dto/response/profileInfo.response.dto';
-import { ProfileUpdateRequestDto } from '../dto/request/profileUpdate.request.dto';
-import { DeleteProfileResponseDto } from '../dto/response/deleteProfile.response.dto';
+import { ProfileInfoResponseDto } from './dto/response/profileInfo.response.dto';
+import { ProfileUpdateRequestDto } from './dto/request/profileUpdate.request.dto';
+import { DeleteProfileResponseDto } from './dto/response/deleteProfile.response.dto';
 import { HashingService } from 'src/Utilities/hashing.utilities';
-import { RegisterRequestDto } from '../dto/request/register.request.dto';
-import { FindUserbyEmailResponseDto } from '../dto/response/findUserByEmail.response.dto';
-import { RegisterResponseDto } from '../dto/response/register.response.dto';
-import { UpdateProfileResponseDto } from '../dto/response/updateProfile.response.dto';
-import { GetUserProjectsResponseDto } from '../dto/response/getUser.response.dto';
-import { UpdateUserSkillsRequestDto } from '../dto/request/postUserSkills.request.dto';
-import { UpdateUserSkillsResponseDto } from '../dto/response/postUserSkills.response.dto';
-import { SkillsResponseDto } from '../../skills/dto/response/skills.response.dto';
+import { RegisterRequestDto } from './dto/request/register.request.dto';
+import { FindUserbyEmailResponseDto } from './dto/response/findUserByEmail.response.dto';
+import { RegisterResponseDto } from './dto/response/register.response.dto';
+import { UpdateProfileResponseDto } from './dto/response/updateProfile.response.dto';
+import { GetUserProjectsResponseDto } from './dto/response/getUser.response.dto';
+import { UpdateUserSkillsRequestDto } from './dto/request/postUserSkills.request.dto';
+import { UpdateUserSkillsResponseDto } from './dto/response/postUserSkills.response.dto';
+import { SkillsResponseDto } from '../skills/dto/response/skills.response.dto';
 
 @Injectable()
 export class UserService {

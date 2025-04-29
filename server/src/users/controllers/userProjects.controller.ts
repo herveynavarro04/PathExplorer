@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { GetUserProjectsResponseDto } from '../dto/response/getUser.response.dto';
-import { UserService } from '../services/user.service';
+import { UserService } from '../user.service';
 import { Request } from 'express';
 
 @Controller('user')

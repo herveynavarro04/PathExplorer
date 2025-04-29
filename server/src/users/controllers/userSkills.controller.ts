@@ -7,7 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from '../services/user.service';
+import { UserService } from '../user.service';
 import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { SkillsResponseDto } from 'src/skills/dto/response/skills.response.dto';
 import { UpdateUserSkillsRequestDto } from '../dto/request/postUserSkills.request.dto';

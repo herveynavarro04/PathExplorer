@@ -10,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { UserService } from 'src/users/services/user.service';
+import { UserService } from 'src/users/user.service';
 import { HashingService } from 'src/Utilities/hashing.utilities';
 import { ValidateUserResponseDto } from './dto/response/validateUser.response.dto';
 

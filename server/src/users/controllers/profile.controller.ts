@@ -7,7 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from '../services/user.service';
+import { UserService } from '../user.service';
 import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { Request } from 'express';
 import { ProfileInfoResponseDto } from '../dto/response/profileInfo.response.dto';
