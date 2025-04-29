@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { ProfileInfoResponseDto } from '../dto/response/profileInfo.response.dto';
 import { ProfileUpdateRequestDto } from '../dto/request/profileUpdate.request.dto';
 import { DeleteProfileResponseDto } from '../dto/response/deleteProfile.response.dto';
@@ -15,13 +15,18 @@ import { RegisterRequestDto } from '../dto/request/register.request.dto';
 import { FindUserbyEmailResponseDto } from '../dto/response/findUserByEmail.response.dto';
 import { RegisterResponseDto } from '../dto/response/register.response.dto';
 import { UpdateProfileResponseDto } from '../dto/response/updateProfile.response.dto';
+import { GetUserProjectsResponseDto } from '../dto/response/getUser.response.dto';
+import { UpdateUserSkillsRequestDto } from '../dto/request/postUserSkills.request.dto';
+import { UpdateUserSkillsResponseDto } from '../dto/response/postUserSkills.response.dto';
+import { SkillsResponseDto } from '../../skills/dto/response/skills.response.dto';
 
 @Injectable()
-export class ProfileService {
+export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
     private hashingService: HashingService,
+    private dataSource: DataSource,
   ) {}
 
   async registerUser(
@@ -96,7 +101,7 @@ export class ProfileService {
         Logger.warn('Profile not found', 'UserService');
         throw new NotFoundException('User not found');
       }
-      Logger.warn('Profile found', 'UserService');
+      Logger.log('Profile found', 'UserService');
       return userInfo;
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -159,6 +164,135 @@ export class ProfileService {
         'UserService',
       );
       throw new InternalServerErrorException('Failed to delete user');
+    }
+  }
+
+  async getUserSkills(userId: string): Promise<SkillsResponseDto> {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { userId },
+        relations: ['skills'],
+      });
+      if (!user) {
+        Logger.warn('User not found', 'UserService');
+        throw new NotFoundException('User not found');
+      }
+      Logger.log('User skills fetched', 'UserService');
+      const technicalSkills = user.skills
+        .filter((skill) => skill.skillType === 'Tech')
+        .map((skill) => ({
+          skillName: skill.skillName,
+          skillId: skill.skillId,
+        }));
+
+      const softSkills = user.skills
+        .filter((skill) => skill.skillType === 'Soft')
+        .map((skill) => ({
+          skillName: skill.skillName,
+          skillId: skill.skillId,
+        }));
+      return {
+        technicalSkills: technicalSkills,
+        softSkills: softSkills,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during delete transaction',
+        error.stack,
+        'UserService',
+      );
+      throw new InternalServerErrorException('Failed to delete user');
+    }
+  }
+
+  async postUserSkills(
+    userId: string,
+    postSkillsPayload: UpdateUserSkillsRequestDto,
+  ): Promise<UpdateUserSkillsResponseDto> {
+    try {
+      const values = postSkillsPayload.skills.map((skillId) => ({
+        userid: userId,
+        id_skill: skillId,
+      }));
+
+      await this.dataSource
+        .createQueryBuilder()
+        .insert()
+        .into('user_skills')
+        .values(values)
+        .orIgnore()
+        .execute();
+      Logger.log('User skills successfully updated!', 'UserService');
+      return {
+        userId: userId,
+        lastUpdate: new Date(),
+      };
+    } catch (error) {
+      Logger.error(
+        'Unexpected error during user skills update!',
+        error.stack,
+        'UserService',
+      );
+      throw error;
+    }
+  }
+
+  async getUserProjects(userId: string): Promise<GetUserProjectsResponseDto> {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { userId },
+        relations: ['projects'],
+      });
+      if (!user) {
+        Logger.warn('User not found', 'UserService');
+        throw new NotFoundException('User not found');
+      }
+      Logger.log('User projects fetched', 'UserService');
+      return {
+        projects: user.projects,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during delete transaction',
+        error.stack,
+        'UserService',
+      );
+      throw new InternalServerErrorException('Failed to delete user');
+    }
+  }
+
+  async deleteUserSkills(
+    userId: string,
+    postSkillsPayload: UpdateUserSkillsRequestDto,
+  ): Promise<UpdateUserSkillsResponseDto> {
+    try {
+      const skillIds = postSkillsPayload.skills;
+
+      await this.dataSource
+        .createQueryBuilder()
+        .delete()
+        .from('user_skills')
+        .where('userid = :userId', { userId })
+        .andWhere('id_skill IN (:...skillIds)', { skillIds })
+        .execute();
+      Logger.log('User skills successfully updated!', 'UserService');
+      return {
+        userId: userId,
+        lastUpdate: new Date(),
+      };
+    } catch (error) {
+      Logger.error(
+        'Unexpected error during user skills update!',
+        error.stack,
+        'UserService',
+      );
+      throw error;
     }
   }
 }

@@ -7,7 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ProfileService } from '../services/profile.service';
+import { UserService } from '../services/user.service';
 import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { Request } from 'express';
 import { ProfileInfoResponseDto } from '../dto/response/profileInfo.response.dto';
@@ -16,32 +16,32 @@ import { DeleteProfileResponseDto } from '../dto/response/deleteProfile.response
 import { DeleteProfileRequestDto } from '../dto/request/profileDelete.request.dto';
 import { UpdateProfileResponseDto } from '../dto/response/updateProfile.response.dto';
 
-@Controller('user/profile')
+@Controller('user')
 export class ProfileController {
-  constructor(private profileService: ProfileService) {}
+  constructor(private userService: UserService) {}
 
-  @Get()
+  @Get('profile')
   @UseGuards(JwtGuard)
   async getProfile(@Req() req: Request): Promise<ProfileInfoResponseDto> {
     const userId = req.user['userId'];
-    return this.profileService.getProfileInfo(userId);
+    return this.userService.getProfileInfo(userId);
   }
 
-  @Patch()
+  @Patch('profile')
   @UseGuards(JwtGuard)
   async updateProfile(
     @Body() updatePayload: ProfileUpdateRequestDto,
     @Req() req: Request,
   ): Promise<UpdateProfileResponseDto> {
     const userId = req.user['userId'];
-    return this.profileService.updateProfile(userId, updatePayload);
+    return this.userService.updateProfile(userId, updatePayload);
   }
 
-  @Delete()
+  @Delete('profile')
   @UseGuards(JwtGuard)
   async deleteProfile(
     @Body() userPayload: DeleteProfileRequestDto,
   ): Promise<DeleteProfileResponseDto> {
-    return this.profileService.deleteProfile(userPayload.userId);
+    return this.userService.deleteProfile(userPayload.userId);
   }
 }

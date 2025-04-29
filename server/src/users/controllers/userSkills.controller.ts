@@ -1,53 +1,47 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  Post,
   Req,
   UseGuards,
-  Body,
-  Post,
-  Delete,
 } from '@nestjs/common';
+import { UserService } from '../services/user.service';
 import { JwtGuard } from 'src/auth/Guards/jwt.guards';
-import { Request } from 'express';
-import { SkillsResponseDto } from 'src/auth/dto/response/skills.response.dto';
-import { SkillsService } from '../services/skills.service';
+import { SkillsResponseDto } from 'src/skills/dto/response/skills.response.dto';
 import { UpdateUserSkillsRequestDto } from '../dto/request/postUserSkills.request.dto';
 import { UpdateUserSkillsResponseDto } from '../dto/response/postUserSkills.response.dto';
+import { Request } from 'express';
 
-@Controller('user/skills')
-export class SkillsController {
-  constructor(private skillsService: SkillsService) {}
+@Controller('user')
+export class UserSkillsController {
+  constructor(private userService: UserService) {}
 
-  @Get()
-  @UseGuards(JwtGuard)
-  async getSkills(): Promise<SkillsResponseDto> {
-    return this.skillsService.getSkills();
-  }
-
-  @Get('get')
+  @Get('skills')
   @UseGuards(JwtGuard)
   async getUserSkills(@Req() req: Request): Promise<SkillsResponseDto> {
     const userId = req.user['userId'];
-    return this.skillsService.getUserSkills(userId);
+    return this.userService.getUserSkills(userId);
   }
 
-  @Post('add')
+  @Post('skills')
   @UseGuards(JwtGuard)
   async postUserSkills(
     @Body() postSkillsPayload: UpdateUserSkillsRequestDto,
     @Req() req: Request,
   ): Promise<UpdateUserSkillsResponseDto> {
     const userId = req.user['userId'];
-    return this.skillsService.postUserSkills(userId, postSkillsPayload);
+    return this.userService.postUserSkills(userId, postSkillsPayload);
   }
 
-  @Delete('delete')
+  @Delete('skills')
   @UseGuards(JwtGuard)
   async deleteUserSkills(
     @Body() postSkillsPayload: UpdateUserSkillsRequestDto,
     @Req() req: Request,
   ): Promise<UpdateUserSkillsResponseDto> {
     const userId = req.user['userId'];
-    return this.skillsService.deleteUserSkills(userId, postSkillsPayload);
+    return this.userService.deleteUserSkills(userId, postSkillsPayload);
   }
 }

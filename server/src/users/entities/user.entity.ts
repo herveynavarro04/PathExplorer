@@ -1,6 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
-import { SkillsEntity } from './skills.entity';
+import { SkillsEntity } from 'src/skills/entities/skills.entity';
 import { IsOptional } from 'class-validator';
+import { ProjectsEntity } from 'src/projects/entities/projects.entity';
 
 @Entity('User')
 export class UserEntity {
@@ -35,5 +36,20 @@ export class UserEntity {
       referencedColumnName: 'skillId',
     },
   })
-  skills?: SkillsEntity[];
+  skills: SkillsEntity[];
+
+  @ManyToMany(() => ProjectsEntity, (projets) => projets.user)
+  @IsOptional()
+  @JoinTable({
+    name: 'project_user',
+    joinColumn: {
+      name: 'userid',
+      referencedColumnName: 'userId',
+    },
+    inverseJoinColumn: {
+      name: 'id_project',
+      referencedColumnName: 'projectId',
+    },
+  })
+  projects: ProjectsEntity[];
 }

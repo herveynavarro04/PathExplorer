@@ -3,6 +3,8 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { ProjectsModule } from './projects/projects.module';
+import { SkillsModule } from './skills/skills.module';
 
 @Module({
   imports: [
@@ -20,8 +22,8 @@ import { UsersModule } from './users/users.module';
       autoLoadEntities: true,
       synchronize: false,
     }),
+    ProjectsModule,
+    SkillsModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
