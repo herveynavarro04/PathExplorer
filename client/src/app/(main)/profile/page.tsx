@@ -140,7 +140,7 @@ const Page = () => {
           }}
         />
         <div className="max-h-auto">
-          {/* <TechSkillsCard techSkillMap={techSkillMap} url={url} /> */}
+          <TechSkillsCard techSkillMap={techSkillMap} url={url} />
         </div>
       </div>
     </div>
