@@ -1,4 +1,3 @@
-import "styles/satoshi.css";
 import "styles/globals.css";
 
 import { Sidebar } from "components/Layouts/sidebar";
