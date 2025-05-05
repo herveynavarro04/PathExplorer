@@ -1,96 +1,60 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: linear-gradient(180deg, #0f070f 2%, #3b1e3c 100%);
-  --font-geist-sans: 'Geist', sans-serif;
-  --font-geist-mono: 'Geist Mono', monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: linear-gradient(180deg, #0f070f 10%, #3b1e3c 90%);
-  }
-}
-
-@media (max-width: 1023px) {
-  html,
+@layer base {
   body {
-    height: auto;
-    overflow-y: auto;
+    @apply bg-[#f8f6fa] text-dark-5 dark:bg-[#1b0e23] dark:text-dark-6;
   }
 }
 
-@media (min-width: 1024px) {
-  html,
-  body {
-    height: 100vh;
-    overflow: hidden;
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+   .custom-scrollbar {
+    @apply overflow-auto;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply size-2;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply relative flex-1 rounded-full bg-neutral-200/40 dark:bg-stroke-dark;
+  }
+
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
+/* third-party libraries CSS */
+
+
+.noUi-horizontal .noUi-handle:after,
+.noUi-horizontal .noUi-handle:before {
+  @apply hidden;
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+input[type="search"]::-webkit-search-cancel-button {
+  @apply appearance-none;
 }
 
-@keyframes fadeInModal {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes fadeOutModal {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-}
-
-.animate-fadeInModal {
-  animation: fadeInModal 0.25s ease-out forwards;
-}
-
-.animate-fadeOutModal {
-  animation: fadeOutModal 0.35s ease-in forwards;
-}
-
-html,
-body {
-  background-image: var(--background);
+.custom-input-date::-webkit-calendar-picker-indicator {
+  background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  background-color: #0f070f;
-  margin: 0;
-  padding: 0;
-  color: var(--foreground);
-  font-family: var(--font-geist-sans);
-  overflow-x: hidden;
+  background-size: 20px;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-input:-webkit-autofill {
-  box-shadow: 0 0 0px 1000px #9573a8 inset !important;
-  -webkit-text-fill-color: white !important;
-  transition: background-color 9999s ease-in-out 0s;
+.custom-gradient-1 {
+  background-image: linear-gradient(145deg, #eef 0%, #fff8fc 100%);
 }

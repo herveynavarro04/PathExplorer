@@ -14,11 +14,24 @@ import { UpdateUserSkillsRequestDto } from '../dto/request/postUserSkills.reques
 import { UpdateUserSkillsResponseDto } from '../dto/response/postUserSkills.response.dto';
 import { Request } from 'express';
 
+<<<<<<< HEAD:server/src/users/controllers/userSkills.controller.ts
 @Controller('user')
 export class UserSkillsController {
   constructor(private userService: UserService) {}
 
   @Get('skills')
+=======
+@Controller('user/skills')
+export class SkillsController {
+  constructor(private skillsService: SkillsService) {}
+  @Get()
+  @UseGuards(JwtGuard)
+  async getSkills(): Promise<SkillsResponseDto> {
+    return this.skillsService.getSkills();
+  }
+
+  @Get('get')
+>>>>>>> de93d3fae43b8b4eca4144cad4aaf4bb0538626f:server/src/users/controllers/skills.controller.ts
   @UseGuards(JwtGuard)
   async getUserSkills(@Req() req: Request): Promise<SkillsResponseDto> {
     const userId = req.user['userId'];
@@ -35,7 +48,11 @@ export class UserSkillsController {
     return this.userService.postUserSkills(userId, postSkillsPayload);
   }
 
+<<<<<<< HEAD:server/src/users/controllers/userSkills.controller.ts
   @Delete('skills')
+=======
+  @Post('delete')
+>>>>>>> de93d3fae43b8b4eca4144cad4aaf4bb0538626f:server/src/users/controllers/skills.controller.ts
   @UseGuards(JwtGuard)
   async deleteUserSkills(
     @Body() postSkillsPayload: UpdateUserSkillsRequestDto,
