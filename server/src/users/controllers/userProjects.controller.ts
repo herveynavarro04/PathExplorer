@@ -1,5 +1,5 @@
-//TODO: post project aplications endpoint
-//TODO: withdraw project aplications endpoint
+//TODO: patch project aplications endpoint (create and withdraw applications)
+
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { GetUserProjectsResponseDto } from '../dto/response/getUser.response.dto';
