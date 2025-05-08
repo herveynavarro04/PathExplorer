@@ -15,7 +15,6 @@ export const handleSubmit = async (email, password, setShowError) => {
       const data = await res.json();
       const { accessToken } = data;
       localStorage.setItem("token", accessToken);
-      console.log(`Your token is saved: ${localStorage.getItem("token")}`);
       return true;
     } else {
       setShowError(true);
