@@ -14,7 +14,7 @@ export class ProjectsController {
     return this.projectsService.getAvailableProjects();
   }
 
-  @Get(':clear')
+  @Get(':projectId')
   @UseGuards(JwtGuard)
   async getProjectInfo(
     @Param('projectId') projectId: string,
