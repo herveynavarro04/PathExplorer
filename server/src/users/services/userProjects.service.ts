@@ -11,6 +11,7 @@ import { UpdateUserProjectsRequestDto } from '../dto/request/updateUserProjects.
 import { UpdateUserProjectsResponseDto } from '../dto/response/updateUserProjects.response.dto';
 import { GetUserProjectsResponseDto } from '../dto/response/getUser.response.dto';
 import { DatabaseHelperService } from 'src/common/helpers/dataBase.helper';
+import { ProjectInfoPreviewResponseDto } from '../../projects/dto/response/projectInfoPreview.response.dto';
 
 @Injectable()
 export class UserProjectsService {
@@ -31,8 +32,16 @@ export class UserProjectsService {
         throw new NotFoundException('User not found');
       }
       Logger.log('User projects fetched', 'UserService');
+      const userProjects: ProjectInfoPreviewResponseDto[] = user.projects.map(
+        (project) => ({
+          projectId: project.projectId,
+          projectName: project.projectName,
+          information: project.information,
+          active: project.active,
+        }),
+      );
       return {
-        projects: user.projects,
+        projects: userProjects,
       };
     } catch (error) {
       if (error instanceof NotFoundException) {

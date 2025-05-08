@@ -39,4 +39,33 @@ export class DatabaseHelperService {
 
     return query.execute();
   }
+
+  async selectMany(
+    tableName: string,
+    conditions: Record<string, any> = {},
+    whereInKey?: string,
+    whereInValues?: string[],
+    selectColumns?: string[],
+  ) {
+    const query = this.dataSource
+      .createQueryBuilder()
+      .select(
+        selectColumns?.length
+          ? selectColumns.map((col) => `${tableName}.${col}`)
+          : undefined,
+      )
+      .from(tableName, tableName);
+
+    Object.entries(conditions).forEach(([key, value]) => {
+      query.andWhere(`${tableName}.${key} = :${key}`, { [key]: value });
+    });
+
+    if (whereInKey && whereInValues?.length) {
+      query.andWhere(`${tableName}.${whereInKey} IN (:...ids)`, {
+        ids: whereInValues,
+      });
+    }
+
+    return query.getRawMany();
+  }
 }
