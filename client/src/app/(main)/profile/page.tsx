@@ -49,19 +49,19 @@ const Page = () => {
         return;
       }
 
-      const userData = await authFetch(`${url}/user/profile`, {
+      const userData = await authFetch(`${url}/user`, {
         method: "GET",
       });
 
       const skills: SkillsResponse | null = await authFetch(
-        `${url}/user/skills`,
+        `${url}/skills`,
         {
           method: "GET",
         }
       );
 
       const userSkills: UserSkillsResponse | null = await authFetch(
-        `${url}/user/skills/get`,
+        `${url}/user/skills`,
         {
           method: "GET",
         }
@@ -96,7 +96,7 @@ const Page = () => {
     };
 
     loadData();
-  }, [router]);
+  }, [router, url]);
 
   if (loading || !techSkillMap) {
     return (
