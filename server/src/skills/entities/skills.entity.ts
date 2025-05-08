@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm';
-import { UserEntity } from './user.entity';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 @Entity('skills')
 export class SkillsEntity {

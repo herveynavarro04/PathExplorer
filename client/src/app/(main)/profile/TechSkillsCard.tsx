@@ -5,7 +5,7 @@ import { authFetch } from "@utils/authFetch";
 import { ShowcaseSection } from "components/Layouts/showcase-section";
 
 type TechSkillsCardProps = {
-  techSkillMap: Map<string, [number, boolean]>;
+  techSkillMap: Map<string, [string, boolean]>; 
   url: string;
 };
 
@@ -14,9 +14,6 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
   const [allTechSkills, setAllTechSkills] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [skillsToAdd, setSkillsToAdd] = useState<number[]>([]);
-  const [skillsToDelete, setSkillsToDelete] = useState<number[]>([]);
-  const [triggerSave, setTriggerSave] = useState<boolean>(false);
 
   const MAX_SKILLS = 20;
 
@@ -24,7 +21,7 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
     const selected: string[] = [];
     const all: string[] = [];
 
-    techSkillMap.forEach(([id, isSelected], skillName) => {
+    techSkillMap.forEach(([_, isSelected], skillName) => {
       all.push(skillName);
       if (isSelected) selected.push(skillName);
     });
@@ -32,32 +29,6 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
     setSelectedTechSkills(selected);
     setAllTechSkills(all);
   }, [techSkillMap]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      if (!triggerSave) return;
-
-      if (skillsToDelete.length > 0) {
-        await authFetch(`${url}/user/skills/delete`, {
-          method: "POST",
-          body: JSON.stringify({ skills: skillsToDelete }),
-        });
-      }
-
-      if (skillsToAdd.length > 0) {
-        await authFetch(`${url}/user/skills/add`, {
-          method: "POST",
-          body: JSON.stringify({ skills: skillsToAdd }),
-        });
-      }
-
-      setSkillsToAdd([]);
-      setSkillsToDelete([]);
-      setTriggerSave(false);
-    };
-
-    loadData();
-  }, [triggerSave]);
 
   const filteredSkills = allTechSkills.filter(
     (skill) =>
@@ -68,18 +39,32 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
   const addSkill = (skill: string) => {
     if (selectedTechSkills.length >= MAX_SKILLS) return;
     setSelectedTechSkills([...selectedTechSkills, skill]);
-    setSkillsToAdd([...skillsToAdd, techSkillMap.get(skill)![0]]);
     setSearchTerm("");
   };
 
   const removeSkill = (skill: string) => {
     setSelectedTechSkills(selectedTechSkills.filter((s) => s !== skill));
-    setSkillsToDelete([...skillsToDelete, techSkillMap.get(skill)![0]]);
   };
 
-  const handleSave = () => {
-    setTriggerSave(true);
-    setIsEditing(false);
+  const handleSave = async () => {
+    const addSkills: string[] = [];
+    const deleteSkills: string[] = [];
+
+    techSkillMap.forEach(([id, wasSelected], skillName) => {
+      const isNowSelected = selectedTechSkills.includes(skillName);
+      if (!wasSelected && isNowSelected) addSkills.push(id);
+      if (wasSelected && !isNowSelected) deleteSkills.push(id);
+    });
+
+    try {
+      await authFetch(`${url}/user/skills`, {
+        method: "PATCH",
+        body: JSON.stringify({ addSkills, deleteSkills }),
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Failed to update skills:", error);
+    }
   };
 
   return (

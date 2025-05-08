@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class DeleteProfileResponseDto {
+export class DeleteUserResponseDto {
   @IsString()
   @IsNotEmpty()
   userId: string;

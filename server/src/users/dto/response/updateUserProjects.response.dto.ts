@@ -1,13 +1,13 @@
 import { IsArray, IsDate, IsNotEmpty } from 'class-validator';
 
-export class UpdateUserSkillsResponseDto {
+export class UpdateUserProjectsResponseDto {
   @IsArray()
   @IsNotEmpty()
-  addedSkills: string[];
+  addedProjects: string[];
 
   @IsArray()
   @IsNotEmpty()
-  deletedSkills: string[];
+  deletedProjects: string[];
 
   @IsDate()
   @IsNotEmpty()

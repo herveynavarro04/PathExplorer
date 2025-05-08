@@ -1,17 +1,25 @@
 import { Module } from '@nestjs/common';
-import { ProfileService } from './services/profile.service';
+import { UserService } from './services/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
-import { ProfileController } from './controllers/profile.controller';
+import { UserController } from './controllers/user.controller';
 import { HashingService } from 'src/Utilities/hashing.utilities';
-import { SkillsEntity } from './entities/skills.entity';
-import { SkillsController } from './controllers/skills.controller';
-import { SkillsService } from './services/skills.service';
+import { UserProjectsController } from './controllers/userProjects.controller';
+import { UserSkillsController } from './controllers/userSkills.controller';
+import { UserSkillsService } from './services/userSkills.service';
+import { UserProjectsService } from './services/userProjects.service';
+import { DatabaseHelperService } from 'src/common/helpers/dataBase.helper';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, SkillsEntity])],
-  providers: [ProfileService, HashingService, SkillsService],
-  controllers: [ProfileController, SkillsController],
-  exports: [ProfileService],
+  imports: [TypeOrmModule.forFeature([UserEntity])],
+  providers: [
+    UserService,
+    HashingService,
+    UserSkillsService,
+    UserProjectsService,
+    DatabaseHelperService,
+  ],
+  controllers: [UserController, UserProjectsController, UserSkillsController],
+  exports: [UserService],
 })
 export class UsersModule {}

@@ -32,7 +32,7 @@ export function Header() {
         return;
       }
 
-      const userData = await authFetch("http://localhost:8080/api/user/profile", {
+      const userData = await authFetch("http://localhost:8080/api/user", {
         method: "GET",
       });
 

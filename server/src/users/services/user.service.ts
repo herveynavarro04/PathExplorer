@@ -7,17 +7,17 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { ProfileInfoResponseDto } from '../dto/response/profileInfo.response.dto';
-import { ProfileUpdateRequestDto } from '../dto/request/profileUpdate.request.dto';
-import { DeleteProfileResponseDto } from '../dto/response/deleteProfile.response.dto';
+import { UserInfoResponseDto } from '../dto/response/userInfo.response.dto';
+import { UserUpdateRequestDto } from '../dto/request/userUpdate.request.dto';
 import { HashingService } from 'src/Utilities/hashing.utilities';
 import { RegisterRequestDto } from '../dto/request/register.request.dto';
 import { FindUserbyEmailResponseDto } from '../dto/response/findUserByEmail.response.dto';
 import { RegisterResponseDto } from '../dto/response/register.response.dto';
-import { UpdateProfileResponseDto } from '../dto/response/updateProfile.response.dto';
+import { DeleteUserResponseDto } from '../dto/response/deleteUser.response.dto';
+import { UpdateUserResponseDto } from '../dto/response/updateUser.response.dto';
 
 @Injectable()
-export class ProfileService {
+export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
@@ -86,17 +86,17 @@ export class ProfileService {
     }
   }
 
-  async getProfileInfo(userId: string): Promise<ProfileInfoResponseDto> {
+  async getUserInfo(userId: string): Promise<UserInfoResponseDto> {
     try {
       const userInfo = await this.usersRepository.findOne({
         where: { userId },
         select: ['email', 'firstName', 'lastName', 'imgUrl'],
       });
       if (!userInfo) {
-        Logger.warn('Profile not found', 'UserService');
+        Logger.warn('User not found', 'UserService');
         throw new NotFoundException('User not found');
       }
-      Logger.warn('Profile found', 'UserService');
+      Logger.log('User found', 'UserService');
       return userInfo;
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -111,10 +111,10 @@ export class ProfileService {
     }
   }
 
-  async updateProfile(
+  async updateUser(
     userId: string,
-    updatePayload: ProfileUpdateRequestDto,
-  ): Promise<UpdateProfileResponseDto> {
+    updatePayload: UserUpdateRequestDto,
+  ): Promise<UpdateUserResponseDto> {
     if (updatePayload.password) {
       updatePayload.password = await this.hashingService.hashPassword(
         updatePayload.password,
@@ -122,7 +122,7 @@ export class ProfileService {
     }
     try {
       await this.usersRepository.update({ userId }, updatePayload);
-      Logger.log('Profile Updated', 'UserService');
+      Logger.log('User Updated', 'UserService');
       return {
         userId: userId,
         lastUpdate: new Date(),
@@ -140,7 +140,7 @@ export class ProfileService {
     }
   }
 
-  async deleteProfile(userId: string): Promise<DeleteProfileResponseDto> {
+  async deleteUser(userId: string): Promise<DeleteUserResponseDto> {
     try {
       const deleteResult = await this.usersRepository.delete({ userId });
       if (deleteResult.affected === 0) {

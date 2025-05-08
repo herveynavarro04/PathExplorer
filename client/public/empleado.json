@@ -1,62 +1,48 @@
 {
-    "empleados": [
-      {
-        "id_empleado": 1,
-        "correo": "sergio@accenture.com",
-        "contrasena": "123",
-        "url_foto": "http://localhost:3000/profile.png",
-        "nombre": "Sergio Tomás Vargas Villarreal"
-      }
-    ],
-    "habilidades": [
-      {
-        "id_habilidad": 101,
-        "nombre": "OLA",
-        "tipo": "Técnica"
-      },
-      {
-        "id_habilidad": 102,
-        "nombre": "Liderazgo",
-        "tipo": "Blanda"
-      },
-      {
-        "id_habilidad": 103,
-        "nombre": "React",
-        "tipo": "Técnica"
-      },
-      {
-        "id_habilidad": 104,
-        "nombre": "Trabajo en equipo",
-        "tipo": "Blanda"
-      },
-      {
-        "id_habilidad": 105,
-        "nombre": "SQL",
-        "tipo": "Técnica"
-      },
-      {
-        "id_habilidad": 106,
-        "nombre": "Resolución de problemas",
-        "tipo": "Blanda"
-      },
-      {
-        "id_habilidad": 107,
-        "nombre": "Node.js",
-        "tipo": "Técnica"
-      },
-      {
-        "id_habilidad": 108,
-        "nombre": "Pensamiento crítico",
-        "tipo": "Blanda"
-      }
-    ],
-    "empleado_habilidades": [
-      { "id_empleado": 1, "id_habilidad": 101 },
-      { "id_empleado": 1, "id_habilidad": 102 },
-      { "id_empleado": 1, "id_habilidad": 103 },
-      { "id_empleado": 1, "id_habilidad": 104 }
-    ],
-    "proyectos": [
+  "empleados": [
+    {
+      "id_empleado": 1,
+      "correo": "sergio@accenture.com",
+      "contrasena": "123",
+      "url_foto": "http://localhost:3000/profile.png",
+      "nombre": "Sergio Tomás Vargas Villarreal"
+    }
+  ],
+  "habilidades": [
+    { "id_habilidad": 101, "nombre": "OLA", "tipo": "Técnica" },
+    { "id_habilidad": 102, "nombre": "Liderazgo", "tipo": "Blanda" },
+    { "id_habilidad": 103, "nombre": "React", "tipo": "Técnica" },
+    { "id_habilidad": 104, "nombre": "Trabajo en equipo", "tipo": "Blanda" },
+    { "id_habilidad": 105, "nombre": "SQL", "tipo": "Técnica" },
+    {
+      "id_habilidad": 106,
+      "nombre": "Resolución de problemas",
+      "tipo": "Blanda"
+    },
+    { "id_habilidad": 107, "nombre": "Node.js", "tipo": "Técnica" },
+    { "id_habilidad": 108, "nombre": "Pensamiento crítico", "tipo": "Blanda" },
+    { "id_habilidad": 109, "nombre": "TypeScript", "tipo": "Técnica" },
+    { "id_habilidad": 110, "nombre": "Git", "tipo": "Técnica" },
+    { "id_habilidad": 111, "nombre": "Docker", "tipo": "Técnica" },
+    { "id_habilidad": 112, "nombre": "Python", "tipo": "Técnica" },
+    { "id_habilidad": 113, "nombre": "Next.js", "tipo": "Técnica" },
+    {
+      "id_habilidad": 114,
+      "nombre": "Comunicación efectiva",
+      "tipo": "Blanda"
+    },
+    { "id_habilidad": 115, "nombre": "Adaptabilidad", "tipo": "Blanda" },
+    { "id_habilidad": 116, "nombre": "Gestión del tiempo", "tipo": "Blanda" },
+    { "id_habilidad": 117, "nombre": "Empatía", "tipo": "Blanda" },
+    { "id_habilidad": 118, "nombre": "Negociación", "tipo": "Blanda" }
+  ],
+  "empleado_habilidades": [
+    { "id_empleado": 1, "id_habilidad": 101 },
+    { "id_empleado": 1, "id_habilidad": 102 },
+    { "id_empleado": 1, "id_habilidad": 103 },
+    { "id_empleado": 1, "id_habilidad": 104 }
+  ],
+  "proyectos": [
     {
       "id_proyecto": 201,
       "nombre": "Sistema de Gestión Interna",
@@ -138,26 +124,26 @@
     }
   ],
   "project_managers": [
-  {
-    "id_project_manager": 99,
-    "nombre": "Sofía Schneider"
-  },
-  {
-    "id_project_manager": 91,
-    "nombre": "Antonio Martínez"
-  }
-],
-"goals": [
     {
-      "id_goal": "G001",                         
-      "information": "Finalizar prototipo NextJS", 
-      "term": "2025-02-02",                       
-      "start_date": "2025-01-01T09:00:00Z",      
-      "end_date": "2025-02-02T17:00:00Z",        
-      "completed": true,                        
-      "validated": true,                        
-      "userid": "1",                             
-      "id_reviser": "99"                         
+      "id_project_manager": 99,
+      "nombre": "Sofía Schneider"
+    },
+    {
+      "id_project_manager": 91,
+      "nombre": "Antonio Martínez"
+    }
+  ],
+  "goals": [
+    {
+      "id_goal": "G001",
+      "information": "Finalizar prototipo NextJS",
+      "term": "2025-02-02",
+      "start_date": "2025-01-01T09:00:00Z",
+      "end_date": "2025-02-02T17:00:00Z",
+      "completed": true,
+      "validated": true,
+      "userid": "1",
+      "id_reviser": "99"
     },
     {
       "id_goal": "G002",
@@ -180,8 +166,7 @@
       "validated": false,
       "userid": "1",
       "id_reviser": "99"
-    }
-    ,
+    },
     {
       "id_goal": "G004",
       "information": "Aprender MongoDB para desarrollo de aplicaciones",
@@ -197,16 +182,15 @@
   "user_interests": [
     {
       "userid": "1",
-      "id_skill": "103" 
+      "id_skill": "103"
     },
     {
       "userid": "1",
-      "id_skill": "105" 
+      "id_skill": "105"
     },
     {
       "userid": "1",
-      "id_skill": "107"  
+      "id_skill": "107"
     }
   ]
 }
-  

@@ -1,10 +1,8 @@
 import {
   ConflictException,
   Injectable,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserEntity } from '../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { SignInResponseDto } from './dto/response/signIn.response.dto';
 import { SignInRequestDto } from './dto/request/signIn.request';
@@ -12,14 +10,14 @@ import * as bcrypt from 'bcrypt';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { ProfileService } from 'src/users/services/profile.service';
 import { HashingService } from 'src/Utilities/hashing.utilities';
 import { ValidateUserResponseDto } from './dto/response/validateUser.response.dto';
+import { UserService } from 'src/users/services/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private profileService: ProfileService,
+    private userService: UserService,
     private jwtService: JwtService,
     private hashingService: HashingService,
   ) {}
@@ -27,7 +25,7 @@ export class AuthService {
   async registerUser(
     userPayload: RegisterRequestDto,
   ): Promise<RegisterResponseDto> {
-    if (await this.profileService.verifyUserExistance(userPayload.email)) {
+    if (await this.userService.verifyUserExistance(userPayload.email)) {
       throw new ConflictException('User with this email already exists');
     }
 
@@ -35,7 +33,7 @@ export class AuthService {
     const hashedPassword = await this.hashingService.hashPassword(
       userPayload.password,
     );
-    const register: UserEntity = {
+    const register = {
       userId: userId,
       email: userPayload.email,
       password: hashedPassword,
@@ -43,7 +41,7 @@ export class AuthService {
       firstName: userPayload.firstName,
       lastName: userPayload.lastName,
     };
-    await this.profileService.registerUser(register);
+    await this.userService.registerUser(register);
     return {
       userId: register.userId,
     };
@@ -53,7 +51,7 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<ValidateUserResponseDto> {
-    const user = await this.profileService.findUserbyEmail(email);
+    const user = await this.userService.findUserbyEmail(email);
     if (!user) {
       throw new UnauthorizedException('Email or password incorrect');
     }
@@ -68,8 +66,10 @@ export class AuthService {
   }
 
   async signIn(userPayload: SignInRequestDto): Promise<SignInResponseDto> {
-    const { email, password } = userPayload;
-    const user = await this.validateUser(email, password);
+    const user = await this.validateUser(
+      userPayload.email,
+      userPayload.password,
+    );
     const token = this.jwtService.sign({
       userId: user.userId,
       email: user.email,

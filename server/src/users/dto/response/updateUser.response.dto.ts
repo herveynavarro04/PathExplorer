@@ -1,6 +1,6 @@
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateProfileResponseDto {
+export class UpdateUserResponseDto {
   @IsString()
   @IsNotEmpty()
   userId: string;
