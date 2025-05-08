@@ -2,7 +2,7 @@ import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { ProjectsResponseDto } from './dto/response/projects.response.dto';
-import { ProjectInfoResponseDto } from './dto/response/projectInfo.response.dto';
+import { ProjectsInfoResponseDto } from './dto/response/projectsInfo.response.dto';
 
 @Controller('projects')
 export class ProjectsController {
@@ -18,7 +18,7 @@ export class ProjectsController {
   @UseGuards(JwtGuard)
   async getProjectInfo(
     @Param('projectId') projectId: string,
-  ): Promise<ProjectInfoResponseDto> {
+  ): Promise<ProjectsInfoResponseDto> {
     return this.projectsService.getProjectInfo(projectId);
   }
 }

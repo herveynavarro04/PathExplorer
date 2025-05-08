@@ -1,5 +1,7 @@
+import { IsOptional } from 'class-validator';
+import { TechnologiesEntity } from 'src/common/entities/technologies.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
 
 @Entity('project')
 export class ProjectsEntity {
@@ -38,4 +40,19 @@ export class ProjectsEntity {
 
   @ManyToMany(() => UserEntity, (user) => user.projects)
   user: UserEntity[];
+
+  @ManyToMany(() => TechnologiesEntity, (technologies) => technologies.project)
+  @IsOptional()
+  @JoinTable({
+    name: 'project_technologies',
+    joinColumn: {
+      name: 'id_project',
+      referencedColumnName: 'projectId',
+    },
+    inverseJoinColumn: {
+      name: 'id_technology',
+      referencedColumnName: 'technologyId',
+    },
+  })
+  technologies: TechnologiesEntity[];
 }
