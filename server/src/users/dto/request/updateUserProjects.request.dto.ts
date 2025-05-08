@@ -1,11 +1,11 @@
 import { IsArray, IsOptional } from 'class-validator';
 
-export class UpdateUserSkillsRequestDto {
+export class UpdateUserProjectsRequestDto {
   @IsArray()
   @IsOptional()
-  addSkills?: string[];
+  addProjects?: string[];
 
   @IsArray()
   @IsOptional()
-  deleteSkills?: string[];
+  deleteProjects?: string[];
 }

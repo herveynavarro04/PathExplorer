@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from 'class-validator';
 
-export class ProfileUpdateRequestDto {
+export class UserUpdateRequestDto {
   @IsString()
   @IsOptional()
   password?: string;

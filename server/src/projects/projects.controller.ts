@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
-import { JwtGuard } from 'src/auth/Guards/jwt.guards';
+import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { ProjectsResponseDto } from './dto/response/projects.response.dto';
 import { ProjectInfoResponseDto } from './dto/response/projectInfo.response.dto';
 

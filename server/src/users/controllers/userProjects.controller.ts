@@ -1,14 +1,14 @@
-//TODO: patch project aplications endpoint (create and withdraw applications)
-
-import { Controller, Get, UseGuards, Req } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/Guards/jwt.guards';
-import { GetUserProjectsResponseDto } from '../dto/response/getUser.response.dto';
-import { UserService } from '../user.service';
+import { Controller, Get, UseGuards, Req, Patch, Body } from '@nestjs/common';
+import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { Request } from 'express';
+import { UpdateUserProjectsRequestDto } from '../dto/request/updateUserProjects.request.dto';
+import { UpdateUserProjectsResponseDto } from '../dto/response/updateUserProjects.response.dto';
+import { UserProjectsService } from '../services/userProjects.service';
+import { GetUserProjectsResponseDto } from '../dto/response/getUser.response.dto';
 
 @Controller('user')
 export class UserProjectsController {
-  constructor(private userService: UserService) {}
+  constructor(private userProjectsService: UserProjectsService) {}
 
   @Get('projects')
   @UseGuards(JwtGuard)
@@ -16,6 +16,16 @@ export class UserProjectsController {
     @Req() req: Request,
   ): Promise<GetUserProjectsResponseDto> {
     const userId = req.user['userId'];
-    return this.userService.getUserProjects(userId);
+    return this.userProjectsService.getUserProjects(userId);
+  }
+
+  @Patch('projects')
+  @UseGuards(JwtGuard)
+  async updateUserProjects(
+    @Body() updatePayload: UpdateUserProjectsRequestDto,
+    @Req() req: Request,
+  ): Promise<UpdateUserProjectsResponseDto> {
+    const userId = req.user['userId'];
+    return this.userProjectsService.updateUserProjects(userId, updatePayload);
   }
 }
