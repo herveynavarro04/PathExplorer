@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import { authFetch } from "@utils/authFetch";
 import { ShowcaseSection } from "components/Layouts/showcase-section";
 
-type TechSkillsCardProps = {
-  techSkillMap: Map<string, [string, boolean]>;
+type SoftSkillsCardProps = {
+  softSkillMap: Map<string, [string, boolean]>;
   url: string;
 };
 
-const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
-  const [selectedTechSkills, setSelectedTechSkills] = useState<string[]>([]);
-  const [allTechSkills, setAllTechSkills] = useState<string[]>([]);
+const SoftSkillsCard = ({ softSkillMap, url }: SoftSkillsCardProps) => {
+  const [selectedSoftSkills, setSelectedSoftSkills] = useState<string[]>([]);
+  const [allSoftSkills, setAllSoftSkills] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [addSkills, setAddSkills] = useState<string[]>([]);
@@ -24,14 +24,14 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
     const selected: string[] = [];
     const all: string[] = [];
 
-    techSkillMap.forEach(([_, isSelected], skillName) => {
+    softSkillMap.forEach(([id, isSelected], skillName) => {
       all.push(skillName);
       if (isSelected) selected.push(skillName);
     });
 
-    setSelectedTechSkills(selected);
-    setAllTechSkills(all);
-  }, [techSkillMap]);
+    setSelectedSoftSkills(selected);
+    setAllSoftSkills(all);
+  }, [softSkillMap]);
 
   useEffect(() => {
     const patchData = async () => {
@@ -66,26 +66,31 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
     console.log(deleteSkills);
   }, [deleteSkills]);
 
-  const filteredSkills = allTechSkills.filter(
+  const filteredSkills = allSoftSkills.filter(
     (skill) =>
       skill.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      !selectedTechSkills.includes(skill)
+      !selectedSoftSkills.includes(skill)
   );
 
   const addSkill = (skill: string) => {
-    if (selectedTechSkills.length >= MAX_SKILLS) return;
-    setSelectedTechSkills([...selectedTechSkills, skill]);
-    setAddSkills([...addSkills, techSkillMap.get(skill)![0]]);
+    if (selectedSoftSkills.length >= MAX_SKILLS) return;
+    setSelectedSoftSkills([...selectedSoftSkills, skill]);
+    setAddSkills([...addSkills, softSkillMap.get(skill)![0]]);
     setSearchTerm("");
   };
 
   const removeSkill = (skill: string) => {
-    setSelectedTechSkills(selectedTechSkills.filter((s) => s !== skill));
-    setDeleteSkills([...deleteSkills, techSkillMap.get(skill)![0]]);
+    setSelectedSoftSkills(selectedSoftSkills.filter((s) => s !== skill));
+    setDeleteSkills([...deleteSkills, softSkillMap.get(skill)![0]]);
+  };
+
+  const handleSave = () => {
+    setTriggerSave(true);
+    setIsEditing(false);
   };
 
   return (
-    <ShowcaseSection title="Habilidades Técnicas" className="!p-7">
+    <ShowcaseSection title="Habilidades Blandas" className="!p-7">
       <div className="flex flex-col gap-5">
         {isEditing && (
           <div className="relative">
@@ -113,7 +118,7 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
         )}
 
         <div className="flex flex-wrap gap-2.5">
-          {selectedTechSkills.map((skill) => (
+          {selectedSoftSkills.map((skill) => (
             <span
               key={skill}
               className="flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
@@ -138,7 +143,6 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
               type="button"
               onClick={() => {
                 setTriggerSave((prev) => !prev);
-                setIsEditing(false);
               }}
               className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-white hover:bg-opacity-90"
             >
@@ -159,4 +163,4 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
   );
 };
 
-export default TechSkillsCard;
+export default SoftSkillsCard;

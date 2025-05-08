@@ -1,11 +1,6 @@
-
 "use client";
 
-import {
-  EmailIcon,
-  UploadIcon,
-  UserIcon,
-} from "assets/icons";
+import { EmailIcon, UploadIcon, UserIcon } from "assets/icons";
 import InputGroup from "components/FormElements/InputGroup";
 import { ShowcaseSection } from "components/Layouts/showcase-section";
 import Image from "next/image";
@@ -20,12 +15,11 @@ type PersonalInfoFormProps = {
     lastName: string;
     email: string;
     position: string;
-    url_foto: string;
+    url_pic: string;
   };
 };
 
 export function PersonalInfoForm({ userData }: PersonalInfoFormProps) {
-
   if (!userData) {
     return <Loading />;
   }
@@ -35,7 +29,7 @@ export function PersonalInfoForm({ userData }: PersonalInfoFormProps) {
       <form>
         <div className="mb-5.5 flex items-center gap-3">
           <Image
-            src={userData.url_foto}
+            src={userData.url_pic}
             width={55}
             height={55}
             alt="User"
@@ -73,7 +67,8 @@ export function PersonalInfoForm({ userData }: PersonalInfoFormProps) {
               <UploadIcon />
             </div>
             <p className="mt-2.5 text-body-sm font-medium">
-              <span className="text-primary">Sube el archivo</span> o arrástra el archivo
+              <span className="text-primary">Sube el archivo</span> o arrástra
+              el archivo
             </p>
             <p className="mt-1 text-body-xs">
               SVG, PNG, JPG or GIF (max, 800 X 800px)

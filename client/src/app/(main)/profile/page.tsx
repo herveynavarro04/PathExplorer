@@ -3,32 +3,34 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PersonalInfoForm } from "./_components/personal-info";
-// import ChargeabilityCard from "/ChargeabilityCard";
 import TechSkillsCard from "./TechSkillsCard";
-// import SoftSkillsCardClient from "./SoftSkillsCardClient";
+import SoftSkillsCard from "./SoftSkillsCard";
 import { authFetch } from "@utils/authFetch";
 import Loading from "components/Loading";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
 
 type ProfileData = {
-  nombre: string;
+  firstName: string;
+  lastName: string;
   password: string;
-  correo: string;
-  url_foto: string;
-  puesto: string;
+  email: string;
+  url_pic: string;
+  position: string;
 };
 
 type Skill = {
   skillName: string;
-  skillId: number;
+  skillId: string;
 };
 
 type SkillsResponse = {
   technicalSkills: Skill[];
+  softSkills: Skill[];
 };
 
 type UserSkillsResponse = {
   technicalSkills: Skill[];
+  softSkills: Skill[];
 };
 
 const Page = () => {
@@ -37,35 +39,36 @@ const Page = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [techSkillMap, setTechSkillMap] = useState<Map<
     string,
-    [number, boolean]
+    [string, boolean]
+  > | null>(null);
+  const [softSkillMap, setSoftSkillMap] = useState<Map<
+    string,
+    [string, boolean]
   > | null>(null);
   const url = `http://localhost:8080/api`;
 
   useEffect(() => {
     const loadData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/login");
-        return;
-      }
-
-      const userData = await authFetch(`${url}/user`, {
+      const userData = await authFetch<ProfileData>(`${url}/user`, {
         method: "GET",
       });
 
-      const skills: SkillsResponse | null = await authFetch(
-        `${url}/skills`,
-        {
-          method: "GET",
-        }
-      );
+      const skills = await authFetch<SkillsResponse>(`${url}/skills`, {
+        method: "GET",
+      });
 
-      const userSkills: UserSkillsResponse | null = await authFetch(
+      console.log("These are all the skills");
+      console.log(skills);
+
+      const userSkills = await authFetch<UserSkillsResponse>(
         `${url}/user/skills`,
         {
           method: "GET",
         }
       );
+
+      console.log("These are the user skills");
+      console.log(userSkills);
 
       if (!userData || !skills || !userSkills) {
         router.push("/login");
@@ -73,25 +76,38 @@ const Page = () => {
       }
 
       setProfile({
-        nombre: `${userData.firstName} ${userData.lastName}`,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
         password: userData.password,
-        correo: userData.email,
-        url_foto: "/profile.png",
-        puesto: userData.position || "Front-end Developer",
+        email: userData.email,
+        url_pic: "/profile.png",
+        position: userData.position || "Front-end Developer",
       });
 
       const userTechSkillNames = new Set(
         userSkills.technicalSkills.map((skill) => skill.skillName)
       );
 
-      const skillTechMapping = new Map<string, [number, boolean]>(
+      const skillTechMapping = new Map<string, [string, boolean]>(
         skills.technicalSkills.map((skill) => [
           skill.skillName,
           [skill.skillId, userTechSkillNames.has(skill.skillName)],
         ])
       );
 
+      const userSoftkillNames = new Set(
+        userSkills.softSkills.map((skill) => skill.skillName)
+      );
+
+      const skillSoftMapping = new Map<string, [string, boolean]>(
+        skills.softSkills.map((skill) => [
+          skill.skillName,
+          [skill.skillId, userSoftkillNames.has(skill.skillName)],
+        ])
+      );
+
       setTechSkillMap(skillTechMapping);
+      setSoftSkillMap(skillSoftMapping);
       setLoading(false);
     };
 
@@ -107,40 +123,13 @@ const Page = () => {
   }
 
   return (
-    // <div className="flex flex-col w-full h-full gap-10 px-4 md:px-9">
-    //   <section className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-6">
-    //     <ProfileCardClient profile={profile} />
-    //     <ChargeabilityCard />
-    //   </section>
-
-    //   <section className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-    //     <TechSkillsCard techSkillMap={techSkillMap} url={url} />
-    //     <SoftSkillsCardClient
-    //       allSkills={[
-    //         "Empatía",
-    //         "Comunicación",
-    //         "Resolución de problemas",
-    //         "Liderazgo",
-    //       ]}
-    //       initialSelected={["Empatía", "Comunicación"]}
-    //     />
-    //   </section>
-    // </div>
-
     <div className="mx-auto w-full max-w-[970px]">
       <Breadcrumb pageName="Perfil" />
       <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
-        <PersonalInfoForm
-          userData={{
-            firstName: profile.nombre.split(" ")[0],
-            lastName: profile.nombre.split(" ").slice(1).join(" "),
-            email: profile.correo,
-            position: profile.puesto,
-            url_foto: profile.url_foto,
-          }}
-        />
-        <div className="max-h-auto">
+        <PersonalInfoForm userData={profile} />
+        <div className="max-h-auto flex flex-col gap-5 ">
           <TechSkillsCard techSkillMap={techSkillMap} url={url} />
+          <SoftSkillsCard softSkillMap={softSkillMap} url={url} />
         </div>
       </div>
     </div>
