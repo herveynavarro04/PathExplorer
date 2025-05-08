@@ -1,8 +1,17 @@
-export const authFetch = async (url, options = {}) => {
+import Router from "next/router";
+
+interface FetchOptions extends RequestInit {
+  headers?: HeadersInit;
+}
+
+export const authFetch = async <T = any,>(
+  url: string,
+  options: FetchOptions = {}
+): Promise<T | false> => {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    console.error("Token not found");
+    Router.push("/login");
     return false;
   }
 
@@ -24,7 +33,7 @@ export const authFetch = async (url, options = {}) => {
     }
   } catch (err) {
     console.error("Fetch error:", err);
-    localStorage.removeItem("token"); 
+    localStorage.removeItem("token");
     return false;
   }
 };

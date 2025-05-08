@@ -1,13 +1,18 @@
-'use client';
-import { useState } from 'react';
+"use client";
+
+import { ChangeEvent, useState } from "react";
 
 const PasswordEditor = () => {
-  const [password, setPassword] = useState('********');
-  const [editing, setEditing] = useState(false);
+  const [password, setPassword] = useState<string>("********");
+  const [editing, setEditing] = useState<boolean>(false);
 
-  const handleSave = () => {
-    console.log('New password:', password);
+  const handleSave = (): void => {
+    console.log("New password:", password);
     setEditing(false);
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setPassword(e.target.value);
   };
 
   return (
@@ -18,7 +23,7 @@ const PasswordEditor = () => {
           type="password"
           className="bg-white/10 text-white px-4 py-2 rounded-lg w-full"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChange}
           readOnly={!editing}
         />
         {!editing ? (

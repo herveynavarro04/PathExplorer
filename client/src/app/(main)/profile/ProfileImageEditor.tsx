@@ -1,17 +1,18 @@
-'use client';
-import { useState } from 'react';
+"use client";
+
+import { ChangeEvent, useState } from "react";
 
 const ProfileImageEditor = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleChange = async (e) => {
-    const file = e.target.files[0];
+  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
     setLoading(true);
-    console.log('Selected image:', file.name);
+    console.log("Selected image:", file.name);
 
-    setTimeout(() => setLoading(false), 1500); 
+    setTimeout(() => setLoading(false), 1500);
   };
 
   return (
