@@ -57,10 +57,10 @@ export class UserProjectsService {
     let addedProjects = [];
     let deletedProjects = [];
 
-    if (addProjects) {
+    if (addProjects.length > 0) {
       addedProjects = await this.addUserProjects(userId, addProjects);
     }
-    if (deleteProjects) {
+    if (deleteProjects.length > 0) {
       deletedProjects = await this.deleteUserProjects(userId, deleteProjects);
     }
     return {

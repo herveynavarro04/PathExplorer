@@ -71,10 +71,10 @@ export class UserSkillsService {
     let addedSkills = [];
     let deletedSkills = [];
 
-    if (addSkills) {
+    if (addSkills.length > 0) {
       addedSkills = await this.addUserSkills(userId, addSkills);
     }
-    if (deleteSkills) {
+    if (deleteSkills.length > 0) {
       deletedSkills = await this.deleteUserSkills(userId, deleteSkills);
     }
     return {
