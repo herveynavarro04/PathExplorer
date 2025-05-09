@@ -21,6 +21,46 @@ export class UserProjectsService {
     private dBHelperService: DatabaseHelperService,
   ) {}
 
+  async getUserAvailableProjects(
+    userId: string,
+  ): Promise<GetUserProjectsResponseDto> {
+    try {
+      const subscribedProjectIds = await this.getSubscribedProjectIds(userId);
+      const availableProjects = await this.dBHelperService.selectMany(
+        'project',
+        { active: true, full: false },
+        undefined,
+        undefined,
+        'projectId',
+        subscribedProjectIds,
+        ['projectId', 'projectName', 'information', 'active'],
+      );
+      Logger.log('User available projects fetched', 'UserProjectsService');
+      const userProjects: ProjectInfoPreviewResponseDto[] =
+        availableProjects.map((project) => ({
+          projectId: project.projectId,
+          projectName: project.projectName,
+          information: project.information,
+          active: project.active,
+        }));
+      return {
+        projects: userProjects,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during available projects fetching',
+        error.stack,
+        'UserProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to fetch user available projects',
+      );
+    }
+  }
+
   async getUserProjects(userId: string): Promise<GetUserProjectsResponseDto> {
     try {
       const user = await this.usersRepository.findOne({
@@ -28,10 +68,10 @@ export class UserProjectsService {
         relations: ['projects'],
       });
       if (!user) {
-        Logger.warn('User not found', 'UserService');
+        Logger.warn('User not found', 'UserProjectsService');
         throw new NotFoundException('User not found');
       }
-      Logger.log('User projects fetched', 'UserService');
+      Logger.log('User projects fetched', 'UserProjectsService');
       const userProjects: ProjectInfoPreviewResponseDto[] = user.projects.map(
         (project) => ({
           projectId: project.projectId,
@@ -50,7 +90,7 @@ export class UserProjectsService {
       Logger.error(
         'Error during delete transaction',
         error.stack,
-        'UserService',
+        'UserProjectsService',
       );
       throw new InternalServerErrorException('Failed to fetch user projects');
     }
@@ -77,6 +117,31 @@ export class UserProjectsService {
       deletedProjects: deletedProjects,
       lastUpdate: new Date(),
     };
+  }
+
+  private async getSubscribedProjectIds(userId: string): Promise<string[]> {
+    try {
+      const subscribedProjects = await this.dBHelperService.selectMany(
+        'project_user',
+        { userid: userId },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        ['id_project'],
+      );
+
+      return subscribedProjects.map((p) => p.id_project);
+    } catch (error) {
+      Logger.error(
+        'Error fetching subscribed project IDs for userId',
+        error.stack,
+        'UserProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to fetch subscribed project IDs',
+      );
+    }
   }
 
   private async addUserProjects(userId: string, addProjects: string[]) {

@@ -38,6 +38,21 @@ export class UserEntity {
   })
   skills: SkillsEntity[];
 
+  @ManyToMany(() => SkillsEntity, (skill) => skill.user)
+  @IsOptional()
+  @JoinTable({
+    name: 'user_interests',
+    joinColumn: {
+      name: 'userid',
+      referencedColumnName: 'userId',
+    },
+    inverseJoinColumn: {
+      name: 'id_skill',
+      referencedColumnName: 'skillId',
+    },
+  })
+  interests: SkillsEntity[];
+
   @ManyToMany(() => ProjectsEntity, (projets) => projets.user)
   @IsOptional()
   @JoinTable({

@@ -6,11 +6,11 @@ import { UpdateUserProjectsResponseDto } from '../dto/response/updateUserProject
 import { UserProjectsService } from '../services/userProjects.service';
 import { GetUserProjectsResponseDto } from '../dto/response/getUser.response.dto';
 
-@Controller('user')
+@Controller('user/projects')
 export class UserProjectsController {
   constructor(private userProjectsService: UserProjectsService) {}
 
-  @Get('projects')
+  @Get()
   @UseGuards(JwtGuard)
   async getUserProjects(
     @Req() req: Request,
@@ -19,7 +19,16 @@ export class UserProjectsController {
     return this.userProjectsService.getUserProjects(userId);
   }
 
-  @Patch('projects')
+  @Get('/available')
+  @UseGuards(JwtGuard)
+  async getUserAvailableProjects(
+    @Req() req: Request,
+  ): Promise<GetUserProjectsResponseDto> {
+    const userId = req.user['userId'];
+    return this.userProjectsService.getUserAvailableProjects(userId);
+  }
+
+  @Patch()
   @UseGuards(JwtGuard)
   async updateUserProjects(
     @Body() updatePayload: UpdateUserProjectsRequestDto,

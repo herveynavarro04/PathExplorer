@@ -1,9 +1,11 @@
-import { IsArray } from 'class-validator';
+import { IsArray, IsOptional } from 'class-validator';
 
 export class SkillsResponseDto {
   @IsArray()
-  technicalSkills: object[];
+  @IsOptional()
+  technicalSkills?: object[];
 
   @IsArray()
-  softSkills: object[];
+  @IsOptional()
+  softSkills?: object[];
 }
