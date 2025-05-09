@@ -43,15 +43,17 @@ export class DatabaseHelperService {
   async selectMany(
     tableName: string,
     conditions: Record<string, any> = {},
-    whereInKey?: string,
-    whereInValues?: string[],
+    includeInKey?: string,
+    includeInValues?: string[],
+    excludeInKey?: string,
+    excludeInValues?: string[],
     selectColumns?: string[],
   ) {
     const query = this.dataSource
       .createQueryBuilder()
       .select(
         selectColumns?.length
-          ? selectColumns.map((col) => `${tableName}.${col}`)
+          ? selectColumns.map((col) => `${tableName}.${col} AS "${col}"`)
           : undefined,
       )
       .from(tableName, tableName);
@@ -60,10 +62,19 @@ export class DatabaseHelperService {
       query.andWhere(`${tableName}.${key} = :${key}`, { [key]: value });
     });
 
-    if (whereInKey && whereInValues?.length) {
-      query.andWhere(`${tableName}.${whereInKey} IN (:...ids)`, {
-        ids: whereInValues,
+    if (includeInKey && includeInValues?.length) {
+      query.andWhere(`${tableName}.${includeInKey} IN (:...includeValues)`, {
+        includeValues: includeInValues,
       });
+    }
+
+    if (excludeInKey && excludeInValues?.length) {
+      query.andWhere(
+        `${tableName}.${excludeInKey} NOT IN (:...excludeValues)`,
+        {
+          excludeValues: excludeInValues,
+        },
+      );
     }
 
     return query.getRawMany();

@@ -6,24 +6,44 @@ import { UpdateUserSkillsResponseDto } from '../dto/response/postUserSkills.resp
 import { Request } from 'express';
 import { UserSkillsService } from '../services/userSkills.service';
 
-@Controller('user')
+@Controller('user/skills')
 export class UserSkillsController {
   constructor(private userSkillsService: UserSkillsService) {}
 
-  @Get('skills')
+  @Get()
   @UseGuards(JwtGuard)
   async getUserSkills(@Req() req: Request): Promise<SkillsResponseDto> {
     const userId = req.user['userId'];
     return this.userSkillsService.getUserSkills(userId);
   }
 
-  @Patch('skills')
+  @Patch()
   @UseGuards(JwtGuard)
-  async postUserSkills(
+  async patchUserSkills(
     @Body() updateSkillsPayload: UpdateUserSkillsRequestDto,
     @Req() req: Request,
   ): Promise<UpdateUserSkillsResponseDto> {
     const userId = req.user['userId'];
     return this.userSkillsService.updateUserSkills(userId, updateSkillsPayload);
+  }
+
+  @Get('/interests')
+  @UseGuards(JwtGuard)
+  async getUserInterests(@Req() req: Request): Promise<SkillsResponseDto> {
+    const userId = req.user['userId'];
+    return this.userSkillsService.getUserSkillsInterests(userId);
+  }
+
+  @Patch('/interests')
+  @UseGuards(JwtGuard)
+  async patchUserSkillsInterests(
+    @Body() updateSkillsPayload: UpdateUserSkillsRequestDto,
+    @Req() req: Request,
+  ): Promise<UpdateUserSkillsResponseDto> {
+    const userId = req.user['userId'];
+    return this.userSkillsService.updateUserSkillsInterests(
+      userId,
+      updateSkillsPayload,
+    );
   }
 }
