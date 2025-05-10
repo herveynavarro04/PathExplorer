@@ -85,54 +85,58 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
   };
 
   return (
-    <ShowcaseSection title="Habilidades Técnicas" className="!p-7">
-      <div className="flex flex-col gap-5">
-        {isEditing && (
-          <div className="relative">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar habilidad"
-              className="w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary"
-            />
-            {searchTerm && (
-              <div className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
-                {filteredSkills.slice(0, 10).map((skill) => (
-                  <div
-                    key={skill}
-                    className="cursor-pointer px-4 py-2 hover:bg-gray-2 dark:hover:bg-gray-7"
-                    onClick={() => addSkill(skill)}
-                  >
-                    {skill}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        <div className="flex flex-wrap gap-2.5">
-          {selectedTechSkills.map((skill) => (
-            <span
-              key={skill}
-              className="flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
-            >
-              {skill}
-              {isEditing && (
-                <button
-                  type="button"
-                  onClick={() => removeSkill(skill)}
-                  className="text-gray-500 hover:text-red"
+    <ShowcaseSection title="Habilidades Técnicas" className="!p-7 h-[13rem] ">
+      <div className="flex flex-col justify-between h-full">
+        
+        <div className="relative">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar habilidad"
+            disabled={!isEditing}
+            className={`w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary ${
+              !isEditing ? 'opacity-60 cursor-not-allowed' : ''
+            }`}
+          />
+          {isEditing && searchTerm && (
+            <div className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
+              {filteredSkills.slice(0, 10).map((skill) => (
+                <div
+                  key={skill}
+                  className="cursor-pointer px-4 py-2 hover:bg-gray-2 dark:hover:bg-gray-7"
+                  onClick={() => addSkill(skill)}
                 >
-                  ×
-                </button>
-              )}
-            </span>
-          ))}
+                  {skill}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="flex justify-end pt-2">
+        <div className="flex flex-col flex-grow">
+          <div className="flex flex-wrap items-start gap-2.5 overflow-y-auto pr-1 pt-1 h-[5rem]">
+            {selectedTechSkills.map((skill) => (
+              <span
+                key={skill}
+                className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
+              >
+                {skill}
+                {isEditing && (
+                  <button
+                    type="button"
+                    onClick={() => removeSkill(skill)}
+                    className="text-gray-500 hover:text-red"
+                  >
+                    ×
+                  </button>
+                )}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-end pt-1">
           {isEditing ? (
             <button
               type="button"
