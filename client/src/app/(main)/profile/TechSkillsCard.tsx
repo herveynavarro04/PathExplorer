@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { authFetch } from "@utils/authFetch";
-import { ShowcaseSection } from "components/Layouts/showcase-section";
+import { ShowcaseSectionSkill } from "components/Layouts/showcase-skill";
 
 type TechSkillsCardProps = {
   techSkillMap: Map<string, [string, boolean]>;
@@ -85,37 +85,65 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
   };
 
   return (
-    <ShowcaseSection title="Habilidades Técnicas" className="!p-7 h-[13rem] ">
+    <ShowcaseSectionSkill
+      title="Habilidades Técnicas"
+      className="!p-7 h-[11rem]"
+      action={
+        isEditing ? (
+          <button
+            type="button"
+            onClick={() => {
+              setTriggerSave((prev) => !prev);
+              setIsEditing(false);
+            }}
+            className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-white hover:bg-opacity-90"
+          >
+            Guardar
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsEditing(true)}
+            className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75 transition-colors"
+          >
+            Editar
+          </button>
+        )
+      }
+    >
       <div className="flex flex-col justify-between h-full">
-        
-        <div className="relative">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar habilidad"
-            disabled={!isEditing}
-            className={`w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary ${
-              !isEditing ? 'opacity-60 cursor-not-allowed' : ''
-            }`}
-          />
-          {isEditing && searchTerm && (
-            <div className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
-              {filteredSkills.slice(0, 10).map((skill) => (
-                <div
-                  key={skill}
-                  className="cursor-pointer px-4 py-2 hover:bg-gray-2 dark:hover:bg-gray-7"
-                  onClick={() => addSkill(skill)}
-                >
-                  {skill}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
+  
+        {isEditing && (
+          <div className="relative">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar habilidad"
+              className="w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary"
+            />
+            {searchTerm && (
+              <div className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
+                {filteredSkills.slice(0, 10).map((skill) => (
+                  <div
+                    key={skill}
+                    className="cursor-pointer px-4 py-2 hover:bg-gray-2 dark:hover:bg-gray-7"
+                    onClick={() => addSkill(skill)}
+                  >
+                    {skill}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+  
         <div className="flex flex-col flex-grow">
-          <div className="flex flex-wrap items-start gap-2.5 overflow-y-auto pr-1 pt-1 h-[5rem]">
+        <div
+  className={`flex flex-wrap items-start gap-2.5 overflow-y-auto pr-1 pt-1  ${
+    isEditing ? "h-[5rem]" : "h-[8rem]"
+  }`}
+>
             {selectedTechSkills.map((skill) => (
               <span
                 key={skill}
@@ -135,32 +163,10 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
             ))}
           </div>
         </div>
-
-        <div className="flex justify-end pt-1">
-          {isEditing ? (
-            <button
-              type="button"
-              onClick={() => {
-                setTriggerSave((prev) => !prev);
-                setIsEditing(false);
-              }}
-              className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-white hover:bg-opacity-90"
-            >
-              Guardar
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setIsEditing(true)}
-              className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75 transition-colors"
-            >
-              Editar
-            </button>
-          )}
-        </div>
       </div>
-    </ShowcaseSection>
+    </ShowcaseSectionSkill>
   );
+  
 };
 
 export default TechSkillsCard;
