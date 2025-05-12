@@ -1,0 +1,161 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { ShowcaseSectionSkill } from 'components/Layouts/showcase-skill';
+
+type TechInterestsCardProps = {
+  interestMap: Map<string, [string, boolean]>;
+  url: string;
+};
+
+const TechInterestsCard = ({ interestMap, url }: TechInterestsCardProps) => {
+  const [selectedTechInterests, setSelectedTechInterests] = useState<string[]>([]);
+  const [allTechInterests, setAllTechInterests] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [addInterests, setAddInterests] = useState<string[]>([]);
+  const [deleteInterests, setDeleteInterests] = useState<string[]>([]);
+  const [triggerSave, setTriggerSave] = useState<boolean>(false);
+
+  const MAX_INTERESTS = 20;
+
+  useEffect(() => {
+    const selected: string[] = [];
+    const all: string[] = [];
+
+    interestMap.forEach(([_, isSelected], skillName) => {
+      all.push(skillName);
+      if (isSelected) selected.push(skillName);
+    });
+
+    setSelectedTechInterests(selected);
+    setAllTechInterests(all);
+  }, [interestMap]);
+
+  useEffect(() => {
+    const patchData = async () => {
+      if (!triggerSave) return;
+
+      try {
+        // await authFetch(`${url}/user/interests`, {
+        //   method: "PATCH",
+        //   body: JSON.stringify({ addSkills: addInterests, deleteSkills: deleteInterests }),
+        // });
+        setIsEditing(false);
+      } catch (error) {
+        console.error('Failed to update interests:', error);
+      }
+
+      console.log('Interests to add:', addInterests);
+      console.log('Interests to delete:', deleteInterests);
+
+      setAddInterests([]);
+      setDeleteInterests([]);
+      setTriggerSave(false);
+    };
+
+    patchData();
+  }, [triggerSave]);
+
+  const filteredInterests = allTechInterests.filter(
+    (skill) =>
+      skill.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !selectedTechInterests.includes(skill)
+  );
+
+  const addInterest = (skill: string) => {
+    if (selectedTechInterests.length >= MAX_INTERESTS) return;
+    setSelectedTechInterests([...selectedTechInterests, skill]);
+    setAddInterests([...addInterests, interestMap.get(skill)![0]]);
+    setSearchTerm('');
+  };
+
+  const removeInterest = (skill: string) => {
+    setSelectedTechInterests(selectedTechInterests.filter((s) => s !== skill));
+    setDeleteInterests([...deleteInterests, interestMap.get(skill)![0]]);
+  };
+
+  return (
+    <ShowcaseSectionSkill
+      title="Intereses Técnicos"
+      className="!p-7 h-[11rem]"
+      action={
+        isEditing ? (
+          <button
+            type="button"
+            onClick={() => {
+              setTriggerSave((prev) => !prev);
+              setIsEditing(false);
+            }}
+            className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-white hover:bg-opacity-90"
+          >
+            Guardar
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsEditing(true)}
+            className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75 transition-colors"
+          >
+            Editar
+          </button>
+        )
+      }
+    >
+      <div className="flex flex-col justify-between h-full">
+        {isEditing && (
+          <div className="relative">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar habilidad"
+              className="w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary"
+            />
+            {searchTerm && (
+              <div className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
+                {filteredInterests.slice(0, 10).map((skill) => (
+                  <div
+                    key={skill}
+                    className="cursor-pointer px-4 py-2 hover:bg-gray-2 dark:hover:bg-gray-7"
+                    onClick={() => addInterest(skill)}
+                  >
+                    {skill}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="flex flex-col flex-grow">
+          <div
+            className={`flex flex-wrap items-start gap-2.5 overflow-y-auto pr-1 pt-1 ${
+              isEditing ? 'h-[5rem]' : 'h-[8rem]'
+            }`}
+          >
+            {selectedTechInterests.map((skill) => (
+              <span
+                key={skill}
+                className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
+              >
+                {skill}
+                {isEditing && (
+                  <button
+                    type="button"
+                    onClick={() => removeInterest(skill)}
+                    className="text-gray-500 hover:text-red"
+                  >
+                    ×
+                  </button>
+                )}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </ShowcaseSectionSkill>
+  );
+};
+
+export default TechInterestsCard;
