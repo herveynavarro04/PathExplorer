@@ -1,56 +1,93 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
-
+import React, { useEffect, useRef, useState } from "react";
+import { authFetch } from "@utils/authFetch";
+import ReactDOM from "react-dom";
+import { useRouter } from "next/navigation";
 
 interface ProyectoModalProps {
-  proyecto: any; 
+  projectId: string;
+  projectTech: string[];
   onClose: () => void;
   onApply: (projectId: string) => void;
-  appliedProjects: string[];
+  addProjects: string[];
 }
 
-const ProyectoModal: React.FC<ProyectoModalProps> = ({ proyecto, onClose, onApply, appliedProjects }) => {
+export interface ProjectInfoResponseDto {
+  projectId: string;
+  projectName: string;
+  startDate: string;
+  endDate: string;
+  projectType: string;
+  client: string;
+  active: boolean;
+  information: string;
+  manager: string;
+}
+
+const ProyectoModal = ({
+  projectId,
+  projectTech,
+  onClose,
+  onApply,
+  addProjects,
+}: ProyectoModalProps) => {
   const modalRef = useRef(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [project, setProject] = useState<ProjectInfoResponseDto | null>(null);
+  const url = `http://localhost:8080/api`;
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [fadeIn, setFadeIn] = useState(false);
 
-  //aqui se puede hacer la petición post de aplicar
-//   const handleApply = (projectId: string) => {
-//     console.log("Aplicando al proyecto:", projectId);
-//     // por ejemplo: authFetch(`/api/projects/${projectId}/apply`, { method: 'POST' })
-//   };
+  if (!projectId) return null;
 
-  if (!proyecto) return null;
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    const loadData = async () => {
+      try {
+        const projectData = await authFetch<ProjectInfoResponseDto>(
+          `${url}/projects/${projectId}`
+        );
+
+        if (!projectData) {
+          router.push("/login");
+          return;
+        }
+
+        setProject(projectData);
+        setLoading(false);
+      } catch (err) {
+        console.error("Unexpected fetch error:", err);
+        router.push("/login");
+      }
+    };
+
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      const timer = setTimeout(() => setFadeIn(true), 10);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
   const formatearFecha = (fecha: string) => {
     try {
       const date = new Date(fecha);
-      return new Intl.DateTimeFormat('es-ES', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
+      return new Intl.DateTimeFormat("es-ES", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
       }).format(date);
     } catch {
-      return 'Fecha no disponible';
+      return "Fecha no disponible";
     }
   };
-
-  const state = proyecto.active ? 'Vigente' : 'Finalizado';
-  const colorstate = proyecto.active
-    ? 'bg-green-200 text-green-800'
-    : 'bg-red-200 text-red-800';
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        closeAnimation();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const closeAnimation = () => {
     setIsVisible(false);
@@ -59,83 +96,111 @@ const ProyectoModal: React.FC<ProyectoModalProps> = ({ proyecto, onClose, onAppl
     }, 0);
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (modalRef.current && !(modalRef.current as any).contains(event.target)) {
+      closeAnimation();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  if (!project) return null;
+
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 transition-opacity backdrop-blur-sm">
-  <div
-    ref={modalRef}
-    className={`bg-[#f3e8ff] text-[#2b2b2b] rounded-3xl p-8 pb-3 max-w-3xl w-full relative shadow-xl transition-all duration-300 ease-in-out ${
-      isVisible ? 'animate-fadeInModal' : 'animate-fadeOutModal'
-    }`}
-  >
-    <button
-      onClick={closeAnimation}
-      className="absolute top-4 right-4 text-lg font-bold bg-[#e0cfe6] hover:bg-[#d1c0db] text-[#4B0082] rounded-full w-8 h-8 flex items-center justify-center transition"
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-sm transition-opacity duration-500 ${
+        fadeIn ? "opacity-100" : "opacity-0"
+      }`}
     >
-      ✕
-    </button>
-
-    <h2 className="text-2xl font-semibold mb-4 border-b border-[#d7bff1] pb-2">
-      {proyecto.projectName}
-    </h2>
-
-    <p className="mb-6 text-[#4b3b61] leading-relaxed">
-      {proyecto.information}
-    </p>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-      <div>
-        <h3 className="text-lg font-medium mb-2">Stack de tecnologías</h3>
-        <div className="flex flex-wrap gap-2">
-          {proyecto.technologies.map((tech: string, idx: number) => (
-            <span
-              key={idx}
-              className="bg-white text-[#4b3b61] px-3 py-1 rounded-full border border-[#e5d6f1] text-sm"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="space-y-2 text-sm">
-        <p><strong>Inicio:</strong> {formatearFecha(proyecto.startDate)}</p>
-        <p><strong>Fin:</strong> {formatearFecha(proyecto.endDate)}</p>
-        <p><strong>Administrador:</strong> {proyecto.manager || 'N/A'}</p>
-        <p><strong>Cliente:</strong> {proyecto.client}</p>
-        <p><strong>Tipo:</strong> {proyecto.projectType}</p>
-        <div
-          className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold ${
-            proyecto.active
-              ? 'bg-green-100 text-green-800'
-              : 'bg-red-100 text-red-800'
-          }`}
+      <div
+        ref={modalRef}
+        className={`bg-[#f3e8ff] text-[#2b2b2b] rounded-3xl p-8 pb-3 max-w-3xl w-full relative shadow-xl transition-all duration-300 ease-in-out ${
+          isVisible ? "animate-fadeInModal" : "animate-fadeOutModal"
+        }`}
+      >
+        <button
+          onClick={closeAnimation}
+          className="absolute top-4 right-4 text-lg font-bold bg-[#e0cfe6] hover:bg-[#d1c0db] text-[#4B0082] rounded-full w-8 h-8 flex items-center justify-center transition"
         >
-          {state}
+          ✕
+        </button>
+
+        <h2 className="text-2xl font-semibold mb-4 border-b border-[#d7bff1] pb-2">
+          {project.projectName}
+        </h2>
+
+        <p className="mb-6 text-[#4b3b61] leading-relaxed">
+          {project.information}
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <h3 className="text-lg font-medium mb-2">Stack de tecnologías</h3>
+            <div className="flex flex-wrap gap-2">
+              {projectTech.map((tech, index) => (
+                <span
+                  key={index}
+                  className="bg-white text-[#4b3b61] px-3 py-1 rounded-full border border-[#e5d6f1] text-sm"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2 text-sm">
+            <p>
+              <strong>Inicio:</strong> {formatearFecha(project.startDate)}
+            </p>
+            <p>
+              <strong>Fin:</strong> {formatearFecha(project.endDate)}
+            </p>
+            <p>
+              <strong>Administrador:</strong> {project.manager || "N/A"}
+            </p>
+            <p>
+              <strong>Cliente:</strong> {project.client}
+            </p>
+            <p>
+              <strong>Tipo:</strong> {project.projectType}
+            </p>
+            <div
+              className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold ${
+                project.active
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
+              }`}
+            >
+              {project.active ? "Vigente" : "Finalizado"}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          {addProjects.includes(project.projectId) ? (
+            <button
+              onClick={() => onApply(project.projectId)}
+              className="bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-2 rounded-lg transition"
+            >
+              Cancelar aplicación
+            </button>
+          ) : (
+            <button
+              onClick={() => onApply(project.projectId)}
+              className="bg-[#65417f] hover:bg-[#5a366e] text-white font-medium px-6 py-2 rounded-lg transition"
+            >
+              Aplicar al proyecto
+            </button>
+          )}
         </div>
       </div>
-    </div>
-    <div className="flex justify-end">
-        {appliedProjects?.includes(proyecto.projectId) ? (
-
-            <button
-            onClick={() => onApply(proyecto.projectId)}
-            className="bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-2 rounded-lg transition"
-            >
-            Cancelar aplicación
-            </button>
-        ) : (
-            <button
-            onClick={() => onApply(proyecto.projectId)}
-            className="bg-[#65417f] hover:bg-[#5a366e] text-white font-medium px-6 py-2 rounded-lg transition"
-            >
-            Aplicar al proyecto
-            </button>
-        )}
-        </div>
-  </div>
-</div>,
-document.body
-
+    </div>,
+    document.body
   );
 };
 
