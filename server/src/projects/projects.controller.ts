@@ -1,17 +1,28 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { ProjectsResponseDto } from './dto/response/projects.response.dto';
 import { ProjectsInfoResponseDto } from './dto/response/projectsInfo.response.dto';
+import { Request } from 'express';
+import { GetProjectsTechResponseDto } from './dto/response/getProjectsTech.response.dto';
 
 @Controller('projects')
 export class ProjectsController {
   constructor(private projectsService: ProjectsService) {}
 
-  @Get()
+  @Get('available')
   @UseGuards(JwtGuard)
-  async getAvailableProjects(): Promise<ProjectsResponseDto> {
-    return this.projectsService.getAvailableProjects();
+  async getAvailableProjects(
+    @Req() req: Request,
+  ): Promise<ProjectsResponseDto> {
+    const userId = req.user['userId'];
+    return this.projectsService.getAvailableProjects(userId);
+  }
+
+  @Get('techs')
+  @UseGuards(JwtGuard)
+  async getProjectsTech(): Promise<GetProjectsTechResponseDto> {
+    return this.projectsService.getProjectsTech();
   }
 
   @Get(':projectId')

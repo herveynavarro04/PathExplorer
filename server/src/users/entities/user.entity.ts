@@ -30,7 +30,10 @@ export class UserEntity {
   @Column({ name: 'lastname' })
   lastName: string;
 
-  @ManyToMany(() => SkillsEntity, (skill) => skill.user)
+  @ManyToMany(() => SkillsEntity, (skill) => skill.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @IsOptional()
   @JoinTable({
     name: 'user_skills',
@@ -45,7 +48,10 @@ export class UserEntity {
   })
   skills: SkillsEntity[];
 
-  @ManyToMany(() => SkillsEntity, (skill) => skill.user)
+  @ManyToMany(() => SkillsEntity, (skill) => skill.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @IsOptional()
   @JoinTable({
     name: 'user_interests',
@@ -60,6 +66,9 @@ export class UserEntity {
   })
   interests: SkillsEntity[];
 
-  @OneToMany(() => ProjectUserEntity, (link) => link.user)
-  projectLinks: ProjectUserEntity[];
+  @OneToMany(() => ProjectUserEntity, (link) => link.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  projectUserLink: ProjectUserEntity[];
 }

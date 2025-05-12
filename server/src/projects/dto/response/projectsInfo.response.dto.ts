@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { TechDto } from 'src/common/dto/tech.dto';
 
 export class ProjectsInfoResponseDto {
   @IsString()
@@ -55,5 +56,5 @@ export class ProjectsInfoResponseDto {
 
   @IsArray()
   @IsNotEmpty()
-  technologies: string[];
+  technologies: TechDto[];
 }

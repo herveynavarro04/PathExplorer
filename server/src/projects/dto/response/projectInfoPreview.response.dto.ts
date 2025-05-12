@@ -1,4 +1,5 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { TechDto } from 'src/common/dto/tech.dto';
 export class ProjectInfoPreviewResponseDto {
   @IsString()
   @IsNotEmpty()
@@ -12,7 +13,7 @@ export class ProjectInfoPreviewResponseDto {
   @IsNotEmpty()
   information: string;
 
-  @IsBoolean()
-  @IsOptional()
-  active?: boolean;
+  @IsArray()
+  @IsNotEmpty()
+  technologies?: TechDto[];
 }
