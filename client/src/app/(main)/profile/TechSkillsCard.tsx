@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { authFetch } from "@utils/authFetch";
-import { ShowcaseSection } from "components/Layouts/showcase-section";
+import { ShowcaseSectionSkill } from "components/Layouts/showcase-skill";
 
 type TechSkillsCardProps = {
   techSkillMap: Map<string, [string, boolean]>;
@@ -85,8 +85,34 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
   };
 
   return (
-    <ShowcaseSection title="Habilidades Técnicas" className="!p-7">
-      <div className="flex flex-col gap-5">
+    <ShowcaseSectionSkill
+      title="Habilidades Técnicas"
+      className="!p-7 h-[11rem]"
+      action={
+        isEditing ? (
+          <button
+            type="button"
+            onClick={() => {
+              setTriggerSave((prev) => !prev);
+              setIsEditing(false);
+            }}
+            className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-white hover:bg-opacity-90"
+          >
+            Guardar
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsEditing(true)}
+            className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75 transition-colors"
+          >
+            Editar
+          </button>
+        )
+      }
+    >
+      <div className="flex flex-col justify-between h-full">
+  
         {isEditing && (
           <div className="relative">
             <input
@@ -111,52 +137,36 @@ const TechSkillsCard = ({ techSkillMap, url }: TechSkillsCardProps) => {
             )}
           </div>
         )}
-
-        <div className="flex flex-wrap gap-2.5">
-          {selectedTechSkills.map((skill) => (
-            <span
-              key={skill}
-              className="flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
-            >
-              {skill}
-              {isEditing && (
-                <button
-                  type="button"
-                  onClick={() => removeSkill(skill)}
-                  className="text-gray-500 hover:text-red"
-                >
-                  ×
-                </button>
-              )}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex justify-end pt-2">
-          {isEditing ? (
-            <button
-              type="button"
-              onClick={() => {
-                setTriggerSave((prev) => !prev);
-                setIsEditing(false);
-              }}
-              className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-white hover:bg-opacity-90"
-            >
-              Guardar
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setIsEditing(true)}
-              className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75 transition-colors"
-            >
-              Editar
-            </button>
-          )}
+  
+        <div className="flex flex-col flex-grow">
+        <div
+  className={`flex flex-wrap items-start gap-2.5 overflow-y-auto pr-1 pt-1  ${
+    isEditing ? "h-[5rem]" : "h-[8rem]"
+  }`}
+>
+            {selectedTechSkills.map((skill) => (
+              <span
+                key={skill}
+                className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
+              >
+                {skill}
+                {isEditing && (
+                  <button
+                    type="button"
+                    onClick={() => removeSkill(skill)}
+                    className="text-gray-500 hover:text-red"
+                  >
+                    ×
+                  </button>
+                )}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
-    </ShowcaseSection>
+    </ShowcaseSectionSkill>
   );
+  
 };
 
 export default TechSkillsCard;
