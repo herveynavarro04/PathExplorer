@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectsEntity } from './entities/projects.entity';
-import { Repository } from 'typeorm';
-import { ProjectsResponseDto } from './dto/response/projects.response.dto';
+import { In, Not, Repository } from 'typeorm';
 import { ProjectsInfoResponseDto } from './dto/response/projectsInfo.response.dto';
 import { TechDto } from 'src/common/dto/tech.dto';
 import { DatabaseHelperService } from 'src/common/helpers/dataBase.helper';
 import { GetProjectsTechResponseDto } from './dto/response/getProjectsTech.response.dto';
+import { ProjectsResponseDto } from './dto/response/projects.response.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -21,27 +21,64 @@ export class ProjectsService {
     private dBHelperService: DatabaseHelperService,
   ) {}
 
-  async getAvailableProjects(): Promise<ProjectsResponseDto> {
+  async getAvailableProjects(userId: string): Promise<ProjectsResponseDto> {
     try {
+      const subscribedProjectIds = await this.getSubscribedProjectIds(userId);
       const projects = await this.projectsRepository.find({
-        where: { active: true, full: false },
+        where: {
+          active: true,
+          full: false,
+          projectId: Not(In(subscribedProjectIds)),
+        },
+        relations: ['technologies'],
         select: ['projectId', 'projectName', 'information'],
       });
-      Logger.log('Projects fetched!', 'ProjectService');
-      return {
-        availableProjects: projects.map((project) => ({
-          projectId: project.projectId,
-          projectName: project.projectName,
-          information: project.information,
+
+      const userProjects = projects.map((project) => ({
+        projectId: project.projectId,
+        projectName: project.projectName,
+        information: project.information,
+        technologies: project.technologies.map((tech) => ({
+          technologyId: tech.technologyId,
+          technologyName: tech.technologyName,
         })),
-      };
+      }));
+
+      return { availableProjects: userProjects };
     } catch (error) {
       Logger.error(
-        'Error during projects fetching',
+        'Error fetching available projects',
         error.stack,
-        'ProjectService',
+        'ProjectsService',
       );
-      throw new InternalServerErrorException('Failed to get projects');
+      throw new InternalServerErrorException(
+        'Failed to fetch available projects',
+      );
+    }
+  }
+
+  private async getSubscribedProjectIds(userId: string): Promise<string[]> {
+    try {
+      const subscribedProjects = await this.dBHelperService.selectMany(
+        'project_user',
+        { userid: userId },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        ['id_project'],
+      );
+
+      return subscribedProjects.map((p) => p.id_project);
+    } catch (error) {
+      Logger.error(
+        'Error fetching subscribed project IDs',
+        error.stack,
+        'ProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to fetch subscribed project IDs',
+      );
     }
   }
 
@@ -59,8 +96,8 @@ export class ProjectsService {
 
       const projectTechnologies: TechDto[] = project.technologies.map(
         (tech) => ({
-          techId: tech.technologyId,
-          techName: tech.technologyName,
+          technologyId: tech.technologyId,
+          technologyName: tech.technologyName,
         }),
       );
 
@@ -101,8 +138,8 @@ export class ProjectsService {
 
       Logger.log('All projects techs fetched', 'ProjectsService');
       const projectsTechs: TechDto[] = availableTechs.map((techs) => ({
-        techId: techs.id_technology,
-        techName: techs.technology_name,
+        technologyId: techs.id_technology,
+        technologyName: techs.technology_name,
       }));
 
       return {

@@ -3,9 +3,9 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class TechDto {
   @IsString()
   @IsNotEmpty()
-  techId: string;
+  technologyId: string;
 
   @IsString()
   @IsNotEmpty()
-  techName: string;
+  technologyName: string;
 }

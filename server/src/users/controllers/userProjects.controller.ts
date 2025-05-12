@@ -19,15 +19,6 @@ export class UserProjectsController {
     return this.userProjectsService.getUserProjects(userId);
   }
 
-  @Get('/available')
-  @UseGuards(JwtGuard)
-  async getUserAvailableProjects(
-    @Req() req: Request,
-  ): Promise<GetUserProjectsResponseDto> {
-    const userId = req.user['userId'];
-    return this.userProjectsService.getUserAvailableProjects(userId);
-  }
-
   @Patch()
   @UseGuards(JwtGuard)
   async updateUserProjects(

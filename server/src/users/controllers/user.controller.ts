@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Req,
   UseGuards,
@@ -12,7 +13,6 @@ import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { Request } from 'express';
 import { UserInfoResponseDto } from '../dto/response/userInfo.response.dto';
 import { UserUpdateRequestDto } from '../dto/request/userUpdate.request.dto';
-import { DeleteUserRequestDto } from '../dto/request/deleteUser.request.dto';
 import { DeleteUserResponseDto } from '../dto/response/deleteUser.response.dto';
 import { UpdateUserResponseDto } from '../dto/response/updateUser.response.dto';
 
@@ -37,11 +37,11 @@ export class UserController {
     return this.userService.updateUser(userId, updatePayload);
   }
 
-  @Delete()
+  @Delete(':userId')
   @UseGuards(JwtGuard)
   async deleteUser(
-    @Body() userPayload: DeleteUserRequestDto,
+    @Param('userId') userId: string,
   ): Promise<DeleteUserResponseDto> {
-    return this.userService.deleteUser(userPayload.userId);
+    return this.userService.deleteUser(userId);
   }
 }
