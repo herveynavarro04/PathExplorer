@@ -2,19 +2,23 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectsEntity } from './entities/projects.entity';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ProjectsResponseDto } from './dto/response/projects.response.dto';
 import { ProjectsInfoResponseDto } from './dto/response/projectsInfo.response.dto';
+import { TechDto } from 'src/common/dto/tech.dto';
+import { DatabaseHelperService } from 'src/common/helpers/dataBase.helper';
+import { GetProjectsTechResponseDto } from './dto/response/getProjectsTech.response.dto';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectRepository(ProjectsEntity)
     private projectsRepository: Repository<ProjectsEntity>,
-    private readonly dataSource: DataSource,
+    private dBHelperService: DatabaseHelperService,
   ) {}
 
   async getAvailableProjects(): Promise<ProjectsResponseDto> {
@@ -45,9 +49,21 @@ export class ProjectsService {
     try {
       const project = await this.projectsRepository.findOne({
         where: { projectId },
+        relations: ['technologies'],
       });
 
-      const projectTechnologies = await this.getProjectTechnologies(projectId);
+      if (!project) {
+        Logger.warn(`Project with ID ${projectId} not found`, 'ProjectService');
+        throw new NotFoundException(`Project with ID ${projectId} not found`);
+      }
+
+      const projectTechnologies: TechDto[] = project.technologies.map(
+        (tech) => ({
+          techId: tech.technologyId,
+          techName: tech.technologyName,
+        }),
+      );
+
       const result: ProjectsInfoResponseDto = {
         projectId: project.projectId,
         projectName: project.projectName,
@@ -71,16 +87,36 @@ export class ProjectsService {
       throw new InternalServerErrorException('Failed to get project info');
     }
   }
+  async getProjectsTech(): Promise<GetProjectsTechResponseDto> {
+    try {
+      const availableTechs = await this.dBHelperService.selectMany(
+        'technologies',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        ['id_technology', 'technology_name'],
+      );
 
-  private async getProjectTechnologies(projectId: string): Promise<string[]> {
-    const technologies = await this.dataSource
-      .createQueryBuilder()
-      .select('t.technology_name', 'technologies')
-      .from('project_technologies', 'pt')
-      .innerJoin('technologies', 't', 'pt.id_technology = t.id_technology')
-      .where('pt.id_project = :projectId', { projectId })
-      .getRawMany();
+      Logger.log('All projects techs fetched', 'ProjectsService');
+      const projectsTechs: TechDto[] = availableTechs.map((techs) => ({
+        techId: techs.id_technology,
+        techName: techs.technology_name,
+      }));
 
-    return technologies.map((t) => t.technologies);
+      return {
+        ProjectsTechs: projectsTechs,
+      };
+    } catch (error) {
+      Logger.error(
+        'Error during fetching project technologies',
+        error.stack,
+        'ProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to fetch project technologies',
+      );
+    }
   }
 }

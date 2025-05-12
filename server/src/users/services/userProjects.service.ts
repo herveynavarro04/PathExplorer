@@ -64,7 +64,7 @@ export class UserProjectsService {
     try {
       const user = await this.usersRepository.findOne({
         where: { userId },
-        relations: ['projectLinks', 'projectLinks.project'],
+        relations: ['projectUserLink', 'projectUserLink.project'],
       });
       if (!user) {
         Logger.warn('User not found', 'UserProjectsService');
@@ -72,12 +72,12 @@ export class UserProjectsService {
       }
       Logger.log('User projects fetched', 'UserProjectsService');
       const userProjects: ProjectInfoPreviewResponseDto[] =
-        user.projectLinks.map((projectLinks) => ({
-          projectId: projectLinks.project.projectId,
-          projectName: projectLinks.project.projectName,
-          information: projectLinks.project.information,
-          active: projectLinks.project.active,
-          status: projectLinks.userStatus,
+        user.projectUserLink.map((projectUserLink) => ({
+          projectId: projectUserLink.project.projectId,
+          projectName: projectUserLink.project.projectName,
+          information: projectUserLink.project.information,
+          active: projectUserLink.project.active,
+          status: projectUserLink.userStatus,
         }));
       return {
         projects: userProjects,

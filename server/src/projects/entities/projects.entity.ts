@@ -1,7 +1,5 @@
-import { IsOptional } from 'class-validator';
 import { ProjectUserEntity } from 'src/common/entities/projectUser.entity';
 import { TechnologiesEntity } from 'src/common/entities/technologies.entity';
-
 import {
   Column,
   Entity,
@@ -47,16 +45,12 @@ export class ProjectsEntity {
   manager: string;
 
   @OneToMany(() => ProjectUserEntity, (link) => link.project)
-  userLinks: ProjectUserEntity[];
+  userProjectLink: ProjectUserEntity[];
 
-  @ManyToMany(() => TechnologiesEntity, (technologies) => technologies.project)
-  @IsOptional()
+  @ManyToMany(() => TechnologiesEntity, (tech) => tech.projects)
   @JoinTable({
     name: 'project_technologies',
-    joinColumn: {
-      name: 'id_project',
-      referencedColumnName: 'projectId',
-    },
+    joinColumn: { name: 'id_project', referencedColumnName: 'projectId' },
     inverseJoinColumn: {
       name: 'id_technology',
       referencedColumnName: 'technologyId',

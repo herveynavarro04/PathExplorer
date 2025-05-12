@@ -16,11 +16,11 @@ export class ProjectUserEntity {
   @Column({ name: 'chargeability' })
   chargeability: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.projectLinks)
+  @ManyToOne(() => UserEntity, (user) => user.projectUserLink)
   @JoinColumn({ name: 'userid' })
   user: UserEntity;
 
-  @ManyToOne(() => ProjectsEntity, (project) => project.userLinks)
+  @ManyToOne(() => ProjectsEntity, (project) => project.userProjectLink)
   @JoinColumn({ name: 'id_project' })
   project: ProjectsEntity;
 }

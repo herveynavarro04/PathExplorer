@@ -1,5 +1,5 @@
-import { ProjectsEntity } from 'src/projects/entities/projects.entity';
 import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm';
+import { ProjectsEntity } from 'src/projects/entities/projects.entity';
 
 @Entity('technologies')
 export class TechnologiesEntity {
@@ -10,5 +10,5 @@ export class TechnologiesEntity {
   technologyName: string;
 
   @ManyToMany(() => ProjectsEntity, (project) => project.technologies)
-  project: ProjectsEntity[];
+  projects: ProjectsEntity[];
 }

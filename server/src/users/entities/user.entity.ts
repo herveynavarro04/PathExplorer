@@ -61,5 +61,5 @@ export class UserEntity {
   interests: SkillsEntity[];
 
   @OneToMany(() => ProjectUserEntity, (link) => link.user)
-  projectLinks: ProjectUserEntity[];
+  projectUserLink: ProjectUserEntity[];
 }

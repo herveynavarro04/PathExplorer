@@ -11,8 +11,4 @@ export class ProjectInfoPreviewResponseDto {
   @IsString()
   @IsNotEmpty()
   information: string;
-
-  @IsBoolean()
-  @IsOptional()
-  active?: boolean;
 }
