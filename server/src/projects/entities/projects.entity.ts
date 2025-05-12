@@ -1,7 +1,15 @@
 import { IsOptional } from 'class-validator';
+import { ProjectUserEntity } from 'src/common/entities/projectUser.entity';
 import { TechnologiesEntity } from 'src/common/entities/technologies.entity';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
+
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 
 @Entity('project')
 export class ProjectsEntity {
@@ -38,8 +46,8 @@ export class ProjectsEntity {
   @Column({ name: 'manager' })
   manager: string;
 
-  @ManyToMany(() => UserEntity, (user) => user.projects)
-  user: UserEntity[];
+  @OneToMany(() => ProjectUserEntity, (link) => link.project)
+  userLinks: ProjectUserEntity[];
 
   @ManyToMany(() => TechnologiesEntity, (technologies) => technologies.project)
   @IsOptional()

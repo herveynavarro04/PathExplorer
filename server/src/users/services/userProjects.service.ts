@@ -41,7 +41,6 @@ export class UserProjectsService {
           projectId: project.projectId,
           projectName: project.projectName,
           information: project.information,
-          active: project.active,
         }));
       return {
         projects: userProjects,
@@ -65,21 +64,21 @@ export class UserProjectsService {
     try {
       const user = await this.usersRepository.findOne({
         where: { userId },
-        relations: ['projects'],
+        relations: ['projectLinks', 'projectLinks.project'],
       });
       if (!user) {
         Logger.warn('User not found', 'UserProjectsService');
         throw new NotFoundException('User not found');
       }
       Logger.log('User projects fetched', 'UserProjectsService');
-      const userProjects: ProjectInfoPreviewResponseDto[] = user.projects.map(
-        (project) => ({
-          projectId: project.projectId,
-          projectName: project.projectName,
-          information: project.information,
-          active: project.active,
-        }),
-      );
+      const userProjects: ProjectInfoPreviewResponseDto[] =
+        user.projectLinks.map((projectLinks) => ({
+          projectId: projectLinks.project.projectId,
+          projectName: projectLinks.project.projectName,
+          information: projectLinks.project.information,
+          active: projectLinks.project.active,
+          status: projectLinks.userStatus,
+        }));
       return {
         projects: userProjects,
       };
@@ -106,10 +105,10 @@ export class UserProjectsService {
     let addedProjects = [];
     let deletedProjects = [];
 
-    if (addProjects.length > 0) {
+    if (addProjects) {
       addedProjects = await this.addUserProjects(userId, addProjects);
     }
-    if (deleteProjects.length > 0) {
+    if (deleteProjects) {
       deletedProjects = await this.deleteUserProjects(userId, deleteProjects);
     }
     return {
@@ -147,9 +146,10 @@ export class UserProjectsService {
   private async addUserProjects(userId: string, addProjects: string[]) {
     try {
       const values = addProjects.map((projectId) => ({
-        userid: userId,
-        id_project: projectId,
-        status: 'pending',
+        userId: userId,
+        projectId: projectId,
+        userStatus: 'pending',
+        chargeability: null,
       }));
       await this.dBHelperService.insertMany('project_user', values);
       Logger.log('Projects successfully added to user!', 'UserProjectsService');

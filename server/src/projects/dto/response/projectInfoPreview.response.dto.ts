@@ -14,5 +14,5 @@ export class ProjectInfoPreviewResponseDto {
 
   @IsBoolean()
   @IsOptional()
-  active?: boolean
+  active?: boolean;
 }
