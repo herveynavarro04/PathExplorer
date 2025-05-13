@@ -11,7 +11,7 @@ import { ProjectsInfoResponseDto } from './dto/response/projectsInfo.response.dt
 import { TechDto } from 'src/common/dto/tech.dto';
 import { DatabaseHelperService } from 'src/common/helpers/dataBase.helper';
 import { GetProjectsTechResponseDto } from './dto/response/getProjectsTech.response.dto';
-import { ProjectsResponseDto } from './dto/response/projects.response.dto';
+import { GetAvailableResponseDto } from './dto/response/getAvailableProjects.response.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -21,7 +21,7 @@ export class ProjectsService {
     private dBHelperService: DatabaseHelperService,
   ) {}
 
-  async getAvailableProjects(userId: string): Promise<ProjectsResponseDto> {
+  async getAvailableProjects(userId: string): Promise<GetAvailableResponseDto> {
     try {
       const subscribedProjectIds = await this.getSubscribedProjectIds(userId);
       const projects = await this.projectsRepository.find({
@@ -43,7 +43,7 @@ export class ProjectsService {
           technologyName: tech.technologyName,
         })),
       }));
-
+      Logger.log('Available projects fetched!', 'ProjectService');
       return { availableProjects: userProjects };
     } catch (error) {
       Logger.error(

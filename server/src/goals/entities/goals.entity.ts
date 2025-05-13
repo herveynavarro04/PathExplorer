@@ -11,12 +11,6 @@ export class GoalsEntity {
   @Column({ name: 'term' })
   term: Date;
 
-  @Column({ name: 'start_date' })
-  startDate: Date;
-
-  @Column({ name: 'end_date' })
-  endDate: Date;
-
   @Column({ name: 'completed' })
   completed: boolean;
 
@@ -28,4 +22,7 @@ export class GoalsEntity {
 
   @Column({ name: 'id_reviser' })
   reviserId: string;
+
+  @Column({ name: 'created_at' })
+  createdAt: Date;
 }
