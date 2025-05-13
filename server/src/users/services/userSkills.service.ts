@@ -84,10 +84,10 @@ export class UserSkillsService {
         relations: ['interests'],
       });
       if (!user) {
-        Logger.warn('User not found', 'UserInterestsService');
+        Logger.warn('User not found', 'UserSkillsService');
         throw new NotFoundException('User not found');
       }
-      Logger.log('User interests fetched', 'UserInterestsService');
+      Logger.log('User interests fetched', 'UserSkillsService');
       const filterSkills = await this.filterUserSkills(user.interests);
       return {
         technicalSkills: filterSkills.technicalSkills,

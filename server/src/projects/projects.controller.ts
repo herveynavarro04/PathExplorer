@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { JwtGuard } from 'src/common/Guards/jwt.guards';
-import { ProjectsResponseDto } from './dto/response/projects.response.dto';
+import { GetAvailableResponseDto } from './dto/response/getAvailableProjects.response.dto';
 import { ProjectsInfoResponseDto } from './dto/response/projectsInfo.response.dto';
 import { Request } from 'express';
 import { GetProjectsTechResponseDto } from './dto/response/getProjectsTech.response.dto';
@@ -14,7 +14,7 @@ export class ProjectsController {
   @UseGuards(JwtGuard)
   async getAvailableProjects(
     @Req() req: Request,
-  ): Promise<ProjectsResponseDto> {
+  ): Promise<GetAvailableResponseDto> {
     const userId = req.user['userId'];
     return this.projectsService.getAvailableProjects(userId);
   }
