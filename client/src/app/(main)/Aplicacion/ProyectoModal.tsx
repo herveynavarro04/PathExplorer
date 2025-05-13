@@ -5,10 +5,14 @@ import { useRouter } from "next/navigation";
 
 interface ProyectoModalProps {
   projectId: string;
-  projectTech: string[];
   onClose: () => void;
   onApply: (projectId: string) => void;
   addProjects: string[];
+}
+
+interface TechDto {
+  technologyId: string;
+  technologyName: string;
 }
 
 export interface ProjectInfoResponseDto {
@@ -21,11 +25,11 @@ export interface ProjectInfoResponseDto {
   active: boolean;
   information: string;
   manager: string;
+  technologies: TechDto[];
 }
 
 const ProyectoModal = ({
   projectId,
-  projectTech,
   onClose,
   onApply,
   addProjects,
@@ -142,12 +146,12 @@ const ProyectoModal = ({
           <div>
             <h3 className="text-lg font-medium mb-2">Stack de tecnologías</h3>
             <div className="flex flex-wrap gap-2">
-              {projectTech.map((tech, index) => (
+              {project.technologies.map((tech) => (
                 <span
-                  key={index}
+                  key={tech.technologyId}
                   className="bg-white text-[#4b3b61] px-3 py-1 rounded-full border border-[#e5d6f1] text-sm"
                 >
-                  {tech}
+                  {tech.technologyName}
                 </span>
               ))}
             </div>

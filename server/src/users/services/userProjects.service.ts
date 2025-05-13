@@ -104,7 +104,7 @@ export class UserProjectsService {
     try {
       await this.dBHelperService.deleteMany(
         'project_user',
-        { userid: userId },
+        { userId: userId },
         'id_project',
         deleteProjects,
       );

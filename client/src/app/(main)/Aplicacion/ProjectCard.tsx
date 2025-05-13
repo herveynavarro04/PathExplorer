@@ -4,21 +4,19 @@ interface ProjectCardProps {
   projectId: string;
   projectName: string;
   information: string;
-  projectTech: string[];
-  handleProjectClick: (projectId: string, projectTech: string[]) => void;
+  handleProjectClick: (projectId: string) => void;
 }
 
 const ProjectCard = ({
   projectId,
   projectName,
   information,
-  projectTech,
   handleProjectClick,
 }: ProjectCardProps) => {
   return (
     <div
       onClick={() => {
-        handleProjectClick(projectId, projectTech);
+        handleProjectClick(projectId);
       }}
       className="cursor-pointer rounded-[10px] bg-[#f8f6fa] shadow-1 dark:bg-[#482a5e] dark:shadow-card h-[10rem]"
     >

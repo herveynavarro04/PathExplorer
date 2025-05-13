@@ -11,34 +11,34 @@ import Loading from "components/Loading";
 import { useRouter } from "next/navigation";
 import LoadingPage from "components/LoadingPage";
 
-export class AuthError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "AuthError";
-  }
+interface TechDto {
+  technologyId: string;
+  technologyName: string;
+}
+
+interface GetProjectsTechResponseDto {
+  ProjectsTechs: TechDto[];
 }
 
 interface ProjectInfoPreviewResponseDto {
   projectId: string;
   projectName: string;
   information: string;
-  technologies: string[];
+  technologies: TechDto[];
 }
 
 interface GetUserProjectsResponseDto {
-  projects: ProjectInfoPreviewResponseDto[];
+  availableProjects: ProjectInfoPreviewResponseDto[];
 }
 
 export default function MyProjectsPage() {
   const [selectedProject, setSelectedProject] = useState<string>(null);
   const [allTech, setAllTech] = useState<string[]>([]);
   const [technologyFilter, setTechnologyFilter] = useState<string[]>([]);
-  const [projectTech, setProjectTech] = useState<string[]>([]);
   const [projects, setProjects] = useState<ProjectInfoPreviewResponseDto[]>([]);
   const [isClient, setIsClient] = useState(false);
   const { theme } = useTheme();
   const [addProjects, setAddProjects] = useState<string[]>([]);
-  const [deleteProjects, setDeleteProjects] = useState<string[]>([]);
   const [appliedMessage, setAppliedMessage] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [triggerPost, setTriggerPost] = useState<boolean>(false);
@@ -54,7 +54,9 @@ export default function MyProjectsPage() {
   let filteredProjects = projects;
   if (technologyFilter.length > 0) {
     filteredProjects = projects.filter((project) =>
-      project.technologies.some((tech) => technologyFilter.includes(tech))
+      project.technologies.some((tech) =>
+        technologyFilter.includes(tech.technologyName)
+      )
     );
   }
 
@@ -65,9 +67,8 @@ export default function MyProjectsPage() {
   );
   const techOptions = allTech.map((tech) => ({ value: tech, label: tech }));
 
-  const handleProjectClick = (projectId: string, projectTech: string[]) => {
+  const handleProjectClick = (projectId: string) => {
     setSelectedProject(projectId);
-    setProjectTech(projectTech);
   };
 
   const handlePageChange = (pageNumber: number) => {
@@ -88,11 +89,6 @@ export default function MyProjectsPage() {
     setSelectedProject(null);
   };
 
-  const getRandomTechnologies = (count: number): string[] => {
-    const shuffled = [...allTech].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -105,19 +101,15 @@ export default function MyProjectsPage() {
     const loadData = async () => {
       try {
         const projectsData = await authFetch<GetUserProjectsResponseDto>(
-          `${url}/user/projects/available`
+          `${url}/projects/available`
         );
+
         if (!projectsData) {
           router.push("/login");
           return;
         }
 
-        const enhancedProjects = projectsData.projects.map((project) => ({
-          ...project,
-          technologies: getRandomTechnologies(2),
-        }));
-
-        setProjects(enhancedProjects);
+        setProjects(projectsData.availableProjects);
         setLoading(false);
       } catch (err) {
         console.error("Unexpected fetch error:", err);
@@ -128,12 +120,48 @@ export default function MyProjectsPage() {
   }, [triggerRefresh, allTech]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
     const loadData = async () => {
+      try {
+        const allTechData = await authFetch<GetProjectsTechResponseDto>(
+          `${url}/projects/techs`
+        );
+        if (!allTechData) {
+          router.push("/login");
+          return;
+        }
+
+        setAllTech(() =>
+          allTechData.ProjectsTechs.map((tech) => tech.technologyName)
+        );
+
+        setLoading(false);
+      } catch (err) {
+        console.error("Unexpected fetch error:", err);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    console.log(projects);
+  }, [projects]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (!triggerPost) return;
+
       setLoading(true);
       try {
         const response = await authFetch(`${url}/user/projects`, {
           method: "PATCH",
-          body: JSON.stringify({ addProjects, deleteProjects }),
+          body: JSON.stringify({ addProjects }),
         });
         if (!response) {
           router.push("/login");
@@ -151,68 +179,8 @@ export default function MyProjectsPage() {
       }
     };
 
-    if (triggerPost) loadData();
+    loadData();
   }, [triggerPost]);
-
-  useEffect(() => {
-    const dummyData: string[] = [
-      "Node.js",
-      "React",
-      "PostgreSQL",
-      "NestJS",
-      "TypeScript",
-      "Express.js",
-      "MongoDB",
-      "Redis",
-      "GraphQL",
-      "REST API",
-      "Docker",
-      "Kubernetes",
-      "AWS",
-      "Azure",
-      "Google Cloud",
-      "Jest",
-      "Cypress",
-      "Playwright",
-      "Sass",
-      "Tailwind CSS",
-      "Next.js",
-      "Vue.js",
-      "Nuxt.js",
-      "Angular",
-      "RxJS",
-      "Java",
-      "Spring Boot",
-      "Python",
-      "Flask",
-      "Django",
-      "Ruby on Rails",
-      "PHP",
-      "Laravel",
-      "C#",
-      ".NET Core",
-      "Go",
-      "Rust",
-      "Elixir",
-      "Firebase",
-      "Prisma",
-      "TypeORM",
-      "Sequelize",
-      "Webpack",
-      "Vite",
-      "Babel",
-      "ESLint",
-      "Prettier",
-      "Storybook",
-      "Figma",
-      "Jira",
-      "Postman",
-    ];
-
-    setTimeout(() => {
-      setAllTech(dummyData);
-    }, 300);
-  }, []);
 
   useEffect(() => {
     setIsClient(true);
@@ -305,7 +273,6 @@ export default function MyProjectsPage() {
               <ProjectCard
                 key={project.projectId}
                 projectId={project.projectId}
-                projectTech={project.technologies}
                 projectName={project.projectName}
                 information={project.information}
                 handleProjectClick={handleProjectClick}
@@ -316,7 +283,6 @@ export default function MyProjectsPage() {
           {selectedProject && (
             <ProyectoModal
               projectId={selectedProject}
-              projectTech={projectTech}
               onClose={() => setSelectedProject(null)}
               onApply={handleApplyToProject}
               addProjects={addProjects}
