@@ -121,7 +121,7 @@ export class UserService {
       );
     }
     try {
-      await this.usersRepository.update({ userId }, updatePayload);
+      await this.usersRepository.update({ userId: userId }, updatePayload);
       Logger.log('User Updated', 'UserService');
       return {
         userId: userId,

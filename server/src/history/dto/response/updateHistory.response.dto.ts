@@ -1,11 +1,11 @@
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
-export class PostGoalResponseDto {
+export class UpdateHistoryResponseDto {
   @IsString()
   @IsNotEmpty()
-  goaldId: string;
+  historyId: string;
 
   @IsDate()
   @IsNotEmpty()
-  createdAt: Date;
+  updatedAt: Date;
 }

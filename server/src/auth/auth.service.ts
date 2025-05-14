@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { HashingService } from 'src/Utilities/hashing.utilities';
 import { ValidateUserResponseDto } from './dto/response/validateUser.response.dto';
 import { UserService } from 'src/users/services/user.service';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,7 @@ export class AuthService {
     const hashedPassword = await this.hashingService.hashPassword(
       userPayload.password,
     );
-    const register = {
+    const register: UserEntity = {
       userId: userId,
       email: userPayload.email,
       password: hashedPassword,

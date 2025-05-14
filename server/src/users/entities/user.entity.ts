@@ -46,7 +46,7 @@ export class UserEntity {
       referencedColumnName: 'skillId',
     },
   })
-  skills: SkillsEntity[];
+  skills?: SkillsEntity[];
 
   @ManyToMany(() => SkillsEntity, (skill) => skill.user, {
     cascade: true,
@@ -64,11 +64,11 @@ export class UserEntity {
       referencedColumnName: 'skillId',
     },
   })
-  interests: SkillsEntity[];
+  interests?: SkillsEntity[];
 
   @OneToMany(() => ProjectUserEntity, (link) => link.user, {
     cascade: true,
     onDelete: 'CASCADE',
   })
-  projectUserLink: ProjectUserEntity[];
+  projectUserLink?: ProjectUserEntity[];
 }
