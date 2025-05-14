@@ -7,11 +7,9 @@ import { GoalsEntity } from './entities/goals.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostGoalRequestDto } from './dto/request/postGoal.request.dto';
-import { CreateGoalResponseDto } from './dto/response/postGoal.response.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateGoalRequestDto } from './dto/request/createGoal.request.dto';
 import { GetGoalResponseDto } from './dto/response/getGoal.response.dto';
-import { GetUserGoalsResponseDto } from './dto/response/getUserGoals.response.dto';
+import { PostGoalResponseDto } from './dto/response/postGoal.response.dto';
 
 @Injectable()
 export class GoalsService {
@@ -22,18 +20,18 @@ export class GoalsService {
 
   async createGoal(
     userId: string,
-    createGoalPayload: PostGoalRequestDto,
-  ): Promise<CreateGoalResponseDto> {
+    postGoalPayload: PostGoalRequestDto,
+  ): Promise<PostGoalResponseDto> {
     const goalId = uuidv4();
 
-    const newGoal: CreateGoalRequestDto = {
+    const newGoal: GoalsEntity = {
       userId: userId,
       goalId: goalId,
       completed: false,
       validated: false,
       reviserId: null,
-      information: createGoalPayload.information,
-      term: createGoalPayload.term,
+      information: postGoalPayload.information,
+      term: postGoalPayload.term,
       createdAt: new Date(),
     };
     try {
@@ -53,7 +51,7 @@ export class GoalsService {
     }
   }
 
-  async getGoals(userId: string): Promise<GetUserGoalsResponseDto> {
+  async getGoals(userId: string): Promise<GetGoalResponseDto[]> {
     try {
       const goals = await this.goalsRepository.find({
         where: { userId: userId },
@@ -66,9 +64,7 @@ export class GoalsService {
         term: goal.term,
       }));
       Logger.log('Goals fetched succesfully', 'GoalsService');
-      return {
-        userGoals: goalsInfo,
-      };
+      return goalsInfo;
     } catch (error) {
       Logger.error('Error during goals fetching', error.stack, 'GoalsService');
       throw new InternalServerErrorException('Failed to fetch goals');
