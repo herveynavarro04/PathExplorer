@@ -64,9 +64,9 @@ const Page = () => {
 
       try {
         const [userData, skills, userSkills] = await Promise.all([
-          authFetch<ProfileData>(`${url}/user`),
+          authFetch<ProfileData>(`${url}/employee`),
           authFetch<SkillsResponse>(`${url}/skills`),
-          authFetch<UserSkillsResponse>(`${url}/user/skills`),
+          authFetch<UserSkillsResponse>(`${url}/skills/employee`),
         ]);
 
         if (!userData || !skills || !userSkills) {

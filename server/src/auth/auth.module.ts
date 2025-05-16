@@ -5,17 +5,16 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../common/Guards/jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '../users/entities/user.entity';
 import { JwtGuard } from '../common/Guards/jwt.guards';
-import { UsersModule } from 'src/users/users.module';
 import { HashingService } from 'src/Utilities/hashing.utilities';
+import { EmployeeModule } from 'src/employee/employee.module';
+import { EmployeeEntity } from 'src/employee/entities/employee.entity';
 
 @Module({
   imports: [
-    UsersModule,
+    EmployeeModule,
     PassportModule,
-    UsersModule,
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([EmployeeEntity]),
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.TOKEN_SECRET,

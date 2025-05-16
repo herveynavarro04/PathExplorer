@@ -38,7 +38,7 @@ const SoftSkillsCard = ({ softSkillMap, url }: SoftSkillsCardProps) => {
       if (!triggerSave) return;
 
       try {
-        await authFetch(`${url}/user/skills`, {
+        await authFetch(`${url}/skills/employee`, {
           method: "PATCH",
           body: JSON.stringify({ addSkills, deleteSkills }),
         });

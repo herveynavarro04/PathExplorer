@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('history')
 export class HistoryEntity {
-  @PrimaryColumn({ name: 'id_history' })
+  @PrimaryColumn({ name: 'history_id' })
   historyId: string;
 
   @Column({ name: 'information' })
@@ -20,8 +20,8 @@ export class HistoryEntity {
   @Column({ name: 'company' })
   company: string;
 
-  @Column({ name: 'userid' })
-  userId: string;
+  @Column({ name: 'employee_id' })
+  employeeId: string;
 
   @Column({ name: 'created_at' })
   createdAt: Date;
