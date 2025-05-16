@@ -103,7 +103,7 @@ const Historial: React.FC = () => {
         />
       )}
 
-      <main className="relative w-full text-white px-5">
+      <div className="relative w-full text-white px-5">
         <div className="relative flex justify-between items-center px-10 py-4">
           <Breadcrumb pageName="Historial" />
         </div>
@@ -155,7 +155,7 @@ const Historial: React.FC = () => {
             Agregar empleo pasado
           </p>
         </div>
-      </main>
+      </div>
     </>
   );
 };
