@@ -1,21 +1,23 @@
 import { Module } from '@nestjs/common';
 import { ProjectsController } from './projects.controller';
-import { ProjectsService } from './projects.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectsEntity } from './entities/projects.entity';
-import { ProjectUserEntity } from 'src/common/entities/projectUser.entity';
-import { TechnologiesEntity } from 'src/common/entities/technologies.entity';
-import { DatabaseHelperService } from 'src/common/helpers/dataBase.helper';
+import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
+import { TechnologiesEntity } from 'src/common/entities/technology.entity';
+import { ProjectTechnologyEntity } from 'src/common/entities/projectTechnologies.entity';
+import { ProjectsService } from './service/projects.service';
+import { EmployeeProjectsService } from './service/employeeProjects.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ProjectsEntity,
-      ProjectUserEntity,
+      EmployeeProjectEntity,
       TechnologiesEntity,
+      ProjectTechnologyEntity,
     ]),
   ],
   controllers: [ProjectsController],
-  providers: [ProjectsService, DatabaseHelperService],
+  providers: [ProjectsService, EmployeeProjectsService],
 })
 export class ProjectsModule {}

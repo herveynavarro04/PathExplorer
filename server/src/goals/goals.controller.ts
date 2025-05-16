@@ -16,14 +16,14 @@ export class GoalsController {
     @Req() req: Request,
     @Body() postGoalPayload: PostGoalRequestDto,
   ): Promise<PostGoalResponseDto> {
-    const userId = req.user['userId'];
-    return this.goalsService.createGoal(userId, postGoalPayload);
+    const employeeId = req.user['employeeId'];
+    return this.goalsService.createGoal(employeeId, postGoalPayload);
   }
 
   @Get()
   @UseGuards(JwtGuard)
   async getGoals(@Req() req: Request): Promise<GetGoalResponseDto[]> {
-    const userId = req.user['userId'];
-    return this.goalsService.getGoals(userId);
+    const employeeId = req.user['employeeId'];
+    return this.goalsService.getGoals(employeeId);
   }
 }

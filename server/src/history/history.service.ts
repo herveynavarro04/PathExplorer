@@ -22,14 +22,14 @@ export class HistoryService {
   ) {}
 
   async postHistory(
-    userId: string,
+    employeeId: string,
     postStoryPayload: PostStoryRequestDto,
   ): Promise<PostStoryResponseDto> {
     try {
       const historyId = uuidv4();
       const newHistory: HistoryEntity = {
         historyId: historyId,
-        userId: userId,
+        employeeId: employeeId,
         ...postStoryPayload,
         createdAt: new Date(),
         updatedAt: null,
@@ -70,10 +70,10 @@ export class HistoryService {
     }
   }
 
-  async getHistories(userId: string): Promise<GetHistoryResponseDto[]> {
+  async getHistories(employeeId: string): Promise<GetHistoryResponseDto[]> {
     try {
       const histories = await this.historyRepository.find({
-        where: { userId: userId },
+        where: { employeeId: employeeId },
         select: [
           'company',
           'historyId',

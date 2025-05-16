@@ -19,13 +19,13 @@ export class GoalsService {
   ) {}
 
   async createGoal(
-    userId: string,
+    employeeId: string,
     postGoalPayload: PostGoalRequestDto,
   ): Promise<PostGoalResponseDto> {
     const goalId = uuidv4();
 
     const newGoal: GoalsEntity = {
-      userId: userId,
+      employeeId: employeeId,
       goalId: goalId,
       completed: false,
       validated: false,
@@ -33,6 +33,7 @@ export class GoalsService {
       information: postGoalPayload.information,
       term: postGoalPayload.term,
       createdAt: new Date(),
+      updatedAt: null,
     };
     try {
       await this.goalsRepository.save(newGoal);
@@ -51,10 +52,10 @@ export class GoalsService {
     }
   }
 
-  async getGoals(userId: string): Promise<GetGoalResponseDto[]> {
+  async getGoals(employeeId: string): Promise<GetGoalResponseDto[]> {
     try {
       const goals = await this.goalsRepository.find({
-        where: { userId: userId },
+        where: { employeeId: employeeId },
         select: ['validated', 'completed', 'information', 'term'],
       });
       const goalsInfo: GetGoalResponseDto[] = goals.map((goal) => ({

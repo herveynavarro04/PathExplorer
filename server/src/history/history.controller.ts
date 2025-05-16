@@ -29,15 +29,15 @@ export class HistoryController {
     @Req() req: Request,
     @Body() postStoryPayload: PostStoryRequestDto,
   ): Promise<PostStoryResponseDto> {
-    const userId = req.user['userId'];
-    return this.historyService.postHistory(userId, postStoryPayload);
+    const employeeId = req.user['employeeId'];
+    return this.historyService.postHistory(employeeId, postStoryPayload);
   }
 
   @Get()
   @UseGuards(JwtGuard)
   async getHistories(@Req() req: Request): Promise<GetHistoryResponseDto[]> {
-    const userId = req.user['userId'];
-    return this.historyService.getHistories(userId);
+    const employeeId = req.user['employeeId'];
+    return this.historyService.getHistories(employeeId);
   }
 
   @Get('employee/:employeeId')

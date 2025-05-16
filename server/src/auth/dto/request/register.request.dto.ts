@@ -11,6 +11,10 @@ export class RegisterRequestDto {
 
   @IsString()
   @IsNotEmpty()
+  rol: string;
+
+  @IsString()
+  @IsNotEmpty()
   firstName: string;
 
   @IsString()

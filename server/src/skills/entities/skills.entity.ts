@@ -1,9 +1,9 @@
-import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { EmployeeSkillEntity } from 'src/common/entities/employeeSkills.entity';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity('skills')
 export class SkillsEntity {
-  @PrimaryColumn({ name: 'id_skill' })
+  @PrimaryColumn({ name: 'skill_id' })
   skillId: string;
 
   @Column({ name: 'skill_name' })
@@ -12,6 +12,12 @@ export class SkillsEntity {
   @Column({ name: 'skill_type' })
   skillType: string;
 
-  @ManyToMany(() => UserEntity, (user) => user.skills)
-  user: UserEntity[];
+  @Column({ name: 'created_at' })
+  createdAt: Date;
+
+  @OneToMany(() => EmployeeSkillEntity, (link) => link.skill, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  employeeSkillLink?: EmployeeSkillEntity[];
 }

@@ -1,17 +1,9 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class ValidateEmployeeResponseDto {
-  @IsString()
-  @IsNotEmpty()
-  employeeId: string;
-
+export class GetEmployeeInfoResponseDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  password: string;
 
   @IsString()
   @IsNotEmpty()
