@@ -1,17 +1,10 @@
-import { ProjectUserEntity } from 'src/common/entities/projectUser.entity';
-import { TechnologiesEntity } from 'src/common/entities/technologies.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { ProjectTechnologyEntity } from 'src/common/entities/projectTechnologies.entity';
+import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
 
 @Entity('project')
 export class ProjectsEntity {
-  @PrimaryColumn({ name: 'id_project' })
+  @PrimaryColumn({ name: 'project_id' })
   projectId: string;
 
   @Column({ name: 'project_name' })
@@ -41,20 +34,21 @@ export class ProjectsEntity {
   @Column({ name: 'limit_employees' })
   limitEmployees: number;
 
-  @Column({ name: 'manager' })
+  @Column({ name: 'manager_id' })
   manager: string;
 
-  @OneToMany(() => ProjectUserEntity, (link) => link.project)
-  userProjectLink: ProjectUserEntity[];
+  @Column({ name: 'created_at' })
+  createdAt: string;
 
-  @ManyToMany(() => TechnologiesEntity, (tech) => tech.projects)
-  @JoinTable({
-    name: 'project_technologies',
-    joinColumn: { name: 'id_project', referencedColumnName: 'projectId' },
-    inverseJoinColumn: {
-      name: 'id_technology',
-      referencedColumnName: 'technologyId',
-    },
+  @Column({ name: 'updated_at' })
+  updatedAt: string;
+
+  @OneToMany(() => EmployeeProjectEntity, (link) => link.project, {
+    cascade: true,
+    onDelete: 'CASCADE',
   })
-  technologies: TechnologiesEntity[];
+  employeeProjectLink?: EmployeeProjectEntity[];
+
+  @OneToMany(() => ProjectTechnologyEntity, (link) => link.project)
+  projectTechnologyLink?: ProjectTechnologyEntity[];
 }

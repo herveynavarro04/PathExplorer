@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('goal')
 export class GoalsEntity {
-  @PrimaryColumn({ name: 'id_goal' })
+  @PrimaryColumn({ name: 'goal_id' })
   goalId: string;
 
   @Column({ name: 'information' })
@@ -17,12 +17,15 @@ export class GoalsEntity {
   @Column({ name: 'validated' })
   validated: boolean;
 
-  @Column({ name: 'userid' })
-  userId: string;
+  @Column({ name: 'employee_id' })
+  employeeId: string;
 
-  @Column({ name: 'id_reviser' })
+  @Column({ name: 'reviser_id' })
   reviserId: string;
 
   @Column({ name: 'created_at' })
   createdAt: Date;
+
+  @Column({ name: 'updated_at' })
+  updatedAt: Date;
 }

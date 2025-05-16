@@ -11,69 +11,74 @@ import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { HashingService } from 'src/Utilities/hashing.utilities';
-import { ValidateUserResponseDto } from './dto/response/validateUser.response.dto';
-import { UserService } from 'src/users/services/user.service';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { EmployeeService } from 'src/employee/services/employee.service';
+import { EmployeeEntity } from 'src/employee/entities/employee.entity';
+import { ValidateEmployeeResponseDto } from './dto/response/validateUser.response.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private employeeService: EmployeeService,
     private jwtService: JwtService,
     private hashingService: HashingService,
   ) {}
 
-  async registerUser(
-    userPayload: RegisterRequestDto,
+  async registerEmployee(
+    employeePayload: RegisterRequestDto,
   ): Promise<RegisterResponseDto> {
-    if (await this.userService.verifyUserExistance(userPayload.email)) {
-      throw new ConflictException('User with this email already exists');
+    if (
+      await this.employeeService.verifyEmployeeExistance(employeePayload.email)
+    ) {
+      throw new ConflictException('employee with this email already exists');
     }
 
-    const userId = uuidv4();
+    const employeeId = uuidv4();
     const hashedPassword = await this.hashingService.hashPassword(
-      userPayload.password,
+      employeePayload.password,
     );
-    const register: UserEntity = {
-      userId: userId,
-      email: userPayload.email,
+    const register: EmployeeEntity = {
+      employeeId: employeeId,
+      email: employeePayload.email,
       password: hashedPassword,
       imgUrl: process.env.DEFAULT_PROFILE_IMAGE,
-      firstName: userPayload.firstName,
-      lastName: userPayload.lastName,
+      rol: employeePayload.rol,
+      createdAt: new Date(),
+      updatedAt: null,
+      firstName: employeePayload.firstName,
+      lastName: employeePayload.lastName,
     };
-    await this.userService.registerUser(register);
+    await this.employeeService.registerEmployee(register);
     return {
-      userId: register.userId,
+      employeeId: register.employeeId,
     };
   }
 
-  async validateUser(
+  async validateEmployee(
     email: string,
     password: string,
-  ): Promise<ValidateUserResponseDto> {
-    const user = await this.userService.findUserbyEmail(email);
-    if (!user) {
+  ): Promise<ValidateEmployeeResponseDto> {
+    const employee = await this.employeeService.findEmployeebyEmail(email);
+    if (!employee) {
       throw new UnauthorizedException('Email or password incorrect');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, employee.password);
     if (isPasswordValid) {
-      delete user.password;
-      return user;
+      delete employee.password;
+      return employee;
     } else {
       throw new UnauthorizedException('Email or password incorrect');
     }
   }
 
-  async signIn(userPayload: SignInRequestDto): Promise<SignInResponseDto> {
-    const user = await this.validateUser(
-      userPayload.email,
-      userPayload.password,
+  async signIn(employeePayload: SignInRequestDto): Promise<SignInResponseDto> {
+    const employee = await this.validateEmployee(
+      employeePayload.email,
+      employeePayload.password,
     );
     const token = this.jwtService.sign({
-      userId: user.userId,
-      email: user.email,
+      employeeId: employee.employeeId,
+      email: employee.email,
     });
     return {
       accessToken: token,

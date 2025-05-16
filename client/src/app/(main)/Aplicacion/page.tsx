@@ -101,7 +101,7 @@ export default function MyProjectsPage() {
     const loadData = async () => {
       try {
         const projectsData = await authFetch<GetUserProjectsResponseDto>(
-          `${url}/projects/available`
+          `${url}/projects/employee/available`
         );
 
         if (!projectsData) {
@@ -159,7 +159,7 @@ export default function MyProjectsPage() {
 
       setLoading(true);
       try {
-        const response = await authFetch(`${url}/user/projects`, {
+        const response = await authFetch(`${url}/projects/employee`, {
           method: "PATCH",
           body: JSON.stringify({ addProjects }),
         });

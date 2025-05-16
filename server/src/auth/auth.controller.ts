@@ -11,15 +11,15 @@ export class AuthController {
 
   @Post('register')
   async register(
-    @Body() userPayload: RegisterRequestDto,
+    @Body() employeePayload: RegisterRequestDto,
   ): Promise<RegisterResponseDto> {
-    return this.authService.registerUser(userPayload);
+    return this.authService.registerEmployee(employeePayload);
   }
 
   @Post('signIn')
   async signIn(
-    @Body() userPayload: SignInRequestDto,
+    @Body() employeePayload: SignInRequestDto,
   ): Promise<SignInResponseDto> {
-    return this.authService.signIn(userPayload);
+    return this.authService.signIn(employeePayload);
   }
 }

@@ -10,6 +10,7 @@ import { PostGoalRequestDto } from './dto/request/postGoal.request.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { GetGoalResponseDto } from './dto/response/getGoal.response.dto';
 import { PostGoalResponseDto } from './dto/response/postGoal.response.dto';
+import { GoalsResponseDto } from './dto/response/getGoals.response.dto';
 
 @Injectable()
 export class GoalsService {
@@ -19,13 +20,13 @@ export class GoalsService {
   ) {}
 
   async createGoal(
-    userId: string,
+    employeeId: string,
     postGoalPayload: PostGoalRequestDto,
   ): Promise<PostGoalResponseDto> {
     const goalId = uuidv4();
 
     const newGoal: GoalsEntity = {
-      userId: userId,
+      employeeId: employeeId,
       goalId: goalId,
       completed: false,
       validated: false,
@@ -33,6 +34,7 @@ export class GoalsService {
       information: postGoalPayload.information,
       term: postGoalPayload.term,
       createdAt: new Date(),
+      updatedAt: null,
     };
     try {
       await this.goalsRepository.save(newGoal);
@@ -51,10 +53,10 @@ export class GoalsService {
     }
   }
 
-  async getGoals(userId: string): Promise<GetGoalResponseDto[]> {
+  async getGoals(employeeId: string): Promise<GoalsResponseDto> {
     try {
       const goals = await this.goalsRepository.find({
-        where: { userId: userId },
+        where: { employeeId: employeeId },
         select: ['validated', 'completed', 'information', 'term'],
       });
       const goalsInfo: GetGoalResponseDto[] = goals.map((goal) => ({
@@ -64,7 +66,9 @@ export class GoalsService {
         term: goal.term,
       }));
       Logger.log('Goals fetched succesfully', 'GoalsService');
-      return goalsInfo;
+      return {
+        goals: goalsInfo
+      };
     } catch (error) {
       Logger.error('Error during goals fetching', error.stack, 'GoalsService');
       throw new InternalServerErrorException('Failed to fetch goals');
