@@ -159,7 +159,7 @@ export default function MyProjectsPage() {
 
       setLoading(true);
       try {
-        const response = await authFetch(`${url}/employee/projects`, {
+        const response = await authFetch(`${url}/projects/employee`, {
           method: "PATCH",
           body: JSON.stringify({ addProjects }),
         });
