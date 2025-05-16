@@ -23,6 +23,7 @@ import { HistoryModule } from './history/history.module';
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
       synchronize: false,
+      ssl: true
     }),
     ProjectsModule,
     SkillsModule,
