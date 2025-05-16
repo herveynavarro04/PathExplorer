@@ -20,7 +20,7 @@ export default function MyProjectsPage() {
       projectType: "Web Development",
       client: "BIMBO",
       active: true,
-      user_status: "pending",
+      status: "pending",
       information: "Designed and developed a full-stack web platform to streamline employee task management, performance tracking, and project timeline coordination",
       manager: "John Doe",
       technologies: ["React", "Node.js", "CSS"],
@@ -32,7 +32,7 @@ export default function MyProjectsPage() {
       endDate: new Date("2022-12-01"),
       projectType: "Mobile App",
       client: "Super Salads",
-      user_status: "accepted",
+      status: "accepted",
       active: false,
       information: "Designed and developed a full-stack web platform to streamline employee task management, performance tracking, and project timeline coordination",
       manager: "Jane Smith",
@@ -46,7 +46,7 @@ export default function MyProjectsPage() {
       projectType: "Backend Development",
       client: "COCA COLA",
       active: true,
-      user_status: "pending",
+      status: "pending",
       information: "Designed and developed a full-stack web platform to streamline employee task management, performance tracking, and project timeline coordination",
       manager: "Robert Brown",
       technologies: ["Node.js", "Express", "MongoDB"],
@@ -59,7 +59,7 @@ export default function MyProjectsPage() {
       projectType: "Web Development",
       client: "BIMBO",
       active: true,
-      user_status: "accepted",
+      status: "accepted",
       information: "This is a project for developing a responsive website for Bimbo",
       manager: "John Doe",
       technologies: ["React", "Node.js", "CSS"],
@@ -72,7 +72,7 @@ export default function MyProjectsPage() {
       projectType: "Mobile App",
       client: "Super Salads",
       active: false,
-      user_status: "accepted",
+      status: "accepted",
 
       information: "Developed a mobile application for Company Y to improve customer engagement.",
       manager: "Jane Smith",
@@ -86,7 +86,7 @@ export default function MyProjectsPage() {
       projectType: "Backend Development",
       client: "COCA COLA",
       active: true,
-      user_status: "accepted",
+      status: "accepted",
 
       information: "Backend development of APIs and database management for Company Z.",
       manager: "Robert Brown",
@@ -99,7 +99,7 @@ export default function MyProjectsPage() {
       endDate: new Date("2022-01-01"),
       projectType: "Web Development",
       client: "Company Y",
-      user_status: "pending",
+      status: "pending",
       active: false,
       information: "A new web development project for Company Y",
       manager: "Alice",
@@ -112,7 +112,7 @@ export default function MyProjectsPage() {
       endDate: new Date("2022-01-01"),
       projectType: "Mobile App",
       client: "Company Z",
-      user_status: "accepted",
+      status: "accepted",
       active: false,
       information: "A mobile app project for Company Z",
       manager: "Bob",
@@ -125,7 +125,7 @@ export default function MyProjectsPage() {
       endDate: new Date("2022-01-01"),
       projectType: "Web Development",
       client: "Company Y",
-      user_status: "accepted",
+      status: "accepted",
       active: true,
       information: "A new web development project for Company Y",
       manager: "Alice",
@@ -138,7 +138,7 @@ export default function MyProjectsPage() {
       endDate: new Date("2022-01-01"),
       projectType: "Mobile App",
       client: "Company Z",
-      user_status: "accepted",
+      status: "accepted",
       active: false,
       information: "A mobile app project for Company Z",
       manager: "Bob",
@@ -152,8 +152,8 @@ export default function MyProjectsPage() {
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const filteredProjects = projects.filter((project) => {
-    if (filter === 'pending') return project.user_status === 'pending';
-    return project.user_status !== 'pending';
+    if (filter === 'pending') return project.status === 'pending';
+    return project.status !== 'pending';
   });
   
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
@@ -223,7 +223,7 @@ export default function MyProjectsPage() {
             active={project.active}
             information={project.information}
             manager={project.manager}
-            user_status={project.user_status}
+            status={project.status}
             technologies={project.technologies}
             onClick={handleProjectClick}
           />

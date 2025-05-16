@@ -13,7 +13,7 @@ interface ProjectCardProps {
   information: string;
   manager: string;
   technologies: any;
-  user_status: string;
+  status: string;
   onClick: (project: any) => void; 
   className?: string;
 }
@@ -28,7 +28,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   active,
   information,
   manager,
-  user_status,
+  status,
   technologies,
   onClick,
   className,
