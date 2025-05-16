@@ -12,6 +12,7 @@ import { UpdateEmployeeProjectsResponseDto } from '../../projects/dto/response/u
 import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
 import { GetAvailableResponseDto } from '../dto/response/getAvailableProjects.response.dto';
 import { ProjectsEntity } from '../entities/projects.entity';
+import { GetUserProjectsResponseDto } from '../dto/response/getUserProjectsResponse.dto';
 
 @Injectable()
 export class EmployeeProjectsService {
@@ -89,7 +90,7 @@ export class EmployeeProjectsService {
 
   async getEmployeeProjects(
     employeeId: string,
-  ): Promise<ProjectInfoPreviewResponseDto[]> {
+  ): Promise<GetUserProjectsResponseDto> {
     try {
       const employeeProjects = await this.employeeProjectRepository.find({
         where: { employeeId: employeeId },
@@ -109,7 +110,9 @@ export class EmployeeProjectsService {
           status: employeeProjectsLink.status,
         }),
       );
-      return projects;
+      return {
+        availableProjects: projects,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

@@ -18,6 +18,7 @@ import { GetHistoryResponseDto } from './dto/response/getHistory.response.dto';
 import { UpdateHistoryResponseDto } from './dto/response/updateHistory.response.dto';
 import { UpdateHistoryRequestDto } from './dto/request/updateHistory.request.dto';
 import { DeleteHistoryResponseDto } from './dto/response/deleteHistory.response.dto';
+import { GetHistoriesResponeDto } from './dto/response/getHistories.dto.response';
 
 @Controller('history')
 export class HistoryController {
@@ -35,7 +36,7 @@ export class HistoryController {
 
   @Get()
   @UseGuards(JwtGuard)
-  async getHistories(@Req() req: Request): Promise<GetHistoryResponseDto[]> {
+  async getHistories(@Req() req: Request): Promise<GetHistoriesResponeDto> {
     const employeeId = req.user['employeeId'];
     return this.historyService.getHistories(employeeId);
   }
@@ -44,7 +45,7 @@ export class HistoryController {
   @UseGuards(JwtGuard)
   async getEmployeeHistories(
     @Param('employeeId') employeeId: string,
-  ): Promise<GetHistoryResponseDto[]> {
+  ): Promise<GetHistoriesResponeDto> {
     return this.historyService.getHistories(employeeId);
   }
 

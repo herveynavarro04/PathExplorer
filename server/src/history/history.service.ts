@@ -13,6 +13,7 @@ import { PostStoryResponseDto } from './dto/response/postStory.response.dto';
 import { UpdateHistoryResponseDto } from './dto/response/updateHistory.response.dto';
 import { HistoryEntity } from './entities/history.entity';
 import { DeleteHistoryResponseDto } from './dto/response/deleteHistory.response.dto';
+import { GetHistoriesResponeDto } from './dto/response/getHistories.dto.response';
 
 @Injectable()
 export class HistoryService {
@@ -70,7 +71,7 @@ export class HistoryService {
     }
   }
 
-  async getHistories(employeeId: string): Promise<GetHistoryResponseDto[]> {
+  async getHistories(employeeId: string): Promise<GetHistoriesResponeDto> {
     try {
       const histories = await this.historyRepository.find({
         where: { employeeId: employeeId },
@@ -94,7 +95,9 @@ export class HistoryService {
         }),
       );
       Logger.log('Histories succesfully fetched', 'HistoryService');
-      return historiesInfo;
+      return {
+        histories: historiesInfo,
+      };
     } catch (error) {
       Logger.error('Error fetching histories', error.stack, 'HistoryService');
       throw new InternalServerErrorException('Failed to fetch histories');
