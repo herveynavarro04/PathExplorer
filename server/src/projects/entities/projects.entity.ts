@@ -34,8 +34,8 @@ export class ProjectsEntity {
   @Column({ name: 'limit_employees' })
   limitEmployees: number;
 
-  @Column({ name: 'manager_id' })
-  manager: string;
+  @Column({ name: 'manager_name' })
+  managerName: string;
 
   @Column({ name: 'created_at' })
   createdAt: string;
