@@ -111,7 +111,7 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
 
   return (
     <ShowcaseSectionSkill
-      title="Habilidades Técnicas"
+      title="Habilidades Blandas"
       className="!p-7 h-[11rem]"
       action={
         isEditing ? (
