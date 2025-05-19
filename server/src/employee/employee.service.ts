@@ -7,14 +7,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { HashingService } from 'src/Utilities/hashing.utilities';
-import { RegisterRequestDto } from '../dto/request/register.request.dto';
-import { RegisterResponseDto } from '../dto/response/register.response.dto';
-import { EmployeeEntity } from '../entities/employee.entity';
-import { FindEmployeebyEmailResponseDto } from '../dto/response/getEmployeeByEmail.response.dto';
-import { GetEmployeeInfoResponseDto } from '../dto/response/getEmployeeInfo.response.dto';
-import { UpdateEmployeeRequestDto } from '../dto/request/updateEmployee.request.dto';
-import { UpdateEmployeeResponseDto } from '../dto/response/updateEmployee.response.dto';
-import { DeleteEmployeeResponseDto } from '../dto/response/deleteemployee.response.dto';
+import { RegisterRequestDto } from './dto/request/register.request.dto';
+import { UpdateEmployeeRequestDto } from './dto/request/updateEmployee.request.dto';
+import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
+import { FindEmployeebyEmailResponseDto } from './dto/response/getEmployeeByEmail.response.dto';
+import { GetEmployeeInfoResponseDto } from './dto/response/getEmployeeInfo.response.dto';
+import { RegisterResponseDto } from './dto/response/register.response.dto';
+import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
+import { EmployeeEntity } from './entities/employee.entity';
 
 @Injectable()
 export class EmployeeService {
