@@ -23,6 +23,8 @@ const Historial: React.FC = () => {
   const [descripcion, setDescripcion] = useState<string>("");
   const [fecha_inicio, setfecha_inicio] = useState<string>("");
   const [fecha_fin, setfecha_fin] = useState<string>("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+
 
   const [historyArray, setHistoryArray] = useState<HistoryItem[]>([
     {
@@ -82,6 +84,7 @@ const Historial: React.FC = () => {
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+  
 
   return (
     <>
@@ -100,61 +103,81 @@ const Historial: React.FC = () => {
           setfecha_fin={setfecha_fin}
           setOpenAddHistory={setOpenAddHistory}
           setHistoryArray={setHistoryArray}
+          editingId={editingId}
+         setEditingId={setEditingId}
         />
       )}
 
       <div className="relative w-full text-white px-5">
         <div className="relative flex justify-between items-center px-10 py-4">
           <Breadcrumb pageName="Historial" />
-        </div>
-
-        <div className="relative w-full min-h-[30rem] grid gap-6 sm:grid-cols-2 2xl:grid-cols-3 px-[3rem] pb-10">
-          {currentItems.map((history) => (
-            <HistoryCard
-              key={history.id}
-              posicion={history.posicion}
-              descripcion={history.descripcion}
-              empresa={history.empresa}
-              fecha_inicio={history.fecha_inicio}
-              fecha_fin={history.fecha_fin}
-              setOpendDeleteCard={setOpendDeleteCard}
-            />
-          ))}
-        </div>
-
-        <div className="flex justify-center gap-4 mt-6">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-          >
-            Anterior
-          </button>
-          <span className="self-center text-lg">
-            {currentPage} de {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-          >
-            Siguiente
-          </button>
-        </div>
-
-        <div
+          <div
           onClick={() => setOpenAddHistory(true)}
-          className="fixed bottom-8 left-14 flex items-center gap-2 text-white cursor-pointer z-0 border-solid border-2 border-[#7B2FE0] bg-[#3A005F] rounded-4xl w-[15rem] h-[5rem] justify-center shadow-xl transition duration-300 ease-out hover:scale-105 hover:-translate-y-1 active:scale-95"
+          className="ml-4 px-4 py-2 bg-[#65417f] self-center text-white rounded-md hover:bg-opacity-90 transition"
         >
-          <div className="absolute inset-0 bg-black/30 z-10 pointer-events-none" />
-          <CiCirclePlus
-            className="transition duration-300 ease-out hover:scale-110 hover:-translate-y-1 active:scale-95"
-            size={38}
-          />
-          <p className="text-[1rem] transition duration-300 ease-out hover:scale-100 active:scale-95">
+          <div className="absolute pointer-events-none" />
+          
+          <p className="text-[1rem] transition duration-300 ease-out hover:scale-100 active:scale-95 hover:cursor-pointer">
             Agregar empleo pasado
           </p>
         </div>
+          
+        </div>
+
+        <div className="relative w-full px-[3rem] pb-10">
+  <div className="min-h-[36rem] flex flex-col justify-between">
+    
+    {/* Cards container */}
+    <div className="grid gap-6 sm:grid-cols-2 2xl:grid-cols-3 mb-6 flex-grow">
+    {currentItems.map((history) => (
+  <HistoryCard
+    key={history.id}
+    posicion={history.posicion}
+    descripcion={history.descripcion}
+    empresa={history.empresa}
+    fecha_inicio={history.fecha_inicio}
+    fecha_fin={history.fecha_fin}
+    setOpendDeleteCard={setOpendDeleteCard}
+    // 👇 Add this:
+    onEdit={() => {
+      setEditingId(history.id);
+      setPosicion(history.posicion);
+      setDescripcion(history.descripcion);
+      setEmpresa(history.empresa);
+      setfecha_inicio(history.fecha_inicio);
+      setfecha_fin(history.fecha_fin);
+      setOpenAddHistory(true);
+    }}
+  />
+))}
+
+    </div>
+
+    {/* Pagination */}
+    <div className="flex justify-center gap-4">
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+      >
+        Anterior
+      </button>
+      <span className="self-center text-lg">
+        {currentPage} de {totalPages}
+      </span>
+      <button
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>
+
+
+        
       </div>
     </>
   );

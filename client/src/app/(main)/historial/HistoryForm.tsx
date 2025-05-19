@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 
 interface HistoryFormProps {
   posicion: string;
@@ -24,6 +25,8 @@ interface HistoryFormProps {
       }[]
     >
   >;
+  editingId: number | null;
+  setEditingId: (id: number | null) => void;
 }
 
 const HistoryForm: React.FC<HistoryFormProps> = ({
@@ -39,32 +42,89 @@ const HistoryForm: React.FC<HistoryFormProps> = ({
   setfecha_fin,
   setOpenAddHistory,
   setHistoryArray,
+  editingId,
+  setEditingId,
 }) => {
-  return (
-    <div className="fixed inset-0 z-[999] bg-black/50 flex items-center justify-center">
+  const modalRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !(modalRef.current as any).contains(event.target)) {
+        closeAnimation();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const closeAnimation = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      setOpenAddHistory(false);
+      resetForm();
+      setEditingId(null); 
+    }, 200);
+  };
+
+  const resetForm = () => {
+    setPosicion("");
+    setEmpresa("");
+    setDescripcion("");
+    setfecha_inicio("");
+    setfecha_fin("");
+  };
+
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-sm bg-black/50">
       <form
+        ref={modalRef}
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
-          setHistoryArray((prev) => [
-            ...prev,
-            {
-              id: prev.length > 0 ? prev[prev.length - 1].id + 1 : 1,
-              posicion,
-              descripcion,
-              empresa,
-              fecha_inicio,
-              fecha_fin,
-            },
-          ]);
-          setOpenAddHistory(false);
-          setPosicion("");
-          setEmpresa("");
-          setDescripcion("");
-          setfecha_inicio("");
-          setfecha_fin("");
+        
+          if (editingId !== null) {
+            // EDIT mode
+            setHistoryArray((prev) =>
+              prev.map((item) =>
+                item.id === editingId
+                  ? {
+                      ...item,
+                      posicion,
+                      descripcion,
+                      empresa,
+                      fecha_inicio,
+                      fecha_fin,
+                    }
+                  : item
+              )
+            );
+          } else {
+            // ADD mode
+            setHistoryArray((prev) => [
+              ...prev,
+              {
+                id: prev.length > 0 ? prev[prev.length - 1].id + 1 : 1,
+                posicion,
+                descripcion,
+                empresa,
+                fecha_inicio,
+                fecha_fin,
+              },
+            ]);
+          }
+        
+          closeAnimation();
         }}
-        className="w-full max-w-3xl rounded-[10px] bg-[#f8f6fa] dark:bg-[#311a42] shadow-1 dark:shadow-card p-6 sm:p-8 space-y-6"
+        
+        className={`w-full max-w-3xl rounded-[10px] bg-[#f8f6fa] dark:bg-[#311a42] shadow-1 dark:shadow-card p-6 sm:p-8 space-y-6 transition-all duration-300 ease-in-out ${
+          isVisible ? "animate-fadeInModal" : "animate-fadeOutModal"
+        }`}
       >
+       
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
@@ -141,14 +201,7 @@ const HistoryForm: React.FC<HistoryFormProps> = ({
           <button
             type="button"
             className="text-sm text-gray-600 dark:text-gray-300 hover:text-red-500 transition"
-            onClick={() => {
-              setOpenAddHistory(false);
-              setPosicion("");
-              setEmpresa("");
-              setDescripcion("");
-              setfecha_inicio("");
-              setfecha_fin("");
-            }}
+            onClick={closeAnimation}
           >
             Cancelar
           </button>
@@ -160,9 +213,9 @@ const HistoryForm: React.FC<HistoryFormProps> = ({
           />
         </div>
       </form>
-    </div>
+    </div>,
+    document.body
   );
 };
 
 export default HistoryForm;
-

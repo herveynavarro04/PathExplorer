@@ -123,12 +123,7 @@ const Page = () => {
     <div className="mx-auto w-full max-w-[970px]">
       <div className="flex pt-5 items-center justify-between w-full">
         <Breadcrumb pageName="Mis Cursos" />
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="ml-4 px-4 py-2 bg-[#65417f] text-white rounded-md hover:bg-opacity-90 transition"
-        >
-          Agregar curso
-        </button>
+        
       </div>
 
       <div className="flex flex-col min-h-[34rem]">
