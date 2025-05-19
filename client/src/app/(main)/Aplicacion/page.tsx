@@ -1,13 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import ProyectoModal from "./ProyectoModal";
-import { FaInfoCircle, FaClock, FaCheck } from "react-icons/fa";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
 import ProjectCard from "./ProjectCard";
 import Select from "react-select";
 import { useTheme } from "next-themes";
 import { authFetch } from "@utils/authFetch";
-import Loading from "components/Loading";
 import { useRouter } from "next/navigation";
 import LoadingPage from "components/LoadingPage";
 
@@ -155,6 +153,11 @@ export default function MyProjectsPage() {
 
   useEffect(() => {
     const loadData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
       if (!triggerPost) return;
 
       setLoading(true);
