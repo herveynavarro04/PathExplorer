@@ -80,8 +80,8 @@ const CourseModal: React.FC<CourseModalProps> = ({ course, onClose }) => {
 
           <div className="flex md:justify-end md:items-start">
             <div className="inline-block rounded-full bg-[#e8d8fa] text-[#4b3b61] px-4 py-1 text-sm font-medium shadow-sm">
-            <strong>Fecha de obtención:</strong>{' '}
-              {formatearFecha(course.date_obtained)}
+            <strong>Curso asignado el:</strong>{' '}
+              {formatearFecha(course.created_at)}
             </div>
           </div>
         </div>

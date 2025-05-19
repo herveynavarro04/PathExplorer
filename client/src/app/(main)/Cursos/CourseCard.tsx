@@ -9,9 +9,9 @@ type CourseCardProps = {
   reviser: string;
   duration: number;
   institution: string;
-  date_obtained: Date;
   information: string;
   course_url: string;
+  created_at: Date;
   onClick: (course: any) => void; 
   className?: string;
 };
@@ -23,11 +23,11 @@ const CourseCard: React.FC<CourseCardProps> = ({
   reviser,
   duration,
   institution,
-  date_obtained,
   information,
   course_url,
   onClick,
   className,
+  created_at,
 }) => {
   const courseData = {
     courseId,
@@ -36,9 +36,9 @@ const CourseCard: React.FC<CourseCardProps> = ({
     reviser,
     duration,
     institution,
-    date_obtained,
     information,
     course_url,
+    created_at,
   };
 
   return (
