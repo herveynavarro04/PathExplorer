@@ -7,6 +7,7 @@ import { TechnologiesEntity } from 'src/common/entities/technology.entity';
 import { ProjectTechnologyEntity } from 'src/common/entities/projectTechnologies.entity';
 import { ProjectsService } from './service/projects.service';
 import { EmployeeProjectsService } from './service/employeeProjects.service';
+import { EmployeeEntity } from 'src/employee/entities/employee.entity';
 
 @Module({
   imports: [

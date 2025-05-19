@@ -53,7 +53,7 @@ export class ProjectsService {
         client: project.client,
         active: project.active,
         information: project.information,
-        manager: project.manager,
+        manager: project.managerName,
         technologies: projectTechnologies,
       };
       Logger.log('Project info fetched!', 'ProjectService');
