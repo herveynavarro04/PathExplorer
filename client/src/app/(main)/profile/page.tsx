@@ -8,6 +8,7 @@ import SoftSkillsCard from "./SoftSkillsCard";
 import { authFetch } from "@utils/authFetch";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
 import LoadingPage from "components/LoadingPage";
+import ChargeabilityCard from "./ChargeabilityCard";
 
 type ProfileData = {
   firstName: string;
@@ -113,6 +114,7 @@ const Page = () => {
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
           <PersonalInfoForm userData={profile} />
           <div className="max-h-auto flex flex-col gap-5">
+            <ChargeabilityCard />
             <TechSkillsCard skills={skills} userSkills={userSkills} url={url} />
             <SoftSkillsCard skills={skills} userSkills={userSkills} url={url} />
           </div>
