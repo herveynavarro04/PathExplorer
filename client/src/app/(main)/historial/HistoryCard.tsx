@@ -1,5 +1,5 @@
 import React from "react";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
 import { cn } from "lib/utils";
 
 interface HistoryCardProps {
@@ -9,9 +9,13 @@ interface HistoryCardProps {
   fecha_inicio: string;
   fecha_fin: string;
   setOpendDeleteCard: (open: boolean) => void;
+  onEdit?: () => void;
   onClick?: () => void;
   className?: string;
 }
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("es-ES", { year: "numeric", month: "long" });
+
 
 const HistoryCard: React.FC<HistoryCardProps> = ({
   posicion,
@@ -20,6 +24,7 @@ const HistoryCard: React.FC<HistoryCardProps> = ({
   fecha_inicio,
   fecha_fin,
   setOpendDeleteCard,
+  onEdit,
   onClick,
   className,
 }) => {
@@ -37,17 +42,30 @@ const HistoryCard: React.FC<HistoryCardProps> = ({
             <h2 className="text-lg font-semibold">{posicion}</h2>
             <p className="text-sm text-gray-500 dark:text-gray-300">{empresa}</p>
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpendDeleteCard(true);
-            }}
-            className="text-gray-400 hover:text-red-500 transition-colors"
-            aria-label="Eliminar entrada"
-            title="Eliminar entrada"
-          >
-            <FaRegTrashAlt size={20} />
-          </button>
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit?.(); // edit handler
+              }}
+              className="text-gray-400 hover:text-blue-500 transition-colors"
+              aria-label="Editar entrada"
+              title="Editar entrada"
+            >
+              <FaRegEdit size={20} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpendDeleteCard(true);
+              }}
+              className="text-gray-400 hover:text-red-500 transition-colors"
+              aria-label="Eliminar entrada"
+              title="Eliminar entrada"
+            >
+              <FaRegTrashAlt size={20} />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -62,4 +80,3 @@ const HistoryCard: React.FC<HistoryCardProps> = ({
 };
 
 export default HistoryCard;
-

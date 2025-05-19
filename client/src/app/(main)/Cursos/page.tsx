@@ -27,7 +27,7 @@ const Page = () => {
       reviser: "María González",
       duration: 40,
       institution: "Universidad Nacional Autónoma de México",
-      date_obtained: new Date("2023-05-10"),
+      created_at: new Date("2023-05-10"),
       information:
         "Curso enfocado en los fundamentos de la IA, incluyendo redes neuronales y aprendizaje supervisado.",
       course_url: "https://cursos.unam.mx/ia-introduccions/",
@@ -39,7 +39,7 @@ const Page = () => {
       reviser: "Carlos Herrera",
       duration: 60,
       institution: "Platzi",
-      date_obtained: new Date("2022-11-20"),
+      created_at: new Date("2022-11-20"),
       information:
         "Cubre el desarrollo de aplicaciones usando React, Node.js, y bases de datos relacionales.",
       course_url: "https://platzi.com/cursos/fullstack-webdev/",
@@ -51,7 +51,7 @@ const Page = () => {
       reviser: "Ana Martínez",
       duration: 30,
       institution: "Coursera - Cisco",
-      date_obtained: new Date("2021-09-15"),
+      created_at: new Date("2021-09-15"),
       information:
         "Introduce principios básicos de seguridad informática y prácticas de defensa.",
       course_url: "https://www.coursera.org/learn/fundamentos-ciberseguridad",
@@ -63,7 +63,7 @@ const Page = () => {
       reviser: "Luis Ramírez",
       duration: 25,
       institution: "Scrum.org",
-      date_obtained: new Date("2024-02-01"),
+      created_at: new Date("2024-02-01"),
       information:
         "Curso práctico sobre marcos ágiles con foco en roles, artefactos y ceremonias de Scrum.",
       course_url: "https://www.scrum.org/courses/scrum-master-training",
@@ -75,7 +75,7 @@ const Page = () => {
       reviser: "Luis Ramírez",
       duration: 25,
       institution: "Scrum.org",
-      date_obtained: new Date("2024-02-01"),
+      created_at: new Date("2024-02-01"),
       information:
         "Curso práctico sobre marcos ágiles con foco en roles, artefactos y ceremonias de Scrum.",
       course_url: "https://www.scrum.org/courses/gestion-tiempo-recursos",
@@ -87,7 +87,7 @@ const Page = () => {
       reviser: "Sofía Torres",
       duration: 50,
       institution: "edX - Harvard",
-      date_obtained: new Date("2023-08-10"),
+      created_at: new Date("2023-08-10"),
       information: "Explora técnicas avanzadas como boosting, clustering y redes profundas.",
       course_url: "https://edx.org/ml-avanzado",
     },
@@ -98,7 +98,7 @@ const Page = () => {
       reviser: "Juan Pérez",
       duration: 35,
       institution: "IBM",
-      date_obtained: new Date("2023-09-10"),
+      created_at: new Date("2023-09-10"),
       information: "Procesamiento de datos masivos con Hadoop, Spark y herramientas modernas.",
       course_url: "https://ibm.com/big-data-essentials",
     },
@@ -123,12 +123,7 @@ const Page = () => {
     <div className="mx-auto w-full max-w-[970px]">
       <div className="flex pt-5 items-center justify-between w-full">
         <Breadcrumb pageName="Mis Cursos" />
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="ml-4 px-4 py-2 bg-[#65417f] text-white rounded-md hover:bg-opacity-90 transition"
-        >
-          Agregar curso
-        </button>
+        
       </div>
 
       <div className="flex flex-col min-h-[34rem]">
@@ -142,7 +137,7 @@ const Page = () => {
               reviser={course.reviser}
               duration={course.duration}
               institution={course.institution}
-              date_obtained={course.date_obtained}
+              created_at={course.created_at}
               information={course.information}
               course_url={course.course_url}
               onClick={handleCourseClick}

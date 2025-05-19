@@ -1,60 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 
 interface DeleteCardProps {
-  historyId: number;
-  setOpendDeleteCard: (open: boolean) => void;
-  setHistoryArray: React.Dispatch<React.SetStateAction<any[]>>;
+  onClose: () => void;
+  onDelete: () => void;
 }
 
-const DeleteCard: React.FC<DeleteCardProps> = ({ historyId, setOpendDeleteCard, setHistoryArray }) => {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const DeleteCard: React.FC<DeleteCardProps> = ({ onClose, onDelete }) => {
+  const modalRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(true);
 
-  const simulateDelete = async () => {
-    setIsDeleting(true);
-    setError(null);
-    
-    try {
-     
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !(modalRef.current as any).contains(event.target)) {
+        closeModal();
+      }
+    };
 
-      setHistoryArray((prevHistory) =>
-        prevHistory.filter((historyItem) => historyItem.id !== historyId)
-      );
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-      setOpendDeleteCard(false);
-    } catch (err) {
-      setError("An error occurred while deleting. Please try again.");
-    } finally {
-      setIsDeleting(false);
-    }
+  const closeModal = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 200);
   };
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-md shadow-md max-w-sm w-full">
-        <h2 className="text-xl font-semibold text-center">Are you sure you want to delete this entry?</h2>
-        
-        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-        
-        <div className="flex justify-between mt-4">
+  const confirmDelete = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onDelete();
+    }, 200);
+  };
+
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-sm bg-black/50">
+      <div
+        ref={modalRef}
+        className={`bg-[#fefefe] dark:bg-[#311a42] text-gray-800 dark:text-white rounded-lg p-6 max-w-md w-full transition-all duration-300 ease-in-out shadow-xl ${
+          isVisible ? "animate-fadeInModal" : "animate-fadeOutModal"
+        }`}
+      >
+        <h2 className="text-xl font-semibold mb-4">¿Eliminar este empleo?</h2>
+        <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">
+          Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminarlo?
+        </p>
+        <div className="flex justify-end gap-4">
           <button
-            className="px-4 py-2 bg-gray-500 text-white rounded-md"
-            onClick={() => setOpendDeleteCard(false)} 
+            onClick={closeModal}
+            className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
           >
-            Cancel
+            Cancelar
           </button>
           <button
-            className="px-4 py-2 bg-red-500 text-white rounded-md"
-            onClick={simulateDelete}
-            disabled={isDeleting}
+            onClick={confirmDelete}
+            className="px-4 py-2 text-sm font-semibold bg-red-600 text-white rounded-md hover:bg-red-700 transition"
           >
-            {isDeleting ? "Deleting..." : "Delete"}
+            Eliminar
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
 export default DeleteCard;
-
