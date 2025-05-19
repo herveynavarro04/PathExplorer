@@ -25,8 +25,9 @@ import { CertificatesModule } from './certificates/certificates.module';
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
       synchronize: false,
-      ssl: true
+      ssl: true,
     }),
+
     ProjectsModule,
     SkillsModule,
     GoalsModule,
