@@ -16,6 +16,8 @@ const TechInterestsCard = ({ interestMap, url }: TechInterestsCardProps) => {
   const [addInterests, setAddInterests] = useState<string[]>([]);
   const [deleteInterests, setDeleteInterests] = useState<string[]>([]);
   const [triggerSave, setTriggerSave] = useState<boolean>(false);
+  const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
+
 
   const MAX_INTERESTS = 20;
 
@@ -106,19 +108,22 @@ const TechInterestsCard = ({ interestMap, url }: TechInterestsCardProps) => {
         {isEditing && (
           <div className="relative">
             <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar habilidad"
-              className="w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary"
-            />
-            {searchTerm && (
-              <div className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setTimeout(() => setIsInputFocused(false), 150)} 
+            placeholder="Buscar habilidad"
+            className="w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary"
+          />
+
+            {(isInputFocused || searchTerm) && (
+              <div className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
                 {filteredInterests.slice(0, 10).map((skill) => (
                   <div
                     key={skill}
                     className="cursor-pointer px-4 py-2 hover:bg-gray-2 dark:hover:bg-gray-7"
-                    onClick={() => addInterest(skill)}
+                    onMouseDown={() => addInterest(skill)}
                   >
                     {skill}
                   </div>
