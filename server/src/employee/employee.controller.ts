@@ -9,12 +9,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/common/Guards/jwt.guards';
-import { DeleteEmployeeResponseDto } from '../dto/response/deleteEmployee.response.dto';
-import { UpdateEmployeeResponseDto } from '../dto/response/updateEmployee.response.dto';
-import { GetEmployeeInfoResponseDto } from '../dto/response/getEmployeeInfo.response.dto';
-import { UpdateEmployeeRequestDto } from '../dto/request/updateEmployee.request.dto';
 import { Request } from 'express';
-import { EmployeeService } from '../services/employee.service';
+import { GetEmployeeInfoResponseDto } from './dto/response/getEmployeeInfo.response.dto';
+import { UpdateEmployeeRequestDto } from './dto/request/updateEmployee.request.dto';
+import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
+import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
+import { EmployeeService } from './employee.service';
 
 @Controller('employee')
 export class EmployeeController {

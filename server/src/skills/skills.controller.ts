@@ -20,14 +20,14 @@ export class SkillsController {
     return this.skillsService.getSkills();
   }
 
-  @Get('/employee')
+  @Get('employee')
   @UseGuards(JwtGuard)
   async getemployeeSkills(@Req() req: Request): Promise<SkillsResponseDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeSkillsService.getEmployeeSkills(employeeId);
   }
 
-  @Patch('/employee')
+  @Patch('employee')
   @UseGuards(JwtGuard)
   async patchemployeeSkills(
     @Body() updateSkillsPayload: UpdateEmployeeSkillsRequestDto,
@@ -40,14 +40,14 @@ export class SkillsController {
     );
   }
 
-  @Get('/employee/interests')
+  @Get('employee/interests')
   @UseGuards(JwtGuard)
   async getemployeeInterests(@Req() req: Request): Promise<SkillsResponseDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeSkillsService.getEmployeeSkillsInterests(employeeId);
   }
 
-  @Patch('/employee/interests')
+  @Patch('employee/interests')
   @UseGuards(JwtGuard)
   async patchemployeeSkillsInterests(
     @Body() updateSkillsPayload: UpdateEmployeeSkillsRequestDto,

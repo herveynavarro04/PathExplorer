@@ -11,9 +11,9 @@ import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { HashingService } from 'src/Utilities/hashing.utilities';
-import { EmployeeService } from 'src/employee/services/employee.service';
 import { EmployeeEntity } from 'src/employee/entities/employee.entity';
 import { ValidateEmployeeResponseDto } from './dto/response/validateUser.response.dto';
+import { EmployeeService } from 'src/employee/employee.service';
 
 @Injectable()
 export class AuthService {

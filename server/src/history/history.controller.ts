@@ -14,7 +14,6 @@ import { Request } from 'express';
 import { PostStoryRequestDto } from './dto/request/postStory.request.dto';
 import { PostStoryResponseDto } from './dto/response/postStory.response.dto';
 import { HistoryService } from './history.service';
-import { GetHistoryResponseDto } from './dto/response/getHistory.response.dto';
 import { UpdateHistoryResponseDto } from './dto/response/updateHistory.response.dto';
 import { UpdateHistoryRequestDto } from './dto/request/updateHistory.request.dto';
 import { DeleteHistoryResponseDto } from './dto/response/deleteHistory.response.dto';

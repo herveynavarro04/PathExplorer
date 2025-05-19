@@ -12,7 +12,6 @@ import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { GetAvailableResponseDto } from './dto/response/getAvailableProjects.response.dto';
 import { GetProjectsTechResponseDto } from './dto/response/getProjectsTech.response.dto';
 import { ProjectsInfoResponseDto } from './dto/response/projectsInfo.response.dto';
-import { ProjectInfoPreviewResponseDto } from './dto/response/projectInfoPreview.response.dto';
 import { UpdateEmployeeProjectsRequestDto } from './dto/request/updateEmployeeProjects.request.dto';
 import { UpdateEmployeeProjectsResponseDto } from './dto/response/updateEmployeeProjects.response.dto';
 import { ProjectsService } from './service/projects.service';
@@ -32,7 +31,7 @@ export class ProjectsController {
     return this.projectsService.getProjectsTech();
   }
 
-  @Get('/employee')
+  @Get('employee')
   @UseGuards(JwtGuard)
   async getEmployeeProjects(
     @Req() req: Request,
@@ -41,7 +40,7 @@ export class ProjectsController {
     return this.employeeProjectsService.getEmployeeProjects(employeeId);
   }
 
-  @Get('/employee/available')
+  @Get('employee/available')
   @UseGuards(JwtGuard)
   async getAvailableProjects(
     @Req() req: Request,
@@ -52,7 +51,7 @@ export class ProjectsController {
     );
   }
 
-  @Patch('/employee')
+  @Patch('employee')
   @UseGuards(JwtGuard)
   async updateEmployeeProjects(
     @Body() updatePayload: UpdateEmployeeProjectsRequestDto,
