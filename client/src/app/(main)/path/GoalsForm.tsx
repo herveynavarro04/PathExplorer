@@ -80,19 +80,6 @@ const GoalsForm: React.FC<GoalsFormProps> = ({ setOpenForm, addGoal }) => {
           />
         </div>
 
-        <div className="flex flex-col">
-          <label className="mb-1 font-medium">Estado</label>
-          <select
-            value={status}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-              setStatus(e.target.value as "inProgress" | "complete")
-            }
-            className="bg-white dark:bg-[#1c1c1c] text-[#2b2b2b] dark:text-white border border-[#d7bff1] dark:border-[#444] rounded-xl px-4 py-2"
-          >
-            <option value="inProgress">En progreso</option>
-            <option value="complete">Completada</option>
-          </select>
-        </div>
 
         <div className="flex flex-col gap-3 pt-4">
           <button
