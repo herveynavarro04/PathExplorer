@@ -44,10 +44,9 @@ const Page = () => {
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [techSkillMap, setTechSkillMap] = useState<Map<
-    string,
-    [string, boolean]
-  > | null>(null);
+  const [skills, setSkills] = useState<SkillsResponse>(null);
+  const [userSkills, setUserSKills] = useState<UserSkillsResponse>(null);
+
   const [softSkillMap, setSoftSkillMap] = useState<Map<
     string,
     [string, boolean]
@@ -83,15 +82,8 @@ const Page = () => {
           position: userData.position || "Front-end Developer",
         });
 
-        const userTechSkillNames = new Set(
-          userSkills.technicalSkills.map((s) => s.skillName)
-        );
-        const techSkillMap = new Map<string, [string, boolean]>(
-          skills.technicalSkills.map((skill) => [
-            skill.skillName,
-            [skill.skillId, userTechSkillNames.has(skill.skillName)],
-          ])
-        );
+        setSkills(skills);
+        setUserSKills(userSkills);
 
         const userSoftSkillNames = new Set(
           userSkills.softSkills.map((s) => s.skillName)
@@ -103,7 +95,6 @@ const Page = () => {
           ])
         );
 
-        setTechSkillMap(techSkillMap);
         setSoftSkillMap(softSkillMap);
         setLoading(false);
       } catch (err) {
@@ -122,8 +113,8 @@ const Page = () => {
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
           <PersonalInfoForm userData={profile} />
           <div className="max-h-auto flex flex-col gap-5">
-            <TechSkillsCard techSkillMap={techSkillMap} url={url} />
-            <SoftSkillsCard softSkillMap={softSkillMap} url={url} />
+            <TechSkillsCard skills={skills} userSkills={userSkills} url={url} />
+            <SoftSkillsCard skills={skills} userSkills={userSkills} url={url} />
           </div>
         </div>
       </div>
