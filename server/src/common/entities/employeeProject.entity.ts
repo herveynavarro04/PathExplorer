@@ -13,6 +13,9 @@ export class EmployeeProjectEntity {
   @Column({ name: 'status' })
   status: string;
 
+  @Column({ name: 'position' })
+  position: string;
+
   @Column({ name: 'chargeability', type: 'int' })
   chargeability: number;
 
