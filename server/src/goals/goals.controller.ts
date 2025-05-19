@@ -4,7 +4,6 @@ import { Request } from 'express';
 import { PostGoalRequestDto } from './dto/request/postGoal.request.dto';
 import { PostGoalResponseDto } from './dto/response/postGoal.response.dto';
 import { GoalsService } from './goals.service';
-import { GetGoalResponseDto } from './dto/response/getGoal.response.dto';
 import { GoalsResponseDto } from './dto/response/getGoals.response.dto';
 
 @Controller('goals')

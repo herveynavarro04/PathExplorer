@@ -3,6 +3,7 @@ import { IsOptional } from 'class-validator';
 import { EmployeeSkillEntity } from 'src/common/entities/employeeSkills.entity';
 import { EmployeeInterestEntity } from 'src/common/entities/employeeInterests.entity';
 import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
+import { EmployeeCoursesEntity } from 'src/common/entities/employeeCourses.entity';
 
 @Entity('employee')
 export class EmployeeEntity {
@@ -53,4 +54,11 @@ export class EmployeeEntity {
   })
   @IsOptional()
   employeeInterestLink?: EmployeeInterestEntity[];
+
+  @OneToMany(() => EmployeeCoursesEntity, (link) => link.employee, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @IsOptional()
+  employeeCoursesLink?: EmployeeCoursesEntity[];
 }
