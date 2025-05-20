@@ -33,6 +33,8 @@ export class CertificatesService {
       const newCertificate: CertificatesEntity = {
         certificateId: certificateId,
         title: postCertificatePayload.title,
+        information: postCertificatePayload.information,
+        obtainedAt: postCertificatePayload.obtainedAt,
         employeeId: employeeId,
         createdAt: new Date(),
         status: 'pending',
@@ -93,7 +95,8 @@ export class CertificatesService {
       const certificates = employeeCertificates.map((certificate) => ({
         certificateId: certificate.certificateId,
         title: certificate.title,
-        createdAt: certificate.createdAt,
+        obtainedAt: certificate.obtainedAt,
+        information: certificate.information,
         status: certificate.status,
       }));
       return {
@@ -117,7 +120,7 @@ export class CertificatesService {
     try {
       const certificateInfo = await this.certificatesRepository.findOne({
         where: { certificateId: certificateId },
-        select: ['createdAt', 'status', 'title'],
+        select: ['status', 'title', 'obtainedAt'],
       });
       Logger.log('Certificate info succesfully fetched', 'CertificatesService');
       return certificateInfo;

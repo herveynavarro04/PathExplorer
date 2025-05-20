@@ -40,9 +40,11 @@ export class CertificatesController {
 
   @Get()
   @UseGuards(JwtGuard)
-  async getCertificates(@Req() req: Request): Promise<GetCertificatesResponseDto> {
+  async getCertificates(
+    @Req() req: Request,
+  ): Promise<GetCertificatesResponseDto> {
     const employeeId = req.user['employeeId'];
-    return this.certificateService.getCertificates(employeeId)
+    return this.certificateService.getCertificates(employeeId);
   }
 
   @Get(':certificateId')
