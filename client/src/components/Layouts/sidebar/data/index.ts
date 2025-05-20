@@ -26,11 +26,6 @@ export const NAV_DATA = [
         url: "/my-projects",
         icon: Icons.Table,
       },
-      {
-        title: "Project Manager",
-        url: "/Project-Manager",
-        icon: Icons.Table,
-      }
       
     ],
   },
