@@ -169,6 +169,7 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
                 information={certificate.information}
                 obtainedAt={certificate.obtainedAt}
                 onClick={() => handleCertClick(certificate)}
+                onDelete={handleDeleteClick}
               />
             ))
           )}
