@@ -86,7 +86,7 @@ export class CertificatesService {
     try {
       const employeeCertificates = await this.certificatesRepository.find({
         where: { employeeId: employeeId },
-        select: ['certificateId', 'createdAt', 'status', 'title'],
+        select: ['certificateId', 'createdAt', 'status', 'title', 'information'],
       });
       Logger.log(
         'Certificates info succesfully fetched',
