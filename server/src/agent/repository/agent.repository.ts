@@ -1,8 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { ProjectRecomendationsRequestDto } from '../dto/request/projectRecomendations.request.dto';
 import { InternalServerErrorException, Logger } from '@nestjs/common';
-import { ProjectRecomendationsResponseDto } from '../dto/response/projectRecomendations.response.dto';
-import { lastValueFrom } from 'rxjs';
+import { MsAgentResponse } from '../dto/response/msAgent.response.dto';
 
 export class AgentRepository {
   private httpClient: AxiosInstance;
@@ -15,7 +14,7 @@ export class AgentRepository {
 
   async agentProjectRecomendations(
     payload: ProjectRecomendationsRequestDto,
-  ): Promise<ProjectRecomendationsResponseDto> {
+  ): Promise<MsAgentResponse> {
     try {
       const response = await this.httpClient.post(
         '/api/agent/recommend',
@@ -25,9 +24,7 @@ export class AgentRepository {
         'Project recomendations succesfully requested',
         'AgentRepository',
       );
-      return {
-        projects: response.data,
-      };
+      return response.data;
     } catch (error) {
       Logger.error('Error on MsAgent request', error.stack, 'AgentRepository');
       throw new InternalServerErrorException('Failed to request projects');

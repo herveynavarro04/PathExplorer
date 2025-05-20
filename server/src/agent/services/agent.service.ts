@@ -13,6 +13,8 @@ import { ProjectRecomendationsRequestDto } from '../dto/request/projectRecomenda
 import { IEmployeeInfo } from '../interfaces/employeeInfo.interface';
 import { AgentRepository } from '../repository/agent.repository';
 import { ProjectsEntity } from 'src/projects/entities/projects.entity';
+import { MsAgentResponse } from '../dto/response/msAgent.response.dto';
+import { IProjectsInfo } from '../interfaces/projectsInfo.interface';
 
 @Injectable()
 export class AgentService {
@@ -47,7 +49,13 @@ export class AgentService {
       availableProjects: availableProjects,
     };
 
-    return this.agentRepository.agentProjectRecomendations(payload);
+    const msAgentResponse: MsAgentResponse =
+      await this.agentRepository.agentProjectRecomendations(payload);
+    const projectsRecs = await this.getProjectsInfo(msAgentResponse.projects);
+
+    return {
+      projectRecs: projectsRecs,
+    };
   }
 
   private async getEmployeeSkills(employeeId: string): Promise<string[]> {
@@ -55,7 +63,7 @@ export class AgentService {
       const skillIds = await this.employeeSkillsRepository.find({
         where: { employeeId: employeeId },
         select: ['skillId'],
-        relations: ['employeeSkillLink', 'employeeSkillLink.skill'],
+        relations: ['skill'],
       });
       const skills = skillIds.map(
         (employeeSkillLink) => employeeSkillLink.skill.skillName,
@@ -72,12 +80,34 @@ export class AgentService {
     }
   }
 
+  private async getProjectsInfo(
+    projectRecs: string[],
+  ): Promise<IProjectsInfo[]> {
+    try {
+      const projects = await this.projectsRepository.find({
+        where: {
+          projectId: In(projectRecs),
+        },
+        select: ['client', 'projectId', 'managerName', 'projectName'],
+      });
+      return projects.map((project) => ({
+        projectId: project.projectId,
+        projectName: project.projectName,
+        managerName: project.managerName,
+        client: project.client,
+      }));
+    } catch (error) {
+      Logger.error('Error fetching project info', error.stack, 'AgentService');
+      throw new InternalServerErrorException('Failed to fetch project info');
+    }
+  }
+
   private async getEmployeeInterests(employeeId: string): Promise<string[]> {
     try {
       const skillIds = await this.employeeInterestsRepository.find({
         where: { employeeId: employeeId },
         select: ['skillId'],
-        relations: ['employeeSkillLink', 'employeeSkillLink.skill'],
+        relations: ['skill'],
       });
       const skills = skillIds.map(
         (employeeSkillLink) => employeeSkillLink.skill.skillName,
@@ -99,7 +129,7 @@ export class AgentService {
     }
   }
 
-  private async getAvailableProjects(pastProjects: string[]): Promise<object> {
+  private async getAvailableProjects(pastProjects: string[]): Promise<any> {
     try {
       const projects = await this.projectsRepository.find({
         where: {
@@ -140,7 +170,7 @@ export class AgentService {
       const projectIds = await this.employeeProjectsRepository.find({
         where: { employeeId: employeeId },
         select: ['projectId'],
-        relations: ['employeeProjectLink', 'employeeProjectLink.project'],
+        relations: ['employee', 'project'],
       });
       const projects = projectIds.map((link) => link.project.information);
       Logger.log('Employee projects successfully fetched', 'AgentAgentService');
