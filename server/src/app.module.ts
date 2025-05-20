@@ -9,6 +9,7 @@ import { GoalsModule } from './goals/goals.module';
 import { HistoryModule } from './history/history.module';
 import { CoursesModule } from './courses/courses.module';
 import { CertificatesModule } from './certificates/certificates.module';
+import { AgentModule } from './agent/agent.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CertificatesModule } from './certificates/certificates.module';
     HistoryModule,
     CoursesModule,
     CertificatesModule,
+    AgentModule,
   ],
 })
 export class AppModule {}
