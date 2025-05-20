@@ -16,7 +16,7 @@ export class CertificatesEntity {
   @Column({ name: 'created_at' })
   createdAt: Date;
 
-  @Column({ name: 'obtianed_at' })
+  @Column({ name: 'obtained_at' })
   obtainedAt: Date;
 
   @Column({ name: 'status' })
