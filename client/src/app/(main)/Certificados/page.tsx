@@ -8,6 +8,9 @@ import CertForm from './CertForm';
 import { authFetch } from '@utils/authFetch';
 import CertModal from './CertModal';
 import DeleteModal from './DeleteModal';
+import { FaInfoCircle, FaClock, FaCheck } from "react-icons/fa";
+import { FiCheckCircle, FiXCircle, FiClock } from "react-icons/fi";
+
 
 
 
@@ -102,11 +105,45 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
   return (
     <div className="mx-auto w-full max-w-[970px]">
       <div className="flex justify-between">
-        <div className="flex">
-          <div className="pt-5">
-            <Breadcrumb pageName="Mis Certificados" />
+      <div className="flex">
+            <div className="pt-5">
+              <Breadcrumb pageName="Mis Certificados" />
+            </div>
+            <div className="relative bg-transparent p-4 flex">
+              <div className="relative group flex items-center space-x-2">
+                <FaInfoCircle className="text-xl cursor-pointer" />
+                <div className="absolute left-0 top-full mt-2 w-80 p-5 bg-[#e4e0e8] dark:bg-[#a285be] text-gray-300 rounded-2xl shadow-lg text-base z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ">
+                  <h3 className="text-md font-semibold mb-4 text-black dark:text-white">
+                    Simbología
+                  </h3>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="text-2xl text-green-500 dark:text-white">
+                      <FiCheckCircle className="transform scale-[0.8]" />
+                    </div>
+                    <span className="text-sm text-black dark:text-white">
+                      Certificado aprobado
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="text-2xl text-yellow-500 dark:text-white">
+                      <FiClock className="transform scale-[0.8]" />
+                    </div>
+                    <span className="text-sm text-black dark:text-white">
+                      Certificado pendiente de revisión
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="text-2xl text-red-700 dark:text-white">
+                      <FiXCircle className="transform scale-[0.8]" />
+                    </div>
+                    <span className="text-sm text-black dark:text-white">
+                      Certificado rechazado
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
         <button
           onClick={() => setShowAddModal(true)}
