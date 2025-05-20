@@ -1,12 +1,47 @@
+// interface FetchOptions extends RequestInit {
+//   headers?: HeadersInit;
+// }
+
+// export const authFetch = async <T = any,>(
+//   url: string,
+//   options: FetchOptions = {}
+// ): Promise<T | false> => {
+//   const token = localStorage.getItem("token");
+
+//   try {
+//     const res = await fetch(url, {
+//       ...options,
+//       headers: {
+//         ...(options.headers || {}),
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "application/json",
+//       },
+//     });
+
+//     if (res.ok) {
+//       return await res.json();
+//     } else {
+//       localStorage.removeItem("token");
+//       return false;
+//     }
+//   } catch (err) {
+//     console.error("Fetch error:", err);
+//     localStorage.removeItem("token");
+//     return false;
+//   }
+// };
+
 interface FetchOptions extends RequestInit {
   headers?: HeadersInit;
 }
 
-export const authFetch = async <T = any,>(
+export const authFetch = async <T = any>(
   url: string,
   options: FetchOptions = {}
 ): Promise<T | false> => {
   const token = localStorage.getItem("token");
+
+  const isFormData = options.body instanceof FormData;
 
   try {
     const res = await fetch(url, {
@@ -14,13 +49,14 @@ export const authFetch = async <T = any,>(
       headers: {
         ...(options.headers || {}),
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
       },
     });
 
     if (res.ok) {
       return await res.json();
     } else {
+      console.error("authFetch failed:", res.status, await res.text());
       localStorage.removeItem("token");
       return false;
     }
