@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
 interface CertModalProps {
@@ -15,12 +16,39 @@ interface CertModalProps {
 
 const CertModal: React.FC<CertModalProps> = ({ certificate, onClose }) => {
   const { certificateId, information, title, obtainedAt } = certificate;
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const token = localStorage.getItem("token");
-const fileUrl = `/api/proxy-certificate/${certificateId}?token=${token}`;
+  useEffect(() => {
+    const fetchPdf = async () => {
+      try {
+        const res = await fetch(`/api/proxy-certificate/${certificateId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          },
+        });
 
+        if (!res.ok) throw new Error("No se pudo cargar el certificado");
 
-  const filePreviewUrl = `${fileUrl}?token=${token}`;
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        setPdfUrl(url);
+      } catch (error) {
+        console.error(error);
+        setPdfUrl(null);
+      }
+    };
+
+    fetchPdf();
+
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [certificateId]);
+
+  const handleOpenCertificate = () => {
+    if (pdfUrl) window.open(pdfUrl, "_blank");
+  };
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
@@ -36,36 +64,41 @@ const fileUrl = `/api/proxy-certificate/${certificateId}?token=${token}`;
           {title}
         </h2>
 
-        <p className="mb-4 text-sm dark:text-gray-200">
+        <p className="mb-2 text-sm dark:text-gray-200">
           <strong>Descripción:</strong> {information || "No disponible"}
         </p>
         <p className="mb-4 text-sm dark:text-gray-200">
-            <strong>Fecha de obtención:</strong>{" "}
-            {certificate.obtainedAt
-                ? new Date(certificate.obtainedAt).toLocaleDateString("es-MX", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                })
-                : "No disponible"}
-            </p>
+          <strong>Fecha de obtención:</strong>{" "}
+          {obtainedAt
+            ? new Date(obtainedAt).toLocaleDateString("es-MX", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })
+            : "No disponible"}
+        </p>
 
-        <div className="border rounded-lg overflow-hidden shadow-md mb-4">
-          <iframe
-            src={fileUrl}
-            title="Vista previa del certificado"
-            className="w-full h-[400px]"
-          />
+        <div className="border rounded-lg overflow-hidden shadow-md mb-4 h-[400px]">
+          {pdfUrl ? (
+            <iframe
+              ref={iframeRef}
+              src={pdfUrl}
+              title="Vista previa del certificado"
+              className="w-full h-full"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
+              Cargando vista previa...
+            </div>
+          )}
         </div>
 
-        <a
-          href={fileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block text-center bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition"
+        <button
+          onClick={handleOpenCertificate}
+          className="block w-full text-center bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition"
         >
           Ver certificado completo
-        </a>
+        </button>
       </div>
     </div>,
     document.body

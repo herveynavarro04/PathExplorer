@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest, context: { params: { id: string } }) {
     const certificateId = context.params.id;
   
-    const token = req.nextUrl.searchParams.get("token");
+    const authHeader = req.headers.get("authorization");
+    const token = authHeader?.split(" ")[1] || req.cookies.get("token")?.value;
+
   
     if (!token) {
       return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
