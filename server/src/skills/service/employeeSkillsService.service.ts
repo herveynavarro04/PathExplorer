@@ -132,11 +132,14 @@ export class EmployeeSkillsService {
     let addedSkills = [];
     let deletedSkills = [];
 
-    if (addSkills.length > 0) {
-      addedSkills = await this.addEmployeeSkills(employeeId, addSkills);
+    if (addSkills) {
+      addedSkills = await this.addEmployeeInterests(employeeId, addSkills);
     }
-    if (deleteSkills.length > 0) {
-      deletedSkills = await this.deleteEmployeeSkills(employeeId, deleteSkills);
+    if (deleteSkills) {
+      deletedSkills = await this.deleteEmployeeInterests(
+        employeeId,
+        deleteSkills,
+      );
     }
     return {
       addedSkills: addedSkills,
@@ -179,6 +182,60 @@ export class EmployeeSkillsService {
   ): Promise<string[]> {
     try {
       await this.employeeSkillsRepository.delete({
+        employeeId: employeeId,
+        skillId: In(deleteSkills),
+      });
+      Logger.log(
+        'Skills successfully deleted from employee!',
+        'EmployeeSkillsService',
+      );
+      return deleteSkills;
+    } catch (error) {
+      Logger.error(
+        'Error deleting skills to employee',
+        error.stack,
+        'EmployeeSkillsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to delete skills to employee',
+      );
+    }
+  }
+
+  private async addEmployeeInterests(
+    employeeId: string,
+    addSkills: string[],
+  ): Promise<string[]> {
+    try {
+      const employeeSkills = addSkills.map((skillId) => ({
+        employeeId: employeeId,
+        skillId: skillId,
+        createdAt: new Date(),
+      }));
+      await this.employeeInterestsRepository.save(employeeSkills);
+      Logger.log(
+        'Skills successfully added to employee!',
+        'EmployeeSkillsService',
+      );
+      return addSkills;
+    } catch (error) {
+      Logger.error(
+        'Error adding skills to employee',
+        error.stack,
+        'EmployeeSkillsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to add skills to employee',
+      );
+    }
+  }
+
+  private async deleteEmployeeInterests(
+    employeeId: string,
+    deleteSkills: string[],
+  ): Promise<string[]> {
+    try {
+      await this.employeeInterestsRepository.delete({
         employeeId: employeeId,
         skillId: In(deleteSkills),
       });
