@@ -14,8 +14,8 @@ export class GoalsEntity {
   @Column({ name: 'completed' })
   completed: boolean;
 
-  @Column({ name: 'validated' })
-  validated: boolean;
+  @Column({ name: 'status' })
+  status: string;
 
   @Column({ name: 'employee_id' })
   employeeId: string;

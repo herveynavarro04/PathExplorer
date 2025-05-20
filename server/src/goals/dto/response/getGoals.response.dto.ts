@@ -1,5 +1,5 @@
-import { GetGoalResponseDto } from "./getGoal.response.dto";
+import { GetGoalResponseDto } from './getGoal.response.dto';
 
-export class GoalsResponseDto{
-    goals: GetGoalResponseDto[]
+export class GoalsResponseDto {
+  goals: GetGoalResponseDto[];
 }
