@@ -44,6 +44,9 @@ export default function MyProjectsPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  const [techsLoaded, setTechsLoaded] = useState(false);
+  const [projectsLoaded, setProjectsLoaded] = useState(false);
+
   const url = `http://localhost:8080/api`;
   const projectsPerPage = 6;
   const indexOfLastProject = currentPage * projectsPerPage;
@@ -93,29 +96,30 @@ export default function MyProjectsPage() {
       router.push("/login");
       return;
     }
-
+  
     if (allTech.length === 0) return;
-
+  
     const loadData = async () => {
       try {
         const projectsData = await authFetch<GetUserProjectsResponseDto>(
           `${url}/projects/employee/available`
         );
-
+  
         if (!projectsData) {
           router.push("/login");
           return;
         }
-
+  
         setProjects(projectsData.availableProjects);
-        setLoading(false);
+        setProjectsLoaded(true);
       } catch (err) {
         console.error("Unexpected fetch error:", err);
       }
     };
-
+  
     loadData();
   }, [triggerRefresh, allTech]);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -123,7 +127,7 @@ export default function MyProjectsPage() {
       router.push("/login");
       return;
     }
-
+  
     const loadData = async () => {
       try {
         const allTechData = await authFetch<GetProjectsTechResponseDto>(
@@ -133,19 +137,19 @@ export default function MyProjectsPage() {
           router.push("/login");
           return;
         }
-
+  
         setAllTech(() =>
           allTechData.ProjectsTechs.map((tech) => tech.technologyName)
         );
-
-        setLoading(false);
+        setTechsLoaded(true);
       } catch (err) {
         console.error("Unexpected fetch error:", err);
       }
     };
-
+  
     loadData();
   }, []);
+  
 
   useEffect(() => {
     console.log(projects);
@@ -188,6 +192,12 @@ export default function MyProjectsPage() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (techsLoaded && projectsLoaded) {
+      setLoading(false);
+    }
+  }, [techsLoaded, projectsLoaded]);
 
   const customStyles = {
     control: (base: any, state: any) => ({

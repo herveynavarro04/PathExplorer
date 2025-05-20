@@ -10,7 +10,7 @@ import CertModal from './CertModal';
 import DeleteModal from './DeleteModal';
 import { FaInfoCircle, FaClock, FaCheck } from "react-icons/fa";
 import { FiCheckCircle, FiXCircle, FiClock } from "react-icons/fi";
-
+import LoadingPage from 'components/LoadingPage';
 
 
 
@@ -103,6 +103,7 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
   }, []);
 
   return (
+    <LoadingPage loading={loading}>
     <div className="mx-auto w-full max-w-[970px]">
       <div className="flex justify-between">
       <div className="flex">
@@ -220,6 +221,7 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
         />
       )}
     </div>
+    </LoadingPage>
   );
 };
 

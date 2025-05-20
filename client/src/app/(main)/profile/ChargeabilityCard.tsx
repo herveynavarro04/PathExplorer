@@ -25,7 +25,7 @@ export default function ChargeabilityCard() {
               cx="50"
               cy="50"
               r="45"
-              stroke="#7B2FE0"
+              stroke="#65417f"
               strokeWidth="10"
               fill="none"
               strokeDasharray={circumference}
@@ -38,7 +38,7 @@ export default function ChargeabilityCard() {
               y="50%"
               dominantBaseline="middle"
               textAnchor="middle"
-              fill="#7B2FE0"
+              fill="#65417f"
               fontSize="20"
               fontWeight="bold"
             >
@@ -47,7 +47,6 @@ export default function ChargeabilityCard() {
           </svg>
         </div>
 
-        {/* Description */}
         <div className="flex flex-col justify-center">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-1">
             ¿Qué es esto?
