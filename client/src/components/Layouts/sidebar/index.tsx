@@ -1,7 +1,7 @@
 "use client";
 
 import { Logo } from "components/logo";
-import { cn} from "lib/utils";
+import { cn } from "lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_DATA } from "./data";
@@ -28,7 +28,7 @@ export function Sidebar() {
         className={cn(
           "max-w-[290px] overflow-hidden border-r border-gray-200 bg-[#f8f6fa] transition-[width] duration-200 ease-linear dark:border-[#1b0e23] dark:bg-[#311a42]",
           isMobile ? "fixed bottom-0 top-0 z-50" : "sticky top-0 h-screen",
-          isOpen ? "w-full" : "w-0",
+          isOpen ? "w-full" : "w-0"
         )}
         aria-label="Main navigation"
         aria-hidden={!isOpen}
@@ -37,7 +37,7 @@ export function Sidebar() {
         <div className="flex h-full flex-col py-10 pl-[25px] pr-[7px]">
           <div className="relative pr-4.5">
             <Link
-              href={"/"}
+              href={"/dashboard"}
               onClick={() => isMobile && toggleSidebar()}
               className="px-0 py-2.5 min-[850px]:py-0"
             >
@@ -66,7 +66,9 @@ export function Sidebar() {
                 <nav role="navigation" aria-label={section.label}>
                   <ul className="space-y-2">
                     {section.items.map((item) => {
-                      const href = item.url || "/" + item.title.toLowerCase().split(" ").join("-");
+                      const href =
+                        item.url ||
+                        "/" + item.title.toLowerCase().split(" ").join("-");
                       return (
                         <li key={item.title}>
                           <MenuItem

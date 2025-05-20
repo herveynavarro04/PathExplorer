@@ -19,11 +19,11 @@ interface ProjectInfoPreviewResponseDto {
 interface GetUserProjectsResponseDto {
   availableProjects: ProjectInfoPreviewResponseDto[];
 }
-type FilterType = "pending" | "all";
+type FilterType = "pending" | "approved" | "rejected";
 
 export default function MyProjectsPage() {
   const [selectedProject, setSelectedProject] = useState<any>(null);
-  const [filter, setFilter] = useState<FilterType>("all");
+  const [filter, setFilter] = useState<FilterType>("approved");
   const [projects, setProjects] = useState<ProjectInfoPreviewResponseDto[]>([]);
   const [deleteProjects, setdeleteProjects] = useState<string[]>([]);
   const [appliedMessage, setAppliedMessage] = useState("");
@@ -40,7 +40,8 @@ export default function MyProjectsPage() {
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const filteredProjects = projects.filter((project) => {
     if (filter === "pending") return project.status === "pending";
-    return project.status !== "pending";
+    else if (filter === "approved") return project.status === "approved";
+    else return project.status === "rejected";
   });
 
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
@@ -179,7 +180,10 @@ export default function MyProjectsPage() {
             }
           >
             <option value="pending">Solicitudes enviadas</option>
-            <option value="all">Mis proyectos (aceptados/finalizados)</option>
+            <option value="approved">
+              Mis proyectos (aceptados/finalizados)
+            </option>
+            <option value="rejected">Solicitudes rechazadas</option>
           </select>
         </div>
 
