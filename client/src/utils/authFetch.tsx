@@ -1,5 +1,3 @@
-import Router from "next/router";
-
 interface FetchOptions extends RequestInit {
   headers?: HeadersInit;
 }
@@ -9,11 +7,6 @@ export const authFetch = async <T = any,>(
   options: FetchOptions = {}
 ): Promise<T | false> => {
   const token = localStorage.getItem("token");
-
-  if (!token) {
-    Router.push("/login");
-    return false;
-  }
 
   try {
     const res = await fetch(url, {

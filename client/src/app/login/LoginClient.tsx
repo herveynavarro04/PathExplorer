@@ -1,21 +1,54 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import StateLogin from "./StateLogin";
 import LoadingPage from "components/LoadingPage";
+import { useRouter } from "next/navigation";
+import Login from "./Login";
+import LoginError from "./LoginError";
+import { authFetch } from "@utils/authFetch";
 
-const Page = () => {
+const LoginClient = () => {
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [trigger, setTrigger] = useState(false);
+  const url = `http://localhost:8080/api`;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      localStorage.removeItem("token");
-    }
+    if (token) localStorage.removeItem("token");
 
     const timer = setTimeout(() => setLoading(false), 100);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (!email || !password) return;
+
+      try {
+        const response = await authFetch(`${url}/auth/signIn`, {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response) {
+          setShowError(true);
+        } else {
+          const { accessToken } = response;
+          localStorage.setItem("token", accessToken);
+          router.push("/dashboard");
+        }
+      } catch (err) {
+        console.error("Unexpected error", err);
+        setShowError(true);
+      }
+    };
+
+    loadData();
+  }, [trigger]);
 
   return (
     <LoadingPage loading={loading}>
@@ -26,6 +59,7 @@ const Page = () => {
             alt="Accenture logo"
             width={150}
             height={100}
+            priority
           />
         </div>
 
@@ -36,7 +70,15 @@ const Page = () => {
                 Path Explorer
               </h1>
             </div>
-            <StateLogin parentWidth="w-full" />
+            <div className="w-full">
+              <Login
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                setTrigger={setTrigger}
+              />
+            </div>
           </div>
 
           <div className="w-full h-full flex justify-center items-center relative right-[5rem]">
@@ -49,9 +91,10 @@ const Page = () => {
             />
           </div>
         </div>
+        {showError && <LoginError />}
       </div>
     </LoadingPage>
   );
 };
 
-export default Page;
+export default LoginClient;

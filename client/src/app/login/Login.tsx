@@ -1,28 +1,28 @@
 "use client";
 import React from "react";
-import LoginError from "./LoginError";
 import { FaUserAlt } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 
-// <div className="fixed flex flex-col gap-[3.7rem] top-[29.3rem] left-[14rem]">
-//   <FaUserAlt />
-//   <RiLockPasswordFill />
-// </div>;
-
+interface LoginProps {
+  email: string;
+  setEmail: (email: string) => void;
+  password: string;
+  setPassword: (password: string) => void;
+  setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+}
 const Login = ({
   email,
   setEmail,
   password,
   setPassword,
-  showError,
-  handleSubmit,
-}) => {
+  setTrigger,
+}: LoginProps) => {
   return (
     <form
       className="w-full h-auto flex flex-col items-center justify-center gap-[1.5rem]"
       onSubmit={(e) => {
         e.preventDefault();
-        handleSubmit();
+        if (email && password) setTrigger((prev) => !prev);
       }}
     >
       <div className=" relative w-full max-w-[20rem] flex items-center justify-center transition duration-300 ease-in-out hover:scale-105  ">
@@ -36,9 +36,11 @@ const Login = ({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           onInvalid={(e) =>
-            e.target.setCustomValidity("Por favor, introduce tu correo")
+            (e.target as HTMLInputElement).setCustomValidity(
+              "Por favor, introduce tu correo"
+            )
           }
-          onInput={(e) => e.target.setCustomValidity("")}
+          onInput={(e) => (e.target as HTMLInputElement).setCustomValidity("")}
         />
       </div>
       <div className="relative w-full max-w-[20rem] transition duration-300 ease-in-out hover:scale-105 ">
@@ -52,9 +54,11 @@ const Login = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onInvalid={(e) =>
-            e.target.setCustomValidity("Por favor, introduce tu contraseña")
+            (e.target as HTMLInputElement).setCustomValidity(
+              "Por favor, introduce tu contraseña"
+            )
           }
-          onInput={(e) => e.target.setCustomValidity("")}
+          onInput={(e) => (e.target as HTMLInputElement).setCustomValidity("")}
         />
       </div>
 
@@ -64,7 +68,6 @@ const Login = ({
         value="Iniciar Sesión"
         required
       />
-      {showError && <LoginError />}
     </form>
   );
 };
