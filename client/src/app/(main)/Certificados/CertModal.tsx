@@ -95,7 +95,7 @@ const CertModal: React.FC<CertModalProps> = ({ certificate, onClose }) => {
 
         <button
           onClick={handleOpenCertificate}
-          className="block w-full text-center bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition"
+          className="block w-full text-center bg-[#65417f] text-white py-2 px-4 rounded hover:bg-[#7a5b9e] transition"
         >
           Ver certificado completo
         </button>

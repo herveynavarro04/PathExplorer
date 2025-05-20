@@ -42,7 +42,7 @@ const CertCard: React.FC<CertCardProps> = ({
       className={cn("rounded-[10px] bg-[#f8f6fa] shadow-1 hover:scale-105 transition duration-300 ease-in-out hover:cursor-pointer dark:bg-[#482a5e] relative h-[10rem]", className)}
     >
       <div className="border-b border-stroke px-2 py-2 bg-[#eee9f3] dark:bg-[#644782] rounded-t-[10px] font-medium text-dark dark:text-white flex justify-between items-center">
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-lg font-semibold pl-2">{title}</h2>
         <div className="flex items-center gap-2">
           <span className={cn("text-md px-2 py-1 rounded capitalize", statusInfo.color)}>
             {statusInfo.icon}

@@ -30,13 +30,7 @@ const ProjectCard = ({
           <div>
             <h2 className="text-lg font-semibold">{projectName}</h2>
           </div>
-          <div>
-            {active ? (
-              <FaClock className="text-blue-500" title="Active project" />
-            ) : (
-              <FaCheck className="text-green-500" title="Finished project" />
-            )}
-          </div>
+
         </div>
       </div>
 

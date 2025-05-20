@@ -144,32 +144,7 @@ export default function MyProjectsPage() {
             <div className="pt-5">
               <Breadcrumb pageName="Mis proyectos" />
             </div>
-            <div className="relative bg-transparent p-4 flex">
-              <div className="relative group flex items-center space-x-2">
-                <FaInfoCircle className="text-xl cursor-pointer" />
-                <div className="absolute left-0 top-full mt-2 w-80 p-5 bg-[#a38abb] dark:bg-[#a285be] text-gray-300 rounded-2xl shadow-lg text-base z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ">
-                  <h3 className="text-md font-semibold mb-4 text-black dark:text-white">
-                    Simbología
-                  </h3>
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="text-2xl text-black dark:text-white">
-                      <FaClock className="transform scale-[0.8]" />
-                    </div>
-                    <span className="text-sm text-black dark:text-white">
-                      Proyecto en marcha
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="text-2xl text-black dark:text-white">
-                      <FaCheck className="transform scale-[0.8]" />
-                    </div>
-                    <span className="text-sm text-black dark:text-white">
-                      Proyecto finalizado
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+  
           </div>
 
           <select
