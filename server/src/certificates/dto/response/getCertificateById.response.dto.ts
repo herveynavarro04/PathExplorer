@@ -9,11 +9,15 @@ export class GetCertificateByIdResponseDto {
   @IsNotEmpty()
   title: string;
 
-  @IsDate()
+  @IsString()
   @IsNotEmpty()
-  createdAt: Date;
+  information: string;
 
   @IsString()
   @IsNotEmpty()
   status: string;
+
+  @IsDate()
+  @IsNotEmpty()
+  obtainedAt: Date;
 }

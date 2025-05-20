@@ -29,7 +29,7 @@ export class EmployeeController {
 
   @Patch()
   @UseGuards(JwtGuard)
-  async updateemployee(
+  async updateEmployee(
     @Body() updatePayload: UpdateEmployeeRequestDto,
     @Req() req: Request,
   ): Promise<UpdateEmployeeResponseDto> {
@@ -39,7 +39,7 @@ export class EmployeeController {
 
   @Delete(':employeeId')
   @UseGuards(JwtGuard)
-  async deleteemployee(
+  async deleteEmployee(
     @Param('employeeId') employeeId: string,
   ): Promise<DeleteEmployeeResponseDto> {
     return this.employeeService.deleteEmployee(employeeId);
