@@ -17,7 +17,7 @@ interface HistoryItem {
 
 const Historial: React.FC = () => {
   const [openAddHistory, setOpenAddHistory] = useState<boolean>(false);
-  const [openDeleteCard, setOpendDeleteCard] = useState<boolean>(false);
+  const [openDeleteCard, setOpenDeleteCard] = useState<boolean>(false);
   const [posicion, setPosicion] = useState<string>("");
   const [empresa, setEmpresa] = useState<string>("");
   const [descripcion, setDescripcion] = useState<string>("");
@@ -104,7 +104,7 @@ const Historial: React.FC = () => {
           setOpenAddHistory={setOpenAddHistory}
           setHistoryArray={setHistoryArray}
           editingId={editingId}
-         setEditingId={setEditingId}
+          setEditingId={setEditingId}
         />
       )}
 
@@ -137,7 +137,7 @@ const Historial: React.FC = () => {
     empresa={history.empresa}
     fecha_inicio={history.fecha_inicio}
     fecha_fin={history.fecha_fin}
-    setOpendDeleteCard={setOpendDeleteCard}
+    setOpendDeleteCard={setOpenDeleteCard}
     // 👇 Add this:
     onEdit={() => {
       setEditingId(history.id);
