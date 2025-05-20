@@ -29,7 +29,7 @@ export class GoalsService {
       employeeId: employeeId,
       goalId: goalId,
       completed: false,
-      validated: false,
+      status: 'pending',
       reviserId: null,
       information: postGoalPayload.information,
       term: postGoalPayload.term,
@@ -57,17 +57,17 @@ export class GoalsService {
     try {
       const goals = await this.goalsRepository.find({
         where: { employeeId: employeeId },
-        select: ['validated', 'completed', 'information', 'term'],
+        select: ['status', 'completed', 'information', 'term'],
       });
       const goalsInfo: GetGoalResponseDto[] = goals.map((goal) => ({
         completed: goal.completed,
-        validated: goal.validated,
+        status: goal.status,
         information: goal.information,
         term: goal.term,
       }));
       Logger.log('Goals fetched succesfully', 'GoalsService');
       return {
-        goals: goalsInfo
+        goals: goalsInfo,
       };
     } catch (error) {
       Logger.error('Error during goals fetching', error.stack, 'GoalsService');

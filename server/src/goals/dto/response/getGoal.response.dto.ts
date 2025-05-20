@@ -6,9 +6,9 @@ export class GetGoalResponseDto {
   @IsNotEmpty()
   completed: boolean;
 
-  @IsBoolean()
+  @IsString()
   @IsNotEmpty()
-  validated: boolean;
+  status: string;
 
   @IsString()
   @IsNotEmpty()
