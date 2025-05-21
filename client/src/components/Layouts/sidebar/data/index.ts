@@ -29,7 +29,7 @@ export const NAV_DATA = [
       {
         title: "Project Manager",
         url: "/Project-Manager",
-        icon: Icons.Table,
+        icon: Icons.Calendar,
       }
       
     ],

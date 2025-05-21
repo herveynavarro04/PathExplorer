@@ -1,7 +1,9 @@
+
 "use client";
 
-import { ChevronDown } from "lucide-react";
-import { cn } from "lib/utils";
+import Select from "react-select";
+import { useTheme } from "next-themes"; 
+import { useEffect, useState } from "react";
 
 export default function ProjectViewer({
   projects,
@@ -12,27 +14,72 @@ export default function ProjectViewer({
   selectedProject: any;
   setSelectedProject: (project: any) => void;
 }) {
+  const { theme } = useTheme();
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    setOptions(
+      projects.map((p) => ({ label: p.name, value: p.id }))
+    );
+  }, [projects]);
+
+  const customStyles = {
+    control: (base: any, state: any) => ({
+      ...base,
+      backgroundColor: theme === "dark" ? "#a896b3" : "#e8deef",
+      borderColor: state.isFocused ? "#65417f" : "transparent",
+      boxShadow: state.isFocused ? "0 0 0 1px #65417f" : "none",
+      borderWidth: "1px",
+      "&:hover": { borderColor: "#65417f" },
+      fontSize: "0.875rem",
+      borderRadius: "0.75rem",
+      paddingLeft: "2px",
+      paddingRight: "2px",
+    }),
+    menu: (base: any) => ({
+      ...base,
+      backgroundColor: theme === "dark" ? "#a896b3" : "#e8deef",
+      borderRadius: "0.75rem",
+      marginTop: "4px",
+      zIndex: 10,
+    }),
+    option: (base: any, state: any) => ({
+      ...base,
+      backgroundColor: state.isFocused
+        ? theme === "dark"
+          ? "#877691"
+          : "#d6c8df"
+        : "transparent",
+      color: theme === "dark" ? "#1f1b2e" : "#111827",
+      cursor: "pointer",
+      fontSize: "0.875rem",
+      padding: "0.5rem 0.75rem",
+    }),
+    singleValue: (base: any) => ({
+      ...base,
+      color: theme === "dark" ? "#1f1b2e" : "#111827",
+    }),
+    placeholder: (base: any) => ({
+      ...base,
+      color: theme === "dark" ? "#ddd" : "#666",
+      fontSize: "0.875rem",
+    }),
+  };
+
   return (
-    <div className="relative p-2 w-fit">
-      <select
-        className="appearance-none mt-2 mb-6 px-6 py-3 pr-12 rounded-full text-black dark:text-white font-medium bg-[#593BB48E] dark:bg-[#593bb48e]"
-        onChange={(e) =>
+    <div className=" justify-self-end pb-1">
+      <Select
+        options={options}
+        value={options.find((o) => o.value === selectedProject?.id)}
+        onChange={(selectedOption) =>
           setSelectedProject(
-            projects.find((p) => p.id === e.target.value) || null
+            projects.find((p) => p.id === selectedOption?.value)
           )
         }
-        value={selectedProject?.id || ""}
-      >
-        {projects.map((project) => (
-          <option key={project.id} value={project.id}>
-            {project.name}
-          </option>
-        ))}
-      </select>
-
-      <div className="pointer-events-none absolute right-5 top-[45%] -translate-y-1/2 text-black dark:text-white">
-        <ChevronDown size={20} />
-      </div>
+        styles={customStyles}
+        placeholder="Selecciona un proyecto..."
+        isSearchable={false}
+      />
     </div>
   );
 }
