@@ -1,19 +1,24 @@
+
+
 "use client";
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import LoadingPage from "components/LoadingPage";
 import { useRouter } from "next/navigation";
-import Login from "./Login";
+import { motion } from "framer-motion";
+import LoadingPage from "components/LoadingPage";
 import LoginError from "./LoginError";
+import Login from "./Login";
 import { authFetch } from "@utils/authFetch";
 
 const LoginClient = () => {
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
   const [trigger, setTrigger] = useState(false);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const router = useRouter();
   const url = `http://localhost:8080/api`;
 
   useEffect(() => {
@@ -52,25 +57,57 @@ const LoginClient = () => {
 
   return (
     <LoadingPage loading={loading}>
-      <div className="flex flex-col h-screen w-full">
-        <div className="w-full h-auto pl-[3rem] pt-[1.5rem]">
-          <Image
-            src="/logo-1.png"
-            alt="Accenture logo"
-            width={150}
-            height={100}
-            priority
-          />
-        </div>
+      <div className="relative h-screen w-full overflow-hidden px-4 flex items-center justify-center">
 
-        <div className="w-full h-full grid grid-cols-2 items-center">
-          <div className="text-white w-full h-full flex flex-col justify-center items-center mb-[2.5rem] gap-[1rem]">
-            <div className="flex justify-center w-full h-auto">
-              <h1 className="text-[5rem] text-[#a78ab7] hover:scale-110 transition duration-300 ease-in-out">
-                Path Explorer
-              </h1>
-            </div>
-            <div className="w-full">
+        {/* Background animation */}
+        <motion.div
+          className="absolute inset-0 z-0"
+          initial={{ scale: 1.05 }}
+          animate={{ scale: 1.3 }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut",
+          }}
+          style={{
+            backgroundImage: "url('/monochrome.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+
+        {/* Main Content */}
+        <div className="w-full max-w-7xl h-full grid grid-cols-1 md:grid-cols-2 place-items-center relative z-10">
+          
+          {/* Login Form Card */}
+          <motion.div
+            initial={{ x: -300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full flex justify-center"
+          >
+            <motion.div
+              className="bg-white bg-opacity-80 border border-gray-200 shadow-2xl rounded-2xl p-10 w-full max-w-md"
+              animate={{ rotateX: tilt.x, rotateY: tilt.y }}
+              transition={{ type: "tween", ease: "easeOut", duration: 0.4 }}
+              whileHover={{ scale: 1.02 }}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const offsetX = e.clientX - rect.left;
+                const offsetY = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateY = ((offsetX - centerX) / centerX) * 10;
+                const rotateX = -((offsetY - centerY) / centerY) * 10;
+
+                setTilt({ x: rotateX, y: rotateY });
+              }}
+              onMouseLeave={() => setTilt({ x: 0, y: 0 })}
+            >
+              <h1 className="text-3xl font-light text-purple-600 mb-8 text-center">Path Explorer</h1>
+
               <Login
                 email={email}
                 setEmail={setEmail}
@@ -78,20 +115,30 @@ const LoginClient = () => {
                 setPassword={setPassword}
                 setTrigger={setTrigger}
               />
-            </div>
-          </div>
 
-          <div className="w-full h-full flex justify-center items-center relative right-[5rem]">
-            <Image
-              className="w-[45rem] h-[40rem] object-cover transition duration-300 ease-in-out hover:scale-110 animate-float animate-pulse opacity-80"
-              src="/logo.svg"
-              alt="Accenture logo"
-              width={256}
-              height={256}
-            />
-          </div>
+              
+            </motion.div>
+          </motion.div>
+
+          {/* Logo */}
+          <motion.div
+            initial={{ x: 300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+            className="w-full h-full flex justify-center items-center relative overflow-visible"
+          >
+            <div className="relative md:w-[500px] md:h-[500px] scale-[1.6]">
+              <Image
+                src="/logo.svg"
+                alt="Accenture Logo"
+                fill
+                style={{ objectFit: "contain" }}
+                priority
+              />
+            </div>
+          </motion.div>
+          {showError && <LoginError />}
         </div>
-        {showError && <LoginError />}
       </div>
     </LoadingPage>
   );
