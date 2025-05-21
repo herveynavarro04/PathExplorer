@@ -11,7 +11,7 @@ export default function DisplayViewer({ selectedProject }: { selectedProject: an
 
     return (
         <div className="bg-[#f8f6fa] dark:bg-[#311a42] p-6 rounded-2xl">
-        <div className=" w-full grid grid-cols-3 gap-10"  style={{ maxHeight: "40rem" }}>
+        <div className=" w-full grid grid-cols-3 gap-10 h-[38rem]">
             
             {/* Columna 1: Equipo */}
             <div className="border-r pr-6 space-y-8">
@@ -19,7 +19,7 @@ export default function DisplayViewer({ selectedProject }: { selectedProject: an
             <div className="w-full grid grid-cols-2 gap-6 max-h-[700px] overflow-y-auto overflow-x-hidden"  style={{ maxHeight: "35rem" }}>
                 {selectedProject.team.map((member: any, i: number) => (
                 <div key={i} className="text-center">
-                    <h4 className="text-[#5a3bb3] dark:text-white font-semibold">{member.name}</h4>
+                    <h4 className="text-[#65417f] dark:text-white font-semibold">{member.name}</h4>
                     <img
                     src="/profile.png"
                     alt={member.name}
@@ -48,17 +48,11 @@ export default function DisplayViewer({ selectedProject }: { selectedProject: an
             <div className="space-y-4">
                 <div>
                 <p className="text-sm text-black dark:text-white font-medium mb-1 pt-16">Descripción</p>
-                <div className="bg-[#c6b0dc] text-[#5a3bb3] rounded-xl p-4 font-medium">
+                <div className="bg-[#c6b0dc] text-[#65417f] rounded-xl p-4 font-medium text-sm">
                     {selectedProject.description}
                 </div>
                 </div>
 
-                <div>
-                <p className="text-sm text-black dark:text-white font-medium mb-1">Cliente</p>
-                <div className="bg-[#c6b0dc] text-[#5a3bb3] rounded-xl p-2 px-4 font-medium w-fit">
-                    {selectedProject.client}
-                </div>
-                </div>
 
                 <div>
                 <p className="text-sm text-black dark:text-white font-medium mb-2">Progreso del proyecto</p>
@@ -76,7 +70,7 @@ export default function DisplayViewer({ selectedProject }: { selectedProject: an
                         cx="50"
                         cy="50"
                         r="45"
-                        stroke="#5a3bb3"
+                        stroke="#65417f"
                         strokeWidth="10"
                         fill="none"
                         strokeDasharray={2 * Math.PI * 45}
@@ -96,32 +90,43 @@ export default function DisplayViewer({ selectedProject }: { selectedProject: an
             </div>
 
             {/* Sección derecha: fechas y stack */}
-            <div className="space-y-4">
+            <div className="space-y-10">
+            <div className="flex gap-6 pt-16">
                 <div>
-                <p className="text-sm text-black dark:text-white font-medium mb-1 pt-16">Fecha Inicio</p>
-                <div className="bg-[#c6b0dc] text-[#5a3bb3] rounded-xl p-2 px-4 w-fit font-medium">
+                    <p className="text-sm text-black dark:text-white font-medium mb-1">Fecha Inicio</p>
+                    <div className="bg-[#c6b0dc] text-[#65417f] rounded-xl p-2 px-4 w-fit font-medium">
                     {selectedProject.start_date}
+                    </div>
+                </div>
+                <div>
+                    <p className="text-sm text-black dark:text-white font-medium mb-1">Fecha Fin</p>
+                    <div className="bg-[#c6b0dc] text-[#65417f] rounded-xl p-2 px-4 w-fit font-medium">
+                    {selectedProject.end_date}
+                    </div>
                 </div>
                 </div>
                 <div>
-                <p className="text-sm text-black dark:text-white font-medium mb-1">Fecha Fin</p>
-                <div className="bg-[#c6b0dc] text-[#5a3bb3] rounded-xl p-2 px-4 w-fit font-medium">
-                    {selectedProject.end_date}
+                <p className="text-sm text-black dark:text-white font-medium mb-1">Cliente</p>
+                <div className="bg-[#c6b0dc] text-[#65417f] rounded-xl p-2 px-4 font-medium w-fit">
+                    {selectedProject.client}
                 </div>
                 </div>
+                
 
                 <div>
-                <p className="text-sm text-black dark:text-white font-medium mb-2 pt-9">Stack Tecnológico</p>
-                <div className="bg-[#c6b0dc] rounded-xl p-4 h-fit flex flex-col gap-2 w-full">
+                <p className="text-sm text-black dark:text-white font-medium mb-2">
+                    Stack Tecnológico
+                </p>
+                <div className="bg-[#c6b0dc] rounded-xl p-4 max-h-[8rem] overflow-y-auto flex flex-wrap gap-3 w-full items-start">
                     {selectedProject.stack.map((tech: string, i: number) => (
-                    <span
+                        <span
                         key={i}
-                        className="bg-[#593BB478] text-[#5a3bb3] dark: px-4 py-1 rounded-full text-sm w-fit"
-                    >
+                        className="bg-[#e8deef] text-[#65417f] px-4 py-1 rounded-full text-sm"
+                        >
                         {tech}
-                    </span>
+                        </span>
                     ))}
-                </div>
+                    </div>
                 </div>
             </div>
 
