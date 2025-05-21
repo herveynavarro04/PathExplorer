@@ -6,6 +6,7 @@ import { OverviewCardsGroup } from "./_components/overview-cards";
 import LoadingPage from "components/LoadingPage"; // Adjust path as needed
 import { TopAnalysis } from "components/Analisis/analisis-empleados";
 import { ButtonCardGroup } from "./_components/register";
+import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,19 @@ export default function Home() {
   return (
     <>
         <LoadingPage loading={loading}>
-            <OverviewCardsGroup />
+        <div className=" grid gap-4 md:gap-6 2xl:gap-7.5 ">
+        <div className="flex justify-between">
+            <div className="pt-5">
+              <Breadcrumb pageName="Project Manager Dashboard" />
+            </div>
+            <ButtonCardGroup />
+  
+          </div>
+
+                
+                <OverviewCardsGroup />
+        </div>
+            
         </LoadingPage>
         {/* Fade-in for TopProjects */}
         <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-20 2xl:gap-7.5">
@@ -28,11 +41,7 @@ export default function Home() {
             </LoadingPage>
             </div>
         </div>
-        <div className="mt-5 grid gap-4 md:gap-6 2xl:gap-7.5">
-            <LoadingPage loading={loading}>
-                <ButtonCardGroup />
-            </LoadingPage>
-        </div>
+        
     </>
   );
 }
