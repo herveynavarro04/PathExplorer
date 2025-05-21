@@ -5,17 +5,17 @@ interface GoalCardProps {
   information: string;
   term: string;
   completed: boolean;
-  validated: boolean;
+  status: string;
 }
 
-const GoalCard: React.FC<GoalCardProps> = ({ information, term, completed, validated }) => {
+const GoalCard = ({ information, term, completed, status }: GoalCardProps) => {
   let Icon;
   let iconColor;
 
-  if (completed && !validated) {
+  if (status === "pending") {
     Icon = FiClock;
     iconColor = "text-yellow-500";
-  } else if (validated) {
+  } else if (status === "approved") {
     Icon = FiCheckCircle;
     iconColor = "text-green-500";
   } else {
@@ -28,7 +28,9 @@ const GoalCard: React.FC<GoalCardProps> = ({ information, term, completed, valid
       <div className="flex items-center gap-3">
         <Icon className={iconColor} size={20} />
         <div>
-          <p className="text-gray-800 dark:text-gray-200 font-medium">{information}</p>
+          <p className="text-gray-800 dark:text-gray-200 font-medium">
+            {information}
+          </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
             Estado: {completed ? "Meta Completada" : "Meta en Progreso"}
           </p>

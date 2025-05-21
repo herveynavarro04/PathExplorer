@@ -96,30 +96,29 @@ export default function MyProjectsPage() {
       router.push("/login");
       return;
     }
-  
+
     if (allTech.length === 0) return;
-  
+
     const loadData = async () => {
       try {
         const projectsData = await authFetch<GetUserProjectsResponseDto>(
           `${url}/projects/employee/available`
         );
-  
+
         if (!projectsData) {
           router.push("/login");
           return;
         }
-  
+
         setProjects(projectsData.availableProjects);
         setProjectsLoaded(true);
       } catch (err) {
         console.error("Unexpected fetch error:", err);
       }
     };
-  
+
     loadData();
   }, [triggerRefresh, allTech]);
-  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -127,7 +126,7 @@ export default function MyProjectsPage() {
       router.push("/login");
       return;
     }
-  
+
     const loadData = async () => {
       try {
         const allTechData = await authFetch<GetProjectsTechResponseDto>(
@@ -137,7 +136,7 @@ export default function MyProjectsPage() {
           router.push("/login");
           return;
         }
-  
+
         setAllTech(() =>
           allTechData.ProjectsTechs.map((tech) => tech.technologyName)
         );
@@ -146,10 +145,9 @@ export default function MyProjectsPage() {
         console.error("Unexpected fetch error:", err);
       }
     };
-  
+
     loadData();
   }, []);
-  
 
   useEffect(() => {
     console.log(projects);

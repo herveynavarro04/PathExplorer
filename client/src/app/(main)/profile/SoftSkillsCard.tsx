@@ -182,7 +182,7 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
                 {isEditing && (
                   <button
                     type="button"
-                    onClick={() => removeSkill(skill)}
+                    onMouseDown={() => removeSkill(skill)}
                     className="text-gray-500 hover:text-red"
                   >
                     ×

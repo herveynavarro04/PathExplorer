@@ -52,6 +52,8 @@ const TechSkillsCard = ({ skills, userSkills, url }: TechSkillsCardProps) => {
       ])
     );
 
+    console.log(techSkillMap);
+
     setTechSkillMap(techSkillMap);
   }, []);
 
@@ -91,6 +93,14 @@ const TechSkillsCard = ({ skills, userSkills, url }: TechSkillsCardProps) => {
     patchData();
   }, [triggerSave]);
 
+  useEffect(() => {
+    console.log(addSkills);
+  }, [addSkills]);
+
+  useEffect(() => {
+    console.log(deleteSkills);
+  }, [deleteSkills]);
+
   const filteredSkills = allTechSkills.filter(
     (skill) =>
       !selectedTechSkills.includes(skill) &&
@@ -100,13 +110,13 @@ const TechSkillsCard = ({ skills, userSkills, url }: TechSkillsCardProps) => {
   const addSkill = (skill: string) => {
     if (selectedTechSkills.length >= MAX_SKILLS) return;
     setSelectedTechSkills([...selectedTechSkills, skill]);
-    setAddSkills([...addSkills, techSkillMap?.get(skill)![0]]);
+    setAddSkills([...addSkills, techSkillMap.get(skill)[0]]);
     setSearchTerm("");
   };
 
   const removeSkill = (skill: string) => {
     setSelectedTechSkills(selectedTechSkills.filter((s) => s !== skill));
-    setDeleteSkills([...deleteSkills, techSkillMap?.get(skill)![0]]);
+    setDeleteSkills([...deleteSkills, techSkillMap.get(skill)[0]]);
   };
 
   return (
@@ -144,7 +154,7 @@ const TechSkillsCard = ({ skills, userSkills, url }: TechSkillsCardProps) => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onFocus={() => setIsFocused(true)}
-              onBlur={() => setTimeout(() => setIsFocused(false), 100)}
+              onBlur={() => setTimeout(() => setIsFocused(false), 25)}
               placeholder="Buscar habilidad"
               className="w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary"
             />
@@ -157,7 +167,7 @@ const TechSkillsCard = ({ skills, userSkills, url }: TechSkillsCardProps) => {
                     <div
                       key={skill}
                       className="cursor-pointer px-4 py-2 hover:bg-gray-2 dark:hover:bg-gray-7"
-                      onClick={() => addSkill(skill)}
+                      onMouseDown={() => addSkill(skill)}
                     >
                       {skill}
                     </div>

@@ -5,78 +5,67 @@ import GoalsForm from "./GoalsForm";
 import GoalCardClient from "./GoalCardClient";
 import TechInterestsCard from "./TechInterestsCard";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
-import Loading from "components/Loading";
+import LoadingPage from "components/LoadingPage";
 import { authFetch } from "@utils/authFetch";
+import { useRouter } from "next/navigation";
 
-type Goal = {
-  id: number;
+interface GetGoalResponseDto {
   information: string;
   term: string;
   completed: boolean;
-  validated: boolean;
-};
+  status: string;
+}
 
-type Skill = {
+interface GoalsResponseDto {
+  goals: GetGoalResponseDto[];
+}
+
+interface Skill {
   skillName: string;
   skillId: string;
-};
+}
 
-type SkillsResponse = {
+interface SkillsResponse {
   technicalSkills: Skill[];
   softSkills: Skill[];
-};
+}
 
-type UserSkillsResponse = {
+interface UserInterests {
   technicalSkills: Skill[];
-  softSkills: Skill[];
-};
+}
 
 const Page = () => {
   const [openForm, setOpenForm] = useState<boolean>(false);
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [interestMap, setInterestMap] = useState<Map<string, [string, boolean]> | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [goals, setGoals] = useState<GetGoalResponseDto[]>([]);
+  const [skills, setSkills] = useState<SkillsResponse>(null);
+  const [userInterests, setUserInterests] = useState<UserInterests>(null);
+  const [refreshGoals, setRefreshGoals] = useState<boolean>(false);
 
+  const [loadingGoals, setLoadingGoals] = useState(true);
+  const [loadingInterests, setLoadingInterests] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
   const url = "http://localhost:8080/api";
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [skills, userSkills] = await Promise.all([
-          authFetch<SkillsResponse>(`${url}/skills`, { method: "GET" }),
-          authFetch<UserSkillsResponse>(`${url}/skills/employee`, { method: "GET" }),
-        ]);
+    const LoadData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
 
-        if (!skills || !userSkills) {
-          console.error("Failed to load skills or user skills.");
+      try {
+        const response = await authFetch<GoalsResponseDto>(`${url}/goals`);
+        if (!response) {
+          router.push("/login");
           return;
         }
 
-        const userTechInterestNames = new Set(
-          userSkills.technicalSkills.map((skill) => skill.skillName)
-        );
-
-        const interestMapping = new Map<string, [string, boolean]>(
-          skills.technicalSkills.map((skill) => [
-            skill.skillName,
-            [skill.skillId, userTechInterestNames.has(skill.skillName)],
-          ])
-        );
-
-        setInterestMap(interestMapping);
-      } catch (error) {
-        console.error("Error fetching interests:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchGoals = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/empleado.json");
-        const data = await response.json();
-
-        const formattedGoals: Goal[] = (data.goals || []).map((g: any) => {
+        const formattedGoals: GetGoalResponseDto[] = (
+          response?.goals || []
+        ).map((g) => {
           const d = new Date(g.term);
           const day = d.getDate();
           let month = d.toLocaleDateString("es-MX", { month: "long" });
@@ -84,51 +73,86 @@ const Page = () => {
           const year = d.getFullYear();
 
           return {
-            id: g.id_goal,
             information: g.information,
             term: `${day} ${month} ${year}`,
             completed: g.completed,
-            validated: g.validated,
+            status: g.status,
           };
         });
 
         setGoals(formattedGoals);
       } catch (error) {
         console.error("Error fetching goals:", error);
+      } finally {
+        setLoadingGoals(false);
       }
     };
 
-    fetchGoals();
-    fetchData();
+    LoadData();
+  }, [refreshGoals]);
+
+  useEffect(() => {
+    const fetchInterests = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const [skills, userInterests] = await Promise.all([
+          authFetch<SkillsResponse>(`${url}/skills`),
+          authFetch<UserInterests>(`${url}/skills/employee/interests`),
+        ]);
+
+        if (!skills || !userInterests) {
+          console.error("Failed to load skills or user skills.");
+          return;
+        }
+
+        setSkills(skills);
+        setUserInterests(userInterests);
+      } catch (error) {
+        console.error("Error fetching interests:", error);
+      } finally {
+        setLoadingInterests(false);
+      }
+    };
+
+    fetchInterests();
   }, []);
 
-  if (loading || !interestMap) {
-    return (
-      <div className="w-full h-full">
-        <Loading />
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!loadingGoals && !loadingInterests) {
+      setLoading(false);
+    }
+  }, [loadingGoals, loadingInterests]);
 
   return (
-    <>
-      {openForm && (
-        <GoalsForm
-          setOpenForm={setOpenForm}
-          addGoal={(newGoal: Goal) => setGoals((prev) => [...prev, newGoal])}
-        />
-      )}
+    <LoadingPage loading={loading}>
+      <>
+        {openForm && (
+          <GoalsForm
+            setOpenForm={setOpenForm}
+            setRefreshGoals={setRefreshGoals}
+          />
+        )}
 
-      <div className="mx-auto w-full max-w-[970px]">
-        <Breadcrumb pageName="Path de Carrera" />
+        <div className="mx-auto w-full max-w-[970px]">
+          <Breadcrumb pageName="Path de Carrera" />
 
-        <GoalCardClient goals={goals} onOpenForm={() => setOpenForm(true)} />
+          <GoalCardClient goals={goals} setOpenForm={setOpenForm} />
 
-        <div className="mt-10">
-          <TechInterestsCard interestMap={interestMap} url={url} />
+          <div className="mt-10">
+            <TechInterestsCard
+              skills={skills}
+              userInterests={userInterests}
+              url={url}
+            />
+          </div>
         </div>
-      </div>
-    </>
+      </>
+    </LoadingPage>
   );
 };
 
