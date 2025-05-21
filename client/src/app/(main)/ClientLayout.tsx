@@ -30,9 +30,15 @@ export default function ClientLayout({
     return <Loading fullScreen />;
   }
 
-  const showLayout = authorized && pathname !== "/login";
+  if (!authorized && pathname !== "/login") {
+    return null;
+  }
 
-  return showLayout ? (
+  if (pathname === "/login") {
+    return <>{children}</>;
+  }
+
+  return (
     <div className="flex min-h-screen">
       <Sidebar />
       <div className="w-full bg-[#d0bfdb] dark:bg-[#1b0e23]">
@@ -42,7 +48,5 @@ export default function ClientLayout({
         </main>
       </div>
     </div>
-  ) : (
-    children
   );
 }

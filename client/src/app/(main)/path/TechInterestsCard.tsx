@@ -1,27 +1,74 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { ShowcaseSectionSkill } from 'components/Layouts/showcase-skill';
+import { useState, useEffect } from "react";
+import { ShowcaseSectionSkill } from "components/Layouts/showcase-skill";
+import { authFetch } from "@utils/authFetch";
+import { useRouter } from "next/navigation";
 
-type TechInterestsCardProps = {
-  interestMap: Map<string, [string, boolean]>;
+interface TechInterestsCardProps {
+  skills: SkillsResponse;
+  userInterests: UserInterests;
   url: string;
-};
+}
 
-const TechInterestsCard = ({ interestMap, url }: TechInterestsCardProps) => {
-  const [selectedTechInterests, setSelectedTechInterests] = useState<string[]>([]);
+interface Skill {
+  skillName: string;
+  skillId: string;
+}
+
+interface SkillsResponse {
+  technicalSkills: Skill[];
+  softSkills: Skill[];
+}
+
+interface UserInterests {
+  technicalSkills: Skill[];
+}
+
+const TechInterestsCard = ({
+  skills,
+  userInterests,
+  url,
+}: TechInterestsCardProps) => {
+  const [selectedTechInterests, setSelectedTechInterests] = useState<string[]>(
+    []
+  );
   const [allTechInterests, setAllTechInterests] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [addInterests, setAddInterests] = useState<string[]>([]);
   const [deleteInterests, setDeleteInterests] = useState<string[]>([]);
   const [triggerSave, setTriggerSave] = useState<boolean>(false);
   const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
-
+  const [interestMap, setInterestMap] = useState<Map<
+    string,
+    [string, boolean]
+  > | null>(null);
+  const router = useRouter();
 
   const MAX_INTERESTS = 20;
 
   useEffect(() => {
+    const userTechInterestNames = new Set<string>(
+      userInterests.technicalSkills.map((skill) => skill.skillName)
+    );
+
+    console.log(userTechInterestNames);
+
+    const interestMap = new Map<string, [string, boolean]>(
+      skills.technicalSkills.map((skill) => [
+        skill.skillName,
+        [skill.skillId, userTechInterestNames.has(skill.skillName)],
+      ])
+    );
+
+    console.log(interestMap);
+
+    setInterestMap(interestMap);
+  }, []);
+
+  useEffect(() => {
+    if (!interestMap) return;
     const selected: string[] = [];
     const all: string[] = [];
 
@@ -38,18 +85,24 @@ const TechInterestsCard = ({ interestMap, url }: TechInterestsCardProps) => {
     const patchData = async () => {
       if (!triggerSave) return;
 
+      const addSkills = addInterests;
+      const deleteSkills = deleteInterests;
+
       try {
-        // await authFetch(`${url}/user/interests`, {
-        //   method: "PATCH",
-        //   body: JSON.stringify({ addSkills: addInterests, deleteSkills: deleteInterests }),
-        // });
+        const response = await authFetch(`${url}/skills/employee/interests`, {
+          method: "PATCH",
+          body: JSON.stringify({ addSkills, deleteSkills }),
+        });
+        if (!response) {
+          router.push("/login");
+          return;
+        }
+        console.log(response);
+
         setIsEditing(false);
       } catch (error) {
-        console.error('Failed to update interests:', error);
+        console.error("Failed to update skills:", error);
       }
-
-      console.log('Interests to add:', addInterests);
-      console.log('Interests to delete:', deleteInterests);
 
       setAddInterests([]);
       setDeleteInterests([]);
@@ -58,6 +111,14 @@ const TechInterestsCard = ({ interestMap, url }: TechInterestsCardProps) => {
 
     patchData();
   }, [triggerSave]);
+
+  useEffect(() => {
+    console.log(addInterests);
+  }, [addInterests]);
+
+  useEffect(() => {
+    console.log(deleteInterests);
+  }, [deleteInterests]);
 
   const filteredInterests = allTechInterests.filter(
     (skill) =>
@@ -68,13 +129,13 @@ const TechInterestsCard = ({ interestMap, url }: TechInterestsCardProps) => {
   const addInterest = (skill: string) => {
     if (selectedTechInterests.length >= MAX_INTERESTS) return;
     setSelectedTechInterests([...selectedTechInterests, skill]);
-    setAddInterests([...addInterests, interestMap.get(skill)![0]]);
-    setSearchTerm('');
+    setAddInterests([...addInterests, interestMap.get(skill)[0]]);
+    setSearchTerm("");
   };
 
   const removeInterest = (skill: string) => {
     setSelectedTechInterests(selectedTechInterests.filter((s) => s !== skill));
-    setDeleteInterests([...deleteInterests, interestMap.get(skill)![0]]);
+    setDeleteInterests([...deleteInterests, interestMap.get(skill)[0]]);
   };
 
   return (
@@ -108,18 +169,18 @@ const TechInterestsCard = ({ interestMap, url }: TechInterestsCardProps) => {
         {isEditing && (
           <div className="relative">
             <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onFocus={() => setIsInputFocused(true)}
-            onBlur={() => setTimeout(() => setIsInputFocused(false), 150)} 
-            placeholder="Buscar habilidad"
-            className="w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary"
-          />
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setTimeout(() => setIsInputFocused(false), 25)}
+              placeholder="Buscar habilidad"
+              className="w-full rounded-lg border border-gray-3 bg-white dark:border-dark-3 dark:bg-dark-2 px-4 py-2 text-sm placeholder:text-gray-500 focus:outline-primary"
+            />
 
             {(isInputFocused || searchTerm) && (
               <div className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
-                {filteredInterests.slice(0, 10).map((skill) => (
+                {filteredInterests.map((skill) => (
                   <div
                     key={skill}
                     className="cursor-pointer px-4 py-2 hover:bg-gray-2 dark:hover:bg-gray-7"
@@ -136,7 +197,7 @@ const TechInterestsCard = ({ interestMap, url }: TechInterestsCardProps) => {
         <div className="flex flex-col flex-grow">
           <div
             className={`flex flex-wrap items-start gap-2.5 overflow-y-auto pr-1 pt-1 ${
-              isEditing ? 'h-[5rem]' : 'h-[8rem]'
+              isEditing ? "h-[5rem]" : "h-[8rem]"
             }`}
           >
             {selectedTechInterests.map((skill) => (

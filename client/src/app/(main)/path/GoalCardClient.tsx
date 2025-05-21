@@ -5,22 +5,18 @@ import { FiInfo, FiCheckCircle, FiXCircle, FiClock } from "react-icons/fi";
 import GoalCard from "./GoalCard";
 
 interface Goal {
-  id: number;
   information: string;
   term: string;
   completed: boolean;
-  validated: boolean;
-  start_date: Date;
-  end_date: Date;
-  id_reviser: number;
+  status: string;
 }
 
 interface GoalCardClientProps {
   goals: Goal[];
-  onOpenForm: () => void;
+  setOpenForm: (openForm: boolean) => void;
 }
 
-const GoalCardClient: React.FC<GoalCardClientProps> = ({ goals, onOpenForm }) => {
+const GoalCardClient = ({ goals, setOpenForm }: GoalCardClientProps) => {
   return (
     <section className="max-w-5xl mx-auto bg-white dark:bg-[#4f2e6f] shadow-lg rounded-2xl p-6 h-[20rem] flex flex-col">
       <div className="flex items-center justify-between mb-4">
@@ -30,7 +26,10 @@ const GoalCardClient: React.FC<GoalCardClientProps> = ({ goals, onOpenForm }) =>
           </h2>
 
           {/* Info icon */}
-          <FiInfo className="text-gray-500 dark:text-gray-300 cursor-pointer" size={18} />
+          <FiInfo
+            className="text-gray-500 dark:text-gray-300 cursor-pointer"
+            size={18}
+          />
 
           {/* Tooltip */}
           <div className="absolute top-7 left-1/2 -translate-x-1/2 w-72 text-sm bg-white dark:bg-[#2b2b2b] text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg shadow-md p-3 z-50 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200">
@@ -52,7 +51,7 @@ const GoalCardClient: React.FC<GoalCardClientProps> = ({ goals, onOpenForm }) =>
         </div>
 
         <button
-          onClick={onOpenForm}
+          onClick={() => setOpenForm(true)}
           className="inline-flex items-center gap-2 bg-[#65417f] hover:bg-[#5a366e] text-white font-medium px-4 py-2 rounded-full transition"
         >
           <CiCirclePlus size={20} /> Registrar nueva meta
@@ -60,13 +59,13 @@ const GoalCardClient: React.FC<GoalCardClientProps> = ({ goals, onOpenForm }) =>
       </div>
 
       <div className="space-y-3 overflow-y-auto pr-2" style={{ flexGrow: 1 }}>
-        {goals.map((g) => (
+        {goals.map((goal, idx) => (
           <GoalCard
-            key={g.id}
-            information={g.information}
-            term={g.term}
-            completed={g.completed}
-            validated={g.validated}
+            key={idx}
+            information={goal.information}
+            term={goal.term}
+            completed={goal.completed}
+            status={goal.status}
           />
         ))}
       </div>
