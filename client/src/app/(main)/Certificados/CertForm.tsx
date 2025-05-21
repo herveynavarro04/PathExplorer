@@ -122,16 +122,34 @@ const CertForm: React.FC<CertFormProps> = ({ onClose, onSave }) => {
             />
           </label>
 
-          <label className="text-sm">
-            Subir archivo (.pdf):
-            <input
-              type="file"
-              accept=".pdf"
-              onChange={handleFileChange}
-              className="mt-1"
-              required
-            />
-          </label>
+          <label className="text-sm w-full">
+  Subir archivo (.pdf):
+  <div
+    onDragOver={(e) => e.preventDefault()}
+    onDrop={(e) => {
+      e.preventDefault();
+      if (e.dataTransfer.files.length) {
+        setFile(e.dataTransfer.files[0]);
+      }
+    }}
+    className="mt-2 p-6 border-2 border-dashed border-purple-400 rounded-lg text-center cursor-pointer bg-purple-50 hover:bg-purple-100 transition"
+    onClick={() => document.getElementById('fileUploadInput')?.click()}
+  >
+    {file ? (
+      <span className="text-purple-700 font-medium">{file.name}</span>
+    ) : (
+      <span className="text-purple-500">Arrastra el archivo aquí o haz clic para seleccionar</span>
+    )}
+  </div>
+  <input
+    id="fileUploadInput"
+    type="file"
+    accept=".pdf"
+    onChange={handleFileChange}
+    className="hidden"
+  />
+</label>
+
 
           <button
             type="submit"
