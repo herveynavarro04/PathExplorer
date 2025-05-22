@@ -7,6 +7,7 @@ import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entit
 import { EmployeeService } from './employee.service';
 import { EmployeeController } from './employee.controller';
 import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
+import { ImageService } from 'src/Utilities/imageService.utilities';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity
       EmployeeProfilePicture,
     ]),
   ],
-  providers: [EmployeeService, HashingService],
+  providers: [EmployeeService, HashingService, ImageService],
   controllers: [EmployeeController],
   exports: [EmployeeService],
 })
