@@ -15,12 +15,15 @@ import { GetEmployeeInfoResponseDto } from './dto/response/getEmployeeInfo.respo
 import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
 import { EmployeeEntity } from './entities/employee.entity';
+import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
 
 @Injectable()
 export class EmployeeService {
   constructor(
     @InjectRepository(EmployeeEntity)
     private employeesRepository: Repository<EmployeeEntity>,
+    @InjectRepository(EmployeeProfilePicture)
+    private employeeProfilePicturesRepository: Repository<EmployeeProfilePicture>,
     private hashingService: HashingService,
   ) {}
 
@@ -94,14 +97,23 @@ export class EmployeeService {
     try {
       const employeeInfo = await this.employeesRepository.findOne({
         where: { employeeId },
-        select: ['email', 'firstName', 'lastName', 'imgUrl'],
+        relations: ['profilePicture'],
       });
       if (!employeeInfo) {
         Logger.warn('Employee not found', 'EmployeeService');
         throw new NotFoundException('employee not found');
       }
+
+      const result = {
+        email: employeeInfo.email,
+        firstName: employeeInfo.firstName,
+        lastName: employeeInfo.lastName,
+        profilePicture:
+          employeeInfo.profilePicture?.imageData ||
+          process.env.DEFAULT_PROFILE_IMAGE,
+      };
       Logger.log('employee found', 'EmployeeService');
-      return employeeInfo;
+      return result;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

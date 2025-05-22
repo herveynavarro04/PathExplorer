@@ -6,6 +6,7 @@ import { EmployeeEntity } from './entities/employee.entity';
 import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
 import { EmployeeService } from './employee.service';
 import { EmployeeController } from './employee.controller';
+import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { EmployeeController } from './employee.controller';
       EmployeeEntity,
       EmployeeProjectEntity,
       EmployeeInterestEntity,
+      EmployeeProfilePicture,
     ]),
   ],
   providers: [EmployeeService, HashingService],

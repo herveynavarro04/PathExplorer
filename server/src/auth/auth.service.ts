@@ -40,7 +40,6 @@ export class AuthService {
       employeeId: employeeId,
       email: employeePayload.email,
       password: hashedPassword,
-      imgUrl: process.env.DEFAULT_PROFILE_IMAGE,
       rol: employeePayload.rol,
       createdAt: new Date(),
       updatedAt: null,

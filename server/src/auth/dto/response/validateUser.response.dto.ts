@@ -15,10 +15,6 @@ export class ValidateEmployeeResponseDto {
 
   @IsString()
   @IsNotEmpty()
-  imgUrl: string;
-
-  @IsString()
-  @IsNotEmpty()
   firstName: string;
 
   @IsString()

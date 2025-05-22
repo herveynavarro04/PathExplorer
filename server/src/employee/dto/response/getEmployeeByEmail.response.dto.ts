@@ -15,10 +15,6 @@ export class FindEmployeebyEmailResponseDto {
 
   @IsString()
   @IsNotEmpty()
-  imgUrl: string;
-
-  @IsString()
-  @IsNotEmpty()
   firstName: string;
 
   @IsString()
