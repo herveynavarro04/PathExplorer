@@ -109,7 +109,7 @@ export class EmployeeService {
         firstName: employeeInfo.firstName,
         lastName: employeeInfo.lastName,
         profilePicture:
-          employeeInfo?.profilePicture?.imageData ||
+          employeeInfo?.profilePicture?.imageData.toString('base64') ||
           process.env.DEFAULT_PROFILE_IMAGE,
         mimeType: employeeInfo?.profilePicture?.mimeType || null,
       };
