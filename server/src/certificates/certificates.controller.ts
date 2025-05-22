@@ -18,7 +18,6 @@ import { PostCertificateRequestDto } from './dto/request/postCertificate.request
 import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { GetCertificateByIdResponseDto } from './dto/response/getCertificateById.response.dto';
 import { GetCertificatesResponseDto } from './dto/response/getCertificates.response.dto';
-import { DeleteCertificateResponseDto } from './dto/response/deleteCertificate.response.dto';
 
 @Controller('certificates')
 export class CertificatesController {
@@ -51,9 +50,7 @@ export class CertificatesController {
 
   @Delete(':certificateId')
   @UseGuards(JwtGuard)
-  async delete(
-    @Param('certificateId') certificateId: string,
-  ): Promise<DeleteCertificateResponseDto> {
+  async delete(@Param('certificateId') certificateId: string): Promise<void> {
     return this.certificateService.deleteCertificate(certificateId);
   }
 

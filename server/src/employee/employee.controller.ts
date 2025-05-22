@@ -14,7 +14,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { UpdateEmployeeRequestDto } from './dto/request/updateEmployee.request.dto';
-import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
 import { GetEmployeeInfoResponseDto } from './dto/response/getEmployeeInfo.response.dto';
 import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
 import { EmployeeService } from './employee.service';
@@ -51,9 +50,7 @@ export class EmployeeController {
 
   @Delete(':employeeId')
   @UseGuards(JwtGuard)
-  async deleteEmployee(
-    @Param('employeeId') employeeId: string,
-  ): Promise<DeleteEmployeeResponseDto> {
+  async deleteEmployee(@Param('employeeId') employeeId: string): Promise<void> {
     return this.employeeService.deleteEmployee(employeeId);
   }
 }

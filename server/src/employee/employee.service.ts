@@ -9,7 +9,6 @@ import { Repository } from 'typeorm';
 import { HashingService } from 'src/Utilities/hashing.utilities';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { UpdateEmployeeRequestDto } from './dto/request/updateEmployee.request.dto';
-import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
 import { FindEmployeebyEmailResponseDto } from './dto/response/getEmployeeByEmail.response.dto';
 import { GetEmployeeInfoResponseDto } from './dto/response/getEmployeeInfo.response.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
@@ -238,7 +237,7 @@ export class EmployeeService {
     }
   }
 
-  async deleteEmployee(employeeId: string): Promise<DeleteEmployeeResponseDto> {
+  async deleteEmployee(employeeId: string): Promise<void> {
     try {
       const deleteResult = await this.employeesRepository.delete({
         employeeId,
@@ -248,7 +247,6 @@ export class EmployeeService {
         throw new NotFoundException(`employee not found`);
       }
       Logger.log('Employee deleted successfully');
-      return { employeeId: employeeId };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

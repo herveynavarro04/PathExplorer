@@ -12,7 +12,6 @@ import { GetHistoryResponseDto } from './dto/response/getHistory.response.dto';
 import { PostStoryResponseDto } from './dto/response/postStory.response.dto';
 import { UpdateHistoryResponseDto } from './dto/response/updateHistory.response.dto';
 import { HistoryEntity } from './entities/history.entity';
-import { DeleteHistoryResponseDto } from './dto/response/deleteHistory.response.dto';
 import { GetHistoriesResponeDto } from './dto/response/getHistories.dto.response';
 
 @Injectable()
@@ -104,13 +103,10 @@ export class HistoryService {
     }
   }
 
-  async deleteHistory(historyId: string): Promise<DeleteHistoryResponseDto> {
+  async deleteHistory(historyId: string): Promise<void> {
     try {
       await this.historyRepository.delete({ historyId: historyId });
       Logger.log('History succesfully deleted', 'HistoryService');
-      return {
-        historyId: historyId,
-      };
     } catch (error) {
       Logger.error('Error deleting history', error.stack, 'HistoryService');
       throw new InternalServerErrorException('Failed to delete history');
