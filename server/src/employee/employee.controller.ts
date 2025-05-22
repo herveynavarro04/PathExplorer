@@ -22,7 +22,7 @@ export class EmployeeController {
 
   @Get()
   @UseGuards(JwtGuard)
-  async getemployee(@Req() req: Request): Promise<GetEmployeeInfoResponseDto> {
+  async getEmployee(@Req() req: Request): Promise<GetEmployeeInfoResponseDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeService.getEmployeeInfo(employeeId);
   }
