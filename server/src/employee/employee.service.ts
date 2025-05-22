@@ -130,6 +130,32 @@ export class EmployeeService {
     }
   }
 
+  async deleteProfilePicture(employeeId: string): Promise<void> {
+    try {
+      await this.employeeProfilePicturesRepository.update(
+        { employee: { employeeId: employeeId } },
+        {
+          imageData: null,
+          mimeType: null,
+          uploadedAt: null,
+        },
+      );
+      Logger.log('Employee profile picture deleted', 'EmployeeService');
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during profile picture update transaction',
+        error.stack,
+        'EmployeeService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to delete employee profile picture',
+      );
+    }
+  }
+
   async updateEmployee(
     employeeId: string,
     updatePayload: UpdateEmployeeRequestDto,
