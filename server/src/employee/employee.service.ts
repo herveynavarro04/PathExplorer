@@ -16,15 +16,17 @@ import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
 import { EmployeeEntity } from './entities/employee.entity';
 import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
+import { ImageService } from 'src/Utilities/imageService.utilities';
 
 @Injectable()
 export class EmployeeService {
   constructor(
+    private hashingService: HashingService,
+    private imageService: ImageService,
     @InjectRepository(EmployeeEntity)
     private employeesRepository: Repository<EmployeeEntity>,
     @InjectRepository(EmployeeProfilePicture)
     private employeeProfilePicturesRepository: Repository<EmployeeProfilePicture>,
-    private hashingService: HashingService,
   ) {}
 
   async registerEmployee(
@@ -109,7 +111,7 @@ export class EmployeeService {
         firstName: employeeInfo.firstName,
         lastName: employeeInfo.lastName,
         profilePicture:
-          employeeInfo?.profilePicture?.imageData.toString('base64') ||
+          employeeInfo?.profilePicture?.imageData?.toString('base64') ||
           process.env.DEFAULT_PROFILE_IMAGE,
         mimeType: employeeInfo?.profilePicture?.mimeType || null,
       };
@@ -143,6 +145,7 @@ export class EmployeeService {
       this.updatePassword(newPassword, employeeId);
     }
     if (file) {
+      this.imageService.validateMimeType(file);
       const imageBuffer = file.buffer;
       const imageMimeType = file.mimetype;
       this.updateProfilePicture(employeeId, imageBuffer, imageMimeType);
@@ -159,10 +162,11 @@ export class EmployeeService {
     imageMimeType: string,
   ): Promise<void> {
     try {
+      const compressImage = await this.imageService.compressImage(imageBuffer);
       await this.employeeProfilePicturesRepository.update(
         { employee: { employeeId: employeeId } },
         {
-          imageData: imageBuffer,
+          imageData: compressImage,
           mimeType: imageMimeType,
           uploadedAt: new Date(),
         },
