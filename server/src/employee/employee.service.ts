@@ -109,8 +109,9 @@ export class EmployeeService {
         firstName: employeeInfo.firstName,
         lastName: employeeInfo.lastName,
         profilePicture:
-          employeeInfo.profilePicture?.imageData ||
+          employeeInfo?.profilePicture?.imageData ||
           process.env.DEFAULT_PROFILE_IMAGE,
+        mimeType: employeeInfo?.profilePicture?.mimeType || null,
       };
       Logger.log('employee found', 'EmployeeService');
       return result;
@@ -130,32 +131,80 @@ export class EmployeeService {
   async updateEmployee(
     employeeId: string,
     updatePayload: UpdateEmployeeRequestDto,
+    file: Express.Multer.File | undefined,
   ): Promise<UpdateEmployeeResponseDto> {
+    if (!file && !updatePayload.password) {
+      return null;
+    }
     if (updatePayload.password) {
-      updatePayload.password = await this.hashingService.hashPassword(
+      const newPassword = await this.hashingService.hashPassword(
         updatePayload.password,
       );
+      this.updatePassword(newPassword, employeeId);
     }
+    if (file) {
+      const imageBuffer = file.buffer;
+      const imageMimeType = file.mimetype;
+      this.updateProfilePicture(employeeId, imageBuffer, imageMimeType);
+    }
+    return {
+      employeeId: employeeId,
+      lastUpdate: new Date(),
+    };
+  }
+
+  private async updateProfilePicture(
+    employeeId: string,
+    imageBuffer: Buffer,
+    imageMimeType: string,
+  ): Promise<void> {
     try {
-      await this.employeesRepository.update(
-        { employeeId: employeeId },
-        updatePayload,
+      await this.employeeProfilePicturesRepository.update(
+        { employee: { employeeId: employeeId } },
+        {
+          imageData: imageBuffer,
+          mimeType: imageMimeType,
+          uploadedAt: new Date(),
+        },
       );
-      Logger.log('Employee Updated', 'EmployeeService');
-      return {
-        employeeId: employeeId,
-        lastUpdate: new Date(),
-      };
+      Logger.log('Employee profile picture updated', 'EmployeeService');
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
       Logger.error(
-        'Error during update transaction',
+        'Error during profile picture update transaction',
         error.stack,
         'EmployeeService',
       );
-      throw new InternalServerErrorException('Failed to updated employee info');
+      throw new InternalServerErrorException(
+        'Failed to updated employee profile picture',
+      );
+    }
+  }
+
+  private async updatePassword(
+    newPassword: string,
+    employeeId: string,
+  ): Promise<void> {
+    try {
+      await this.employeesRepository.update(
+        { employeeId: employeeId },
+        { password: newPassword, updatedAt: new Date() },
+      );
+      Logger.log('Employee password updated', 'EmployeeService');
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during password update transaction',
+        error.stack,
+        'EmployeeService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to updated employee password',
+      );
     }
   }
 

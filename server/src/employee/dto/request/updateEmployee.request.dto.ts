@@ -4,8 +4,4 @@ export class UpdateEmployeeRequestDto {
   @IsString()
   @IsOptional()
   password?: string;
-
-  @IsString()
-  @IsOptional()
-  imgUrl?: string;
 }

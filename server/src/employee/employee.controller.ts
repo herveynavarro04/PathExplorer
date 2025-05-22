@@ -6,7 +6,9 @@ import {
   Param,
   Patch,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { Request } from 'express';
@@ -15,6 +17,7 @@ import { UpdateEmployeeRequestDto } from './dto/request/updateEmployee.request.d
 import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
 import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
 import { EmployeeService } from './employee.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('employee')
 export class EmployeeController {
@@ -29,12 +32,14 @@ export class EmployeeController {
 
   @Patch()
   @UseGuards(JwtGuard)
+  @UseInterceptors(FileInterceptor('pictureFile'))
   async updateEmployee(
     @Body() updatePayload: UpdateEmployeeRequestDto,
+    @UploadedFile() file: Express.Multer.File | undefined,
     @Req() req: Request,
   ): Promise<UpdateEmployeeResponseDto> {
     const employeeId = req.user['employeeId'];
-    return this.employeeService.updateEmployee(employeeId, updatePayload);
+    return this.employeeService.updateEmployee(employeeId, updatePayload, file);
   }
 
   @Delete(':employeeId')

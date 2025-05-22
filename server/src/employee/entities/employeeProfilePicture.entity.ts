@@ -3,8 +3,8 @@ import { EmployeeEntity } from './employee.entity';
 
 @Entity('employee_profile_picture')
 export class EmployeeProfilePicture {
-  @PrimaryColumn({ name: 'picture_id' })
-  pictureId: string;
+  @PrimaryColumn({ name: 'employee_id' })
+  employeeId: string;
 
   @Column({ type: 'bytea', name: 'image_data' })
   imageData: Buffer;
