@@ -27,6 +27,7 @@ export class employeeCoursesService {
         status: employeeCoursesLink.status,
         information: employeeCoursesLink.course.information,
         courseId: employeeCoursesLink.courseId,
+        mandatory: employeeCoursesLink.course.mandatory,
       }));
       Logger.log(
         'Employee courses succesfully fetched',
