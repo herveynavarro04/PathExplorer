@@ -9,7 +9,7 @@ const LoadingPage = ({
 }) => {
   return (
     <div
-      className={`transition-opacity duration-500 ${loading ? "opacity-0" : "opacity-100"}`}
+      className={`transition-opacity duration-200 ${loading ? "opacity-0" : "opacity-100"}`}
     >
       {!loading && children}
     </div>

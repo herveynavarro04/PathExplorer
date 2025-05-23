@@ -48,10 +48,6 @@ const Page = () => {
   const [skills, setSkills] = useState<SkillsResponse>(null);
   const [userSkills, setUserSKills] = useState<UserSkillsResponse>(null);
 
-  const [softSkillMap, setSoftSkillMap] = useState<Map<
-    string,
-    [string, boolean]
-  > | null>(null);
   const url = "http://localhost:8080/api";
 
   useEffect(() => {
@@ -86,17 +82,6 @@ const Page = () => {
         setSkills(skills);
         setUserSKills(userSkills);
 
-        const userSoftSkillNames = new Set(
-          userSkills.softSkills.map((s) => s.skillName)
-        );
-        const softSkillMap = new Map<string, [string, boolean]>(
-          skills.softSkills.map((skill) => [
-            skill.skillName,
-            [skill.skillId, userSoftSkillNames.has(skill.skillName)],
-          ])
-        );
-
-        setSoftSkillMap(softSkillMap);
         setLoading(false);
       } catch (err) {
         console.error("Error loading data:", err);
