@@ -5,7 +5,7 @@ export function ButtonCardGroup() {
 
   return (
     <div className="grid gap-8 2xl:gap-7.5">
-      <Link href="/historial">
+      <Link href="/RegistrarProyecto">
       <ButtonCard
         data="Registrar proyecto"
       />
