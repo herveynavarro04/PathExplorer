@@ -8,10 +8,10 @@ export default function ChargeabilityCard() {
   const offset = circumference - (loadability / 100) * circumference;
 
   return (
-    <ShowcaseSection title="Cargabilidad actual" className="!p-6">
+    <ShowcaseSection title="Cargabilidad actual" className="!pb-2 !pt-2">
       <div className="flex flex-col md:flex-row items-center gap-6">
         {/* Circular Chart */}
-        <div className="relative w-24 h-24">
+        <div className="relative w-15 h-15">
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <circle
               cx="50"
@@ -48,13 +48,12 @@ export default function ChargeabilityCard() {
         </div>
 
         <div className="flex flex-col justify-center">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-1">
+          {/* <h3 className="text-md font-semibold text-gray-800 dark:text-white mb-1">
             ¿Qué es esto?
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300 max-w-xs">
-            Es el parámetro utilizado para medir la carga de trabajo de un
-            empleado en relación a su tiempo total disponible y sus proyectos
-            asignados.
+          </h3> */}
+          <p className="text-xs text-gray-600 dark:text-gray-300 max-w-xs">
+            Parámetro utilizado para medir la carga de trabajo de un
+            empleado en relación a su tiempo total disponible y sus proyectos.
           </p>
         </div>
       </div>

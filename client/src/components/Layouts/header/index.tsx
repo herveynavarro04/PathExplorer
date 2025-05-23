@@ -45,7 +45,10 @@ export function Header() {
         firstName: userData.firstName,
         lastName: userData.lastName,
         email: userData.email,
-        profilePhoto: "/profile.png", 
+        profilePhoto:
+          userData.profilePicture && userData.mimeType
+            ? `data:${userData.mimeType};base64,${userData.profilePicture}`
+            : "/profile.png",
       });
     };
 
