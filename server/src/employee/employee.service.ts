@@ -17,6 +17,7 @@ import { EmployeeEntity } from './entities/employee.entity';
 import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
 import { ImageService } from 'src/Utilities/imageService.utilities';
 import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
+import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
 
 @Injectable()
 export class EmployeeService {
@@ -25,6 +26,8 @@ export class EmployeeService {
     private imageService: ImageService,
     @InjectRepository(EmployeeEntity)
     private employeesRepository: Repository<EmployeeEntity>,
+    @InjectRepository(EmployeeProjectEntity)
+    private employeeProjects: Repository<EmployeeProjectEntity>,
     @InjectRepository(EmployeeProfilePicture)
     private employeeProfilePicturesRepository: Repository<EmployeeProfilePicture>,
   ) {}
