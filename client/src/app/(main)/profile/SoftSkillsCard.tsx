@@ -109,32 +109,53 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
     setDeleteSkills([...deleteSkills, softSkillMap?.get(skill)![0]]);
   };
 
+    const cancelEdit = () => {
+    if (!softSkillMap) return;
+    const selected: string[] = [];
+
+    softSkillMap.forEach(([_, isSelected], skillName) => {
+      if (isSelected) selected.push(skillName);
+    });
+
+    setSelectedSoftSkills(selected);
+    setAddSkills([]);
+    setDeleteSkills([]);
+    setSearchTerm("");
+    setIsEditing(false);
+};
+
   return (
     <ShowcaseSectionSkill
       title="Habilidades Blandas"
       className="!p-7 h-[11rem]"
-      action={
-        isEditing ? (
+      action={isEditing ? (
+        <div className="flex gap-2">
           <button
             type="button"
             onClick={() => {
               setTriggerSave((prev) => !prev);
-              setIsEditing(false);
             }}
             className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-white hover:bg-opacity-90"
           >
             Guardar
           </button>
-        ) : (
           <button
             type="button"
-            onClick={() => setIsEditing(true)}
-            className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75 transition-colors"
+            onClick={cancelEdit}
+            className="rounded-lg border border-gray-400 bg-transparent px-6 py-[7px] font-medium text-gray-700 hover:bg-gray-200 dark:text-white dark:hover:bg-dark-3 transition-colors"
           >
-            Editar
+            Cancelar
           </button>
-        )
-      }
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setIsEditing(true)}
+          className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75 transition-colors"
+        >
+          Editar
+        </button>
+      )}
     >
       <div className="flex flex-col justify-between h-full">
         {isEditing && (

@@ -17,6 +17,7 @@ type ProfileData = {
   email: string;
   url_pic: string;
   position: string;
+  mime_type:string;
 };
 
 type Skill = {
@@ -47,6 +48,7 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [skills, setSkills] = useState<SkillsResponse>(null);
   const [userSkills, setUserSKills] = useState<UserSkillsResponse>(null);
+  const [reloadTrigger, setReloadTrigger] = useState(false);
 
   const [softSkillMap, setSoftSkillMap] = useState<Map<
     string,
@@ -64,7 +66,7 @@ const Page = () => {
 
       try {
         const [userData, skills, userSkills] = await Promise.all([
-          authFetch<ProfileData>(`${url}/employee`),
+          authFetch<any>(`${url}/employee`),
           authFetch<SkillsResponse>(`${url}/skills`),
           authFetch<UserSkillsResponse>(`${url}/skills/employee`),
         ]);
@@ -79,8 +81,9 @@ const Page = () => {
           lastName: userData.lastName,
           password: userData.password,
           email: userData.email,
-          url_pic: "/profile.png",
+          url_pic: userData.profilePicture || "/profile.png",
           position: userData.position || "Front-end Developer",
+          mime_type: userData.mimeType ?? "image/png",
         });
 
         setSkills(skills);
@@ -105,15 +108,26 @@ const Page = () => {
     };
 
     loadData();
-  }, []);
+  }, [reloadTrigger]);
+
+  const updateProfileState = (newData: Partial<ProfileData>) => {
+    setProfile((prev) => ({
+      ...prev,
+      ...newData,
+    }));
+  };
+
 
   return (
     <LoadingPage loading={loading}>
       <div className="mx-auto w-full max-w-[970px]">
         <Breadcrumb pageName="Perfil" />
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
-          <PersonalInfoForm userData={profile} />
-          <div className="max-h-auto flex flex-col gap-5">
+          <PersonalInfoForm userData={profile} 
+          triggerReload={() => setReloadTrigger((prev) => !prev)}
+            updateProfileState={updateProfileState}
+            setGlobalLoading={setLoading}/>
+          <div className="max-h-auto flex flex-col gap-2">
             <ChargeabilityCard />
             <TechSkillsCard skills={skills} userSkills={userSkills} url={url} />
             <SoftSkillsCard skills={skills} userSkills={userSkills} url={url} />
