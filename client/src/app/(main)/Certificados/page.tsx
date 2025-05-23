@@ -158,6 +158,12 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
           {loading ? (
             <p className="text-center col-span-full mt-10">Cargando certificados...</p>
+          ) : currentCertificates.length === 0 ? (
+            <div className="col-span-full flex justify-center items-end min-h-[20rem]">
+              <p className="text-gray-600 dark:text-gray-300 text-lg text-center">
+                Aún no has agregado certificados.
+              </p>
+            </div>
           ) : (
             currentCertificates.map((certificate) => (
               <CertCard
@@ -174,6 +180,7 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
             ))
           )}
         </div>
+
       </div>
 
       {selectedCert && (
@@ -194,6 +201,7 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
       )}
 
       <div className="w-full bg-transparent mt-8">
+        {currentCertificates.length > 0 && (
         <div className="flex justify-center gap-4">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
@@ -213,6 +221,7 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
             Siguiente
           </button>
         </div>
+        )}
       </div>
 
       {showAddModal && (
