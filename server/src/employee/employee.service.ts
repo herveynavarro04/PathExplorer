@@ -18,6 +18,7 @@ import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity
 import { ImageService } from 'src/Utilities/imageService.utilities';
 import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
 import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
+import { GetManagerEmployeesResponseDto } from './dto/response/getManagerEmployees.response.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -96,14 +97,17 @@ export class EmployeeService {
     }
   }
 
-  async getManagerEmployees(employeeId: string): Promise<any> {
+  async getManagerEmployees(
+    employeeId: string,
+  ): Promise<GetManagerEmployeesResponseDto> {
     const managerProjects = await this.getManagerProjects(employeeId);
     if (managerProjects.length < 1) {
-      return [];
+      return null;
     }
     try {
       const managerEmployees = await this.employeeProjects
         .createQueryBuilder('ep')
+        .innerJoin('ep.project', 'project')
         .innerJoin('ep.employee', 'employee')
         .leftJoin('employee.employeeInterestLink', 'interest')
         .leftJoin('employee.employeeSkillLink', 'skill')
@@ -111,22 +115,30 @@ export class EmployeeService {
           projectIds: managerProjects,
         })
         .andWhere('ep.employeeId != :employeeId', { employeeId })
+        .andWhere('ep.status = :status', { status: 'approved' })
         .select([
-          'employee.employeeId AS employeeId',
+          'employee.employeeId AS "employeeId"',
           'employee.email AS email',
-          'employee.firstName AS firstName',
-          'employee.lastName AS lastName',
-          'ep.chargeability AS chargeability',
+          'employee.firstName AS "firstName"',
+          'employee.lastName AS "lastName"',
+          'ep.chargeability AS "chargeability"',
           'ep.position AS position',
-          'COUNT(DISTINCT interest.skillId) AS interestCount',
-          'COUNT(DISTINCT skill.skillId) AS skillCount',
+          'COUNT(DISTINCT interest.skillId) AS "interestCount"',
+          'COUNT(DISTINCT skill.skillId) AS "skillCount"',
         ])
         .groupBy(
           'employee.employeeId, employee.email, employee.firstName, employee.lastName, ep.chargeability, ep.position',
         )
         .getRawMany();
+      const employees = managerEmployees.map((emp) => ({
+        ...emp,
+        interestCount: Number(emp.interestCount),
+        skillCount: Number(emp.skillCount),
+      }));
       Logger.log('Manager employees found', 'EmployeeService');
-      return managerEmployees;
+      return {
+        employees: employees,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -148,7 +160,6 @@ export class EmployeeService {
         .createQueryBuilder('ep')
         .innerJoin('ep.project', 'project')
         .where('ep.employeeId = :employeeId', { employeeId })
-        .andWhere('ep.status = :status', { status: 'approved' })
         .andWhere('project.active = :projectActive', {
           projectActive: true,
         })
