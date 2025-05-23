@@ -36,11 +36,11 @@ export function UserInfo({ name, email, img }: UserInfoProps) {
         <figure className="flex items-center gap-3">
           <Image
             src={img}
-            className="size-12 rounded-full"
             alt={`Avatar of ${name}`}
-            role="presentation"
             width={48}
             height={48}
+            className="rounded-full object-cover w-12 h-12"
+            role="presentation"
           />
           <figcaption className="flex items-center gap-1 font-medium text-black dark:text-dark-6 max-[1024px]:sr-only">
             <span>{name}</span>
@@ -64,14 +64,14 @@ export function UserInfo({ name, email, img }: UserInfoProps) {
         <h2 className="sr-only">User information</h2>
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
-          <Image
-            src={img}
-            className="size-12 rounded-full"
-            alt={`Avatar for ${name}`}
-            role="presentation"
-            width={48}
-            height={48}
-          />
+            <Image
+              src={img}
+              alt={`Avatar for ${name}`}
+              width={48}
+              height={48}
+              className="rounded-full object-cover w-12 h-12"
+              role="presentation"
+            />
 
           <figcaption className="space-y-1 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
