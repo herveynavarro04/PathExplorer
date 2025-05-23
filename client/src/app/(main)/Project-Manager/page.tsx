@@ -24,15 +24,14 @@ export default function Home() {
               <div className="pt-5">
                 <Breadcrumb pageName="Project Manager Dashboard" />
               </div>
-              <ButtonCardGroup />
-    
+
           </div>
           <OverviewCardsGroup />
         </div>
             
         </LoadingPage>
         {/* Fade-in for TopProjects */}
-        <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-20 2xl:gap-7.5">
+        <div className="mt-4 grid grid-cols-12 gap-4 md:mt-10 md:gap-6 2xl:mt-40 2xl:gap-7.5">
             <div className="col-span-12 grid">
             <LoadingPage loading={loading}>
                 <TopAnalysis />

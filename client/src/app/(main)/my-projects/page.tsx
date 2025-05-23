@@ -17,7 +17,7 @@ interface ProjectInfoPreviewResponseDto {
 }
 
 interface GetUserProjectsResponseDto {
-  availableProjects: ProjectInfoPreviewResponseDto[];
+  employeeProjects: ProjectInfoPreviewResponseDto[];
 }
 type FilterType = "pending" | "approved" | "rejected";
 
@@ -91,7 +91,7 @@ export default function MyProjectsPage() {
           return;
         }
 
-        setProjects(projectsData.availableProjects);
+        setProjects(projectsData.employeeProjects);
         setLoading(false);
       } catch (err) {
         console.error("Unexpected fetch error:", err);
@@ -144,7 +144,6 @@ export default function MyProjectsPage() {
             <div className="pt-5">
               <Breadcrumb pageName="Mis proyectos" />
             </div>
-  
           </div>
 
           <select
@@ -164,26 +163,26 @@ export default function MyProjectsPage() {
 
         <div className="flex flex-col min-h-[34rem]">
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
-          {currentProjects.length === 0 ? (
-            <div className="col-span-full flex justify-center items-end min-h-[20rem]">
-              <p className="text-gray-600 dark:text-gray-300 text-lg text-center">
-                Aún no tienes proyectos registrados.
-              </p>
-            </div>
-          ) : (
-            currentProjects.map((project) => (
-              <ProjectCard
-                key={project.projectId}
-                projectId={project.projectId}
-                projectName={project.projectName}
-                information={project.information}
-                active={project.active}
-                status={project.status}
-                onClick={handleProjectClick}
-              />
-            ))
-          )}
-        </div>
+            {currentProjects.length === 0 ? (
+              <div className="col-span-full flex justify-center items-end min-h-[20rem]">
+                <p className="text-gray-600 dark:text-gray-300 text-lg text-center">
+                  Aún no tienes proyectos registrados.
+                </p>
+              </div>
+            ) : (
+              currentProjects.map((project) => (
+                <ProjectCard
+                  key={project.projectId}
+                  projectId={project.projectId}
+                  projectName={project.projectName}
+                  information={project.information}
+                  active={project.active}
+                  status={project.status}
+                  onClick={handleProjectClick}
+                />
+              ))
+            )}
+          </div>
 
           {selectedProject && (
             <ProyectoModal
@@ -196,45 +195,45 @@ export default function MyProjectsPage() {
           )}
         </div>
 
-{currentProjects.length > 0 && (
-  <div className="w-full bg-transparent mt-8 flex justify-between">
-    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-8 px-4 sm:px-0">
-      <div className="flex justify-center gap-4">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-        >
-          Anterior
-        </button>
-        <span className="self-center text-lg">
-          {currentPage} de {totalPages}
-        </span>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-        >
-          Siguiente
-        </button>
-      </div>
-    </div>
+        {currentProjects.length > 0 && (
+          <div className="w-full bg-transparent mt-8 flex justify-between">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-8 px-4 sm:px-0">
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                >
+                  Anterior
+                </button>
+                <span className="self-center text-lg">
+                  {currentPage} de {totalPages}
+                </span>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                >
+                  Siguiente
+                </button>
+              </div>
+            </div>
 
-    {deleteProjects.length > 0 && (
-      <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4">
-        <div className="bg-[#f3e8ff] text-[#2b2b2b] px-4 py-2 rounded-lg text-center">
-          {appliedMessage}
-        </div>
-        <button
-          className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto"
-          onClick={() => setTriggerPost((prev) => !prev)}
-        >
-          Finalizar desaplicación
-        </button>
-      </div>
-    )}
-  </div>
-)}
+            {deleteProjects.length > 0 && (
+              <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4">
+                <div className="bg-[#f3e8ff] text-[#2b2b2b] px-4 py-2 rounded-lg text-center">
+                  {appliedMessage}
+                </div>
+                <button
+                  className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto"
+                  onClick={() => setTriggerPost((prev) => !prev)}
+                >
+                  Finalizar desaplicación
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </LoadingPage>
   );
