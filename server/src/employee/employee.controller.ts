@@ -44,9 +44,18 @@ export class EmployeeController {
 
   @Patch('delete/picture')
   @UseGuards(JwtGuard)
-  async deleteProfilePicture(@Req() req: Request): Promise<void> {
+  async deleteProfilePicture(
+    @Req() req: Request,
+  ): Promise<DeleteEmployeeResponseDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeService.deleteProfilePicture(employeeId);
+  }
+
+  @Get('manager/employees')
+  @UseGuards(JwtGuard)
+  async getManagerEmployees(@Req() req: Request): Promise<any> {
+    const employeeId = req.user['employeeId'];
+    return this.employeeService.getManagerEmployees(employeeId);
   }
 
   @Delete(':employeeId')

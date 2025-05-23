@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class GetCourseInfoDto {
   @IsString()
@@ -26,4 +26,8 @@ export class GetCourseInfoDto {
   @IsBoolean()
   @IsNotEmpty()
   mandatory: boolean;
+
+  @IsDate()
+  @IsNotEmpty()
+  createdAt: Date;
 }
