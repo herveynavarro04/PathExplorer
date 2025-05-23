@@ -144,27 +144,36 @@ const Historial: React.FC = () => {
           <div className="relative w-full px-[3rem] pb-10">
             <div className="min-h-[36rem] flex flex-col justify-between">
               <div className="grid gap-6 sm:grid-cols-2 2xl:grid-cols-3 mb-6 flex-grow">
-                {currentItems.map((history) => (
-                  <HistoryCard
-                    key={history.historyId}
-                    historyId={history.historyId}
-                    information={history.information}
-                    position={history.position}
-                    startDate={history.startDate}
-                    endDate={history.endDate}
-                    company={history.company}
-                    setHistoryId={setHistoryId}
-                    setInformation={setInformation}
-                    setPosition={setPosition}
-                    setStartDate={setStartDate}
-                    setEndDate={setEndDate}
-                    setCompany={setCompany}
-                    setOpenAddHistory={setOpenAddHistory}
-                    setOpendDeleteCard={setOpenDeleteCard}
-                    setIsPatch={setIsPatch}
-                  />
-                ))}
+                {currentItems.length === 0 ? (
+    <div className="w-full col-span-full flex justify-center items-center min-h-[20rem]">
+      <p className="text-center text-lg text-gray-700 dark:text-gray-300">
+        Aún no tienes historial laboral agregado.
+              </p>
+            </div>
+          ) : (
+            currentItems.map((history) => (
+              <HistoryCard
+                key={history.historyId}
+                historyId={history.historyId}
+                information={history.information}
+                position={history.position}
+                startDate={history.startDate}
+                endDate={history.endDate}
+                company={history.company}
+                setHistoryId={setHistoryId}
+                setInformation={setInformation}
+                setPosition={setPosition}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                setCompany={setCompany}
+                setOpenAddHistory={setOpenAddHistory}
+                setOpendDeleteCard={setOpenDeleteCard}
+                setIsPatch={setIsPatch}
+              />
+            ))
+          )}
               </div>
+              {histories.length > 0 && (
 
               <div className="flex justify-center gap-4">
                 <button
@@ -185,6 +194,7 @@ const Historial: React.FC = () => {
                   Siguiente
                 </button>
               </div>
+              )}
             </div>
           </div>
         </div>

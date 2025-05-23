@@ -59,16 +59,24 @@ const GoalCardClient = ({ goals, setOpenForm }: GoalCardClientProps) => {
       </div>
 
       <div className="space-y-3 overflow-y-auto pr-2" style={{ flexGrow: 1 }}>
-        {goals.map((goal, idx) => (
-          <GoalCard
-            key={idx}
-            information={goal.information}
-            term={goal.term}
-            completed={goal.completed}
-            status={goal.status}
-          />
-        ))}
-      </div>
+  {goals.length === 0 ? (
+    <div className="flex justify-center items-center h-full">
+      <p className="text-gray-600 dark:text-gray-300 text-center">
+        Aún no has registrado metas profesionales.
+      </p>
+    </div>
+  ) : (
+    goals.map((goal, idx) => (
+      <GoalCard
+        key={idx}
+        information={goal.information}
+        term={goal.term}
+        completed={goal.completed}
+        status={goal.status}
+      />
+    ))
+  )}
+</div>
     </section>
   );
 };

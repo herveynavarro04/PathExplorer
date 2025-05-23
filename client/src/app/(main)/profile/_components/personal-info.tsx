@@ -3,7 +3,7 @@
 
 "use client";
 
-import { EmailIcon, UploadIcon, UserIcon, PasswordIcon , GlobeIcon} from "assets/icons";
+import { EmailIcon, UploadIcon, UserIcon, PasswordIcon , GlobeIcon, TrashIcon} from "assets/icons";
 import InputGroup from "components/FormElements/InputGroup";
 import { ShowcaseSection } from "components/Layouts/showcase-section";
 import Image from "next/image";
@@ -113,7 +113,7 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
   return (
     <ShowcaseSection
   title="Información Personal"
-  className="!p-7 !pt-3 !pb-0"
+  className="!p-7 !pt-2 !pb-0"
   action={
     !isEditing ? (
       <button
@@ -125,6 +125,14 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
       </button>
     ) : (
       <div className="flex gap-2">
+        
+        <button
+          className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
+          type="submit"
+          form="personal-info-form" 
+        >
+          Guardar
+        </button>
         <button
           className="flex justify-center rounded-lg border border-stroke px-6 py-[7px] font-medium dark:bg-gray-600 dark:hover:bg-opacity-75 text-dark hover:shadow-1 dark:border-dark-3 dark:text-white"
           type="button"
@@ -137,19 +145,13 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
         >
           Cancelar
         </button>
-        <button
-          className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
-          type="submit"
-          form="personal-info-form" 
-        >
-          Guardar
-        </button>
       </div>
     )
   }
 >
       <form id="personal-info-form" onSubmit={handleSubmit}>
-        <div className={`mb-1 ${isEditing ? "flex flex-row items-start gap-5" : "flex justify-center"}`}>
+        <div className={`mb-0 ${isEditing ? "flex flex-row items-center gap-9" : "flex justify-center"}`}>
+          <div className="flex flex-col items-center justify-center ">
   <Image
     src={
       previewUrl.startsWith("data:") || previewUrl.startsWith("blob:")
@@ -162,26 +164,32 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
     height={isEditing ? 66 : 180}
     alt="User"
     className={`rounded-full object-cover transition-all duration-300 ease-in-out ${
-      isEditing ? "size-14" : "size-56"
+      isEditing ? "size-33" : "size-56"
     }`}
     quality={90}
   />
 
+
+  {isEditing && (userData.url_pic || selectedImage) && (
+    <button
+      type="button"
+      onClick={async () => {
+        const defaultImage = await getDefaultProfilePictureFile();
+        setSelectedImage(defaultImage);
+        setPreviewUrl(URL.createObjectURL(defaultImage));
+      }}
+      className="text-sm text-red-500 underline pt-1"
+    >
+      <TrashIcon/>
+    </button>
+  )}
+
+  </div>
+
+
   {isEditing && (
-    <div className="flex flex-col gap-2 w-full transition-all duration-500 ease-in-out">
-      {(userData.url_pic || selectedImage) && (
-        <button
-          type="button"
-          onClick={async () => {
-            const defaultImage = await getDefaultProfilePictureFile();
-            setSelectedImage(defaultImage);
-            setPreviewUrl(URL.createObjectURL(defaultImage));
-          }}
-          className="text-sm text-red-500 underline"
-        >
-          Eliminar foto de perfil
-        </button>
-      )}
+    <div className="flex flex-col gap-2 w-60 transition-all duration-500 ease-in-out items-start">
+      
       <div className="relative block w-full rounded-xl border border-dashed border-gray-4 bg-gray-2 hover:border-primary dark:border-dark-3 dark:bg-dark-2 dark:hover:border-primary">
         <input
           type="file"
@@ -199,10 +207,10 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
             <UploadIcon />
           </div>
           <p className="mt-2.5 text-body-sm font-medium">
-            <span className="text-primary">Sube el archivo</span> o arrástra el archivo
+            <span className="text-primary">Sube</span> o arrastra el archivo
           </p>
-          <p className="mt-1 text-body-xs">
-            PNG, JPG o JPEG (máx. 10MB, 800x800px)
+          <p className="mt-1 text-xs">
+            PNG, JPG o JPEG (máx. 10MB)
           </p>
         </label>
       </div>
@@ -239,7 +247,7 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
 
   
         <InputGroup
-          className="mb-5.5 text-sm"
+          className="mb-3.5 text-sm"
           type="text"
           name="position"
           label="Puesto"

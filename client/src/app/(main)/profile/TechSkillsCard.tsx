@@ -204,23 +204,31 @@ const TechSkillsCard = ({ skills, userSkills, url }: TechSkillsCardProps) => {
               isEditing ? "h-[5rem]" : "h-[8rem]"
             }`}
           >
-            {selectedTechSkills.map((skill) => (
-              <span
-                key={skill}
-                className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
-              >
-                {skill}
-                {isEditing && (
-                  <button
-                    type="button"
-                    onClick={() => removeSkill(skill)}
-                    className="text-gray-500 hover:text-red"
-                  >
-                    ×
-                  </button>
-                )}
-              </span>
-            ))}
+            {selectedTechSkills.length === 0 ? (
+          <div className="w-full flex items-center justify-center h-full">
+            <p className="text-gray-500 dark:text-gray-300 text-sm text-center">
+              Aún no has agregado habilidades técnicas.
+            </p>
+          </div>
+        ) : (
+          selectedTechSkills.map((skill) => (
+            <span
+              key={skill}
+              className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
+            >
+              {skill}
+              {isEditing && (
+                <button
+                  type="button"
+                  onClick={() => removeSkill(skill)}
+                  className="text-gray-500 hover:text-red"
+                >
+                  ×
+                </button>
+              )}
+            </span>
+          ))
+        )}
           </div>
         </div>
       </div>
