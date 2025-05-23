@@ -17,6 +17,7 @@ import { HistoryService } from './history.service';
 import { UpdateHistoryResponseDto } from './dto/response/updateHistory.response.dto';
 import { UpdateHistoryRequestDto } from './dto/request/updateHistory.request.dto';
 import { GetHistoriesResponeDto } from './dto/response/getHistories.dto.response';
+import { DeleteHistoryResponseDto } from './dto/response/deleteHistory.response.dto';
 
 @Controller('history')
 export class HistoryController {
@@ -58,7 +59,9 @@ export class HistoryController {
 
   @Delete(':historyId')
   @UseGuards()
-  async deleteHistory(@Param('historyId') historyId: string): Promise<void> {
+  async deleteHistory(
+    @Param('historyId') historyId: string,
+  ): Promise<DeleteHistoryResponseDto> {
     return this.historyService.deleteHistory(historyId);
   }
 }

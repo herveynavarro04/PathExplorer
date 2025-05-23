@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { CertificatesFilesEntity } from './entities/certificatesFiles.entity';
 import { GetCertificateByIdResponseDto } from './dto/response/getCertificateById.response.dto';
 import { GetCertificatesResponseDto } from './dto/response/getCertificates.response.dto';
+import { DeleteCertificateResponseDto } from './dto/response/deleteCertificate.response.dto';
 @Injectable()
 export class CertificatesService {
   constructor(
@@ -55,12 +56,17 @@ export class CertificatesService {
     }
   }
 
-  async deleteCertificate(certificateId: string): Promise<void> {
+  async deleteCertificate(
+    certificateId: string,
+  ): Promise<DeleteCertificateResponseDto> {
     try {
       await this.certificatesRepository.delete({
         certificateId: certificateId,
       });
       Logger.log('Certificate succesfully deleted', 'CertificatesService');
+      return {
+        certificateId: certificateId,
+      };
     } catch (error) {
       Logger.error(
         'Error during certificate delition',
