@@ -10,7 +10,7 @@ export class AgentController {
 
   @Get('project/recomendations')
   @UseGuards(JwtGuard)
-  async AgentProjectRecomendation(
+  async AgentProjectRecomendations(
     @Req() req: Request,
   ): Promise<ProjectRecomendationsResponseDto> {
     const employeeId = req.user['employeeId'];
