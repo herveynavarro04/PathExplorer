@@ -1,5 +1,4 @@
 import {
-  Catch,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -68,6 +67,7 @@ export class employeeCoursesService {
         status: employeeCoursesLink.status,
         url: employeeCoursesLink.course.url,
         mandatory: employeeCoursesLink.course.mandatory,
+        createdAt: employeeCoursesLink.course.createdAt,
       };
 
       return courseInfo;
@@ -77,9 +77,7 @@ export class employeeCoursesService {
         error.stack,
         'EmployeeCoursesService',
       );
-      throw new InternalServerErrorException(
-        'Failed to fetch course info',
-      );
+      throw new InternalServerErrorException('Failed to fetch course info');
     }
   }
 }

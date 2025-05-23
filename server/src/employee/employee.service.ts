@@ -96,6 +96,83 @@ export class EmployeeService {
     }
   }
 
+  async getManagerEmployees(employeeId: string): Promise<any> {
+    const managerProjects = await this.getManagerProjects(employeeId);
+    if (managerProjects.length < 1) {
+      return [];
+    }
+    try {
+      const managerEmployees = await this.employeeProjects
+        .createQueryBuilder('ep')
+        .innerJoin('ep.employee', 'employee')
+        .leftJoin('employee.employeeInterestLink', 'interest')
+        .leftJoin('employee.employeeSkillLink', 'skill')
+        .where('ep.projectId IN (:...projectIds)', {
+          projectIds: managerProjects,
+        })
+        .andWhere('ep.employeeId != :employeeId', { employeeId })
+        .select([
+          'employee.employeeId AS employeeId',
+          'employee.email AS email',
+          'employee.firstName AS firstName',
+          'employee.lastName AS lastName',
+          'ep.chargeability AS chargeability',
+          'ep.position AS position',
+          'COUNT(DISTINCT interest.skillId) AS interestCount',
+          'COUNT(DISTINCT skill.skillId) AS skillCount',
+        ])
+        .groupBy(
+          'employee.employeeId, employee.email, employee.firstName, employee.lastName, ep.chargeability, ep.position',
+        )
+        .getRawMany();
+      Logger.log('Manager employees found', 'EmployeeService');
+      return managerEmployees;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Unexpected error during manager employees fetching',
+        error.stack,
+        'EmployeeService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to validate manager employees',
+      );
+    }
+  }
+
+  private async getManagerProjects(employeeId: string): Promise<string[]> {
+    try {
+      const projects = await this.employeeProjects
+        .createQueryBuilder('ep')
+        .innerJoin('ep.project', 'project')
+        .where('ep.employeeId = :employeeId', { employeeId })
+        .andWhere('ep.status = :status', { status: 'approved' })
+        .andWhere('project.active = :projectActive', {
+          projectActive: true,
+        })
+        .select(['ep.projectId'])
+        .getMany();
+
+      const managerProjects = projects.map((project) => project.projectId);
+      Logger.log('Manager projects found', 'EmployeeService');
+      return managerProjects;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Unexpected error during manager projects fetching',
+        error.stack,
+        'EmployeeService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to validate manager projects',
+      );
+    }
+  }
+
   async getEmployeeInfo(
     employeeId: string,
   ): Promise<GetEmployeeInfoResponseDto> {
@@ -133,7 +210,9 @@ export class EmployeeService {
     }
   }
 
-  async deleteProfilePicture(employeeId: string): Promise<void> {
+  async deleteProfilePicture(
+    employeeId: string,
+  ): Promise<DeleteEmployeeResponseDto> {
     try {
       await this.employeeProfilePicturesRepository.update(
         { employee: { employeeId: employeeId } },
@@ -144,6 +223,9 @@ export class EmployeeService {
         },
       );
       Logger.log('Employee profile picture deleted', 'EmployeeService');
+      return {
+        employeeId: employeeId,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
