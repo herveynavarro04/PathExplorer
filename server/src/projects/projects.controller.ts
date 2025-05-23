@@ -16,7 +16,7 @@ import { UpdateEmployeeProjectsRequestDto } from './dto/request/updateEmployeePr
 import { UpdateEmployeeProjectsResponseDto } from './dto/response/updateEmployeeProjects.response.dto';
 import { ProjectsService } from './service/projects.service';
 import { EmployeeProjectsService } from './service/employeeProjects.service';
-import { GetUserProjectsResponseDto } from './dto/response/getUserProjectsResponse.dto';
+import { GetEmployeeProjectsResponseDto } from './dto/response/getEmployeeProjectsResponse.dto';
 
 @Controller('projects')
 export class ProjectsController {
@@ -35,7 +35,7 @@ export class ProjectsController {
   @UseGuards(JwtGuard)
   async getEmployeeProjects(
     @Req() req: Request,
-  ): Promise<GetUserProjectsResponseDto> {
+  ): Promise<GetEmployeeProjectsResponseDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeProjectsService.getEmployeeProjects(employeeId);
   }

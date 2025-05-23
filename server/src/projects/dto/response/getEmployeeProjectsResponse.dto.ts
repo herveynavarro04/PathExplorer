@@ -1,8 +1,8 @@
 import { IsArray, IsNotEmpty } from 'class-validator';
 import { ProjectInfoPreviewResponseDto } from './projectInfoPreview.response.dto';
 
-export class GetUserProjectsResponseDto {
+export class GetEmployeeProjectsResponseDto {
   @IsArray()
   @IsNotEmpty()
-  availableProjects: ProjectInfoPreviewResponseDto[];
+  employeeProjects: ProjectInfoPreviewResponseDto[];
 }
