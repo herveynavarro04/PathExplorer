@@ -69,13 +69,13 @@ export function UserInfo({ name, email, img }: UserInfoProps) {
               alt={`Avatar for ${name}`}
               width={48}
               height={48}
-              className="rounded-full object-cover w-12 h-12"
+              className="rounded-full object-cover w-16 h-16"
               role="presentation"
             />
 
-          <figcaption className="space-y-1 text-base font-medium">
+          <figcaption className="space-y-2 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
-              {name}
+              Nivel 10
             </div>
 
             <div className="leading-none text-gray-6">{email}</div>

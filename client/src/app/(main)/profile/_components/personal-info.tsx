@@ -134,7 +134,7 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
           Guardar
         </button>
         <button
-          className="flex justify-center rounded-lg border border-stroke px-6 py-[7px] font-medium dark:bg-gray-600 dark:hover:bg-opacity-75 text-dark hover:shadow-1 dark:border-dark-3 dark:text-white"
+          className="rounded-lg border border-gray-400 bg-transparent px-6 py-[7px] font-medium text-gray-700 hover:bg-gray-200 dark:text-white dark:hover:bg-dark-3 transition-colors"
           type="button"
           onClick={() => {
             setIsEditing(false);
