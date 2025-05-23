@@ -17,6 +17,7 @@ import { UpdateEmployeeRequestDto } from './dto/request/updateEmployee.request.d
 import { GetEmployeeInfoResponseDto } from './dto/response/getEmployeeInfo.response.dto';
 import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
 import { EmployeeService } from './employee.service';
+import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
 
 @Controller('employee')
 export class EmployeeController {
@@ -50,7 +51,9 @@ export class EmployeeController {
 
   @Delete(':employeeId')
   @UseGuards(JwtGuard)
-  async deleteEmployee(@Param('employeeId') employeeId: string): Promise<void> {
+  async deleteEmployee(
+    @Param('employeeId') employeeId: string,
+  ): Promise<DeleteEmployeeResponseDto> {
     return this.employeeService.deleteEmployee(employeeId);
   }
 }

@@ -16,6 +16,7 @@ import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.respons
 import { EmployeeEntity } from './entities/employee.entity';
 import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
 import { ImageService } from 'src/Utilities/imageService.utilities';
+import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -237,7 +238,7 @@ export class EmployeeService {
     }
   }
 
-  async deleteEmployee(employeeId: string): Promise<void> {
+  async deleteEmployee(employeeId: string): Promise<DeleteEmployeeResponseDto> {
     try {
       const deleteResult = await this.employeesRepository.delete({
         employeeId,
@@ -247,6 +248,9 @@ export class EmployeeService {
         throw new NotFoundException(`employee not found`);
       }
       Logger.log('Employee deleted successfully');
+      return {
+        employeeId: employeeId,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
