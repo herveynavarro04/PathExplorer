@@ -30,8 +30,12 @@ export const NAV_DATA = [
         title: "Project Manager",
         url: "/Project-Manager",
         icon: Icons.Calendar,
-      }
-      
+      },
+      {
+        title: "People Lead",
+        url: "/people-lead",
+        icon: Icons.Calendar,
+      },
     ],
   },
   

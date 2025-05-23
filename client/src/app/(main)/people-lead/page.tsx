@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 // import { TopProjects } from "components/RecommendedProjects/top-projects";
-import { OverviewCardsGroup } from "./_components/overview-cards";
+import { OverviewCardsGroup } from "./components/overview-cards";
 import LoadingPage from "components/LoadingPage"; // Adjust path as needed
 import { TopAnalysis } from "components/Analisis/analisis-empleados";
-import { ButtonCardGroup } from "./_components/register";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
+import { TeamCardGroup } from "./components/team-card";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -19,23 +19,23 @@ export default function Home() {
   return (
     <>
         <LoadingPage loading={loading}>
-        <div className=" grid gap-4 md:gap-6 2xl:gap-7.5 ">
-          <div className="flex justify-between">
-              <div className="pt-5">
-                <Breadcrumb pageName="Project Manager Dashboard" />
-              </div>
-              <ButtonCardGroup />
-    
+        <div className="grid gap-4 md:gap-6 2xl:gap-7.5 ">
+        <div className="flex justify-between">
+            <div className="pt-5">
+              <Breadcrumb pageName="People Lead Dashboard" />
+            </div>  
           </div>
-          <OverviewCardsGroup />
+
+                
+                <OverviewCardsGroup />
         </div>
             
         </LoadingPage>
         {/* Fade-in for TopProjects */}
-        <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-20 2xl:gap-7.5">
-            <div className="col-span-12 grid">
+        <div className="min-h-screen mt-4 grid gap-4 md:mt-6 md:gap-6 2xl:mt-20 2xl:gap-7.5">
+            <div className="max-h-[700px] flex-1 col-span-12 grid">
             <LoadingPage loading={loading}>
-                <TopAnalysis />
+                <TeamCardGroup />
             </LoadingPage>
             </div>
         </div>
