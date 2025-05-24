@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { TopProjects } from "components/RecommendedProjects/top-projects";
 import { OverviewCardsGroup } from "./_components/overview-cards";
-import LoadingPage from "components/LoadingPage"; // Adjust path as needed
+import LoadingPage from "components/LoadingPage"; 
 import { TopAnalysis } from "components/Analisis/analisis-empleados";
 import { ButtonCardGroup } from "./_components/register";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
@@ -30,8 +29,7 @@ export default function Home() {
         </div>
             
         </LoadingPage>
-        {/* Fade-in for TopProjects */}
-        <div className="mt-4 grid grid-cols-12 gap-4 md:mt-10 md:gap-6 2xl:mt-40 2xl:gap-7.5">
+        <div className="mt-4 grid grid-cols-12 gap-4 md:mt-10 md:gap-6 2xl:mt-10 2xl:gap-7.5">
             <div className="col-span-12 grid">
             <LoadingPage loading={loading}>
                 <TopAnalysis />
