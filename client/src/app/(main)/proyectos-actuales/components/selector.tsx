@@ -26,12 +26,12 @@ export default function ProjectViewer({
   const customStyles = {
     control: (base: any, state: any) => ({
       ...base,
-      backgroundColor: theme === "dark" ? "#a896b3" : "#e8deef",
+      backgroundColor: theme === "dark" ? "#ffffff" : "#ffffff",
       borderColor: state.isFocused ? "#65417f" : "transparent",
       boxShadow: state.isFocused ? "0 0 0 1px #65417f" : "none",
       borderWidth: "1px",
       "&:hover": { borderColor: "#65417f" },
-      fontSize: "0.875rem",
+      fontSize: "1.3rem",
       borderRadius: "0.75rem",
       paddingLeft: "2px",
       paddingRight: "2px",
@@ -66,20 +66,24 @@ export default function ProjectViewer({
     }),
   };
 
-  return (
-    <div className=" justify-self-end pb-1">
-      <Select
-        options={options}
-        value={options.find((o) => o.value === selectedProject?.id)}
-        onChange={(selectedOption) =>
-          setSelectedProject(
-            projects.find((p) => p.id === selectedOption?.value)
-          )
-        }
-        styles={customStyles}
-        placeholder="Selecciona un proyecto..."
-        isSearchable={false}
-      />
-    </div>
-  );
+return (
+  <div className="flex items-center gap-4 pb-6">
+    <span className="text-sm font-medium text-gray-800 dark:text-white">
+      Proyecto Seleccionado:
+    </span>
+
+    <Select
+      options={options}
+      value={options.find((o) => o.value === selectedProject?.id)}
+      onChange={(selectedOption) =>
+        setSelectedProject(
+          projects.find((p) => p.id === selectedOption?.value)
+        )
+      }
+      styles={customStyles}
+      placeholder="Selecciona un proyecto..."
+      isSearchable={false}
+    />
+  </div>
+);
 }
