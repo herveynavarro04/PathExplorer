@@ -53,14 +53,15 @@ export class employeeCoursesService {
     courseId: string,
   ): Promise<GetCourseInfoDto> {
     try {
-      const course = await this.employeeCoursesRepository.find({
-        where: { employeeId: employeeId, courseId: courseId },
+      const employeeCoursesLink = await this.employeeCoursesRepository.findOne({
+        where: { employeeId, courseId },
         relations: ['employee', 'course'],
       });
-      const employeeCoursesLink = course[0];
+
       if (!employeeCoursesLink) {
         throw new InternalServerErrorException('Course not found');
       }
+
       const courseInfo: GetCourseInfoDto = {
         title: employeeCoursesLink.course.title,
         duration: employeeCoursesLink.course.duration,
@@ -70,6 +71,8 @@ export class employeeCoursesService {
         mandatory: employeeCoursesLink.course.mandatory,
         createdAt: employeeCoursesLink.course.createdAt,
       };
+
+      Logger.log(courseInfo);
 
       return courseInfo;
     } catch (error) {

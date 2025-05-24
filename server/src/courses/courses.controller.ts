@@ -46,7 +46,7 @@ export class CoursesController {
   @UseGuards(JwtGuard)
   async getCourseInfo(
     @Req() req: Request,
-    @Param('coueseId') courseId: string,
+    @Param('courseId') courseId: string,
   ): Promise<GetCourseInfoDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeCourseService.getCourseInfo(employeeId, courseId);
