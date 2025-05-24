@@ -15,7 +15,7 @@ export class GetCoursePreviewDto {
 
   @IsString()
   @IsNotEmpty()
-  status: string;
+  status: boolean;
 
   @IsBoolean()
   @IsNotEmpty()

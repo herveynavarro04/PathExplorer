@@ -17,7 +17,7 @@ export class GetCourseInfoDto {
 
   @IsString()
   @IsNotEmpty()
-  status: string;
+  status: boolean;
 
   @IsString()
   @IsNotEmpty()

@@ -11,7 +11,7 @@ export class EmployeeCoursesEntity {
   courseId: string;
 
   @PrimaryColumn({ name: 'status' })
-  status: string;
+  status: boolean;
 
   @PrimaryColumn({ name: 'validation_date' })
   validationDate: Date;

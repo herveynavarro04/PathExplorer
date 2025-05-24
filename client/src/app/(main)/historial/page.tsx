@@ -81,14 +81,6 @@ const Historial: React.FC = () => {
   }, [refresh]);
 
   useEffect(() => {
-    console.log(information);
-    console.log(position);
-    console.log(startDate);
-    console.log(endDate);
-    console.log(company);
-  }, [position, company, startDate, endDate, information]);
-
-  useEffect(() => {
     if (!loadingHistories) setLoading(false);
   }, [loadingHistories]);
 
@@ -145,55 +137,54 @@ const Historial: React.FC = () => {
             <div className="min-h-[36rem] flex flex-col justify-between">
               <div className="grid gap-6 sm:grid-cols-2 2xl:grid-cols-3 mb-6 flex-grow">
                 {currentItems.length === 0 ? (
-    <div className="w-full col-span-full flex justify-center items-center min-h-[20rem]">
-      <p className="text-center text-lg text-gray-700 dark:text-gray-300">
-        Aún no tienes historial laboral agregado.
-              </p>
-            </div>
-          ) : (
-            currentItems.map((history) => (
-              <HistoryCard
-                key={history.historyId}
-                historyId={history.historyId}
-                information={history.information}
-                position={history.position}
-                startDate={history.startDate}
-                endDate={history.endDate}
-                company={history.company}
-                setHistoryId={setHistoryId}
-                setInformation={setInformation}
-                setPosition={setPosition}
-                setStartDate={setStartDate}
-                setEndDate={setEndDate}
-                setCompany={setCompany}
-                setOpenAddHistory={setOpenAddHistory}
-                setOpendDeleteCard={setOpenDeleteCard}
-                setIsPatch={setIsPatch}
-              />
-            ))
-          )}
+                  <div className="w-full col-span-full flex justify-center items-center min-h-[20rem]">
+                    <p className="text-center text-lg text-gray-700 dark:text-gray-300">
+                      Aún no tienes historial laboral agregado.
+                    </p>
+                  </div>
+                ) : (
+                  currentItems.map((history) => (
+                    <HistoryCard
+                      key={history.historyId}
+                      historyId={history.historyId}
+                      information={history.information}
+                      position={history.position}
+                      startDate={history.startDate}
+                      endDate={history.endDate}
+                      company={history.company}
+                      setHistoryId={setHistoryId}
+                      setInformation={setInformation}
+                      setPosition={setPosition}
+                      setStartDate={setStartDate}
+                      setEndDate={setEndDate}
+                      setCompany={setCompany}
+                      setOpenAddHistory={setOpenAddHistory}
+                      setOpendDeleteCard={setOpenDeleteCard}
+                      setIsPatch={setIsPatch}
+                    />
+                  ))
+                )}
               </div>
               {histories.length > 0 && (
-
-              <div className="flex justify-center gap-4">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-                >
-                  Anterior
-                </button>
-                <span className="self-center text-lg">
-                  {currentPage} de {totalPages}
-                </span>
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-                >
-                  Siguiente
-                </button>
-              </div>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                  >
+                    Anterior
+                  </button>
+                  <span className="self-center text-lg">
+                    {currentPage} de {totalPages}
+                  </span>
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                  >
+                    Siguiente
+                  </button>
+                </div>
               )}
             </div>
           </div>

@@ -46,6 +46,7 @@ const DeleteCard = ({
           return;
         }
         setRefresh((prev) => !prev);
+        setTriggerDelete((prev) => !prev);
         console.log("Deleted:", response);
       } catch (error) {
         console.error("Error deleting", error);
@@ -100,7 +101,7 @@ const DeleteCard = ({
           </button>
           <button
             onClick={() => {
-              setTriggerDelete(true);
+              setTriggerDelete((prev) => !prev);
             }}
             className="px-4 py-2 text-sm font-semibold bg-red-600 text-white rounded-md hover:bg-red-700 transition"
           >
