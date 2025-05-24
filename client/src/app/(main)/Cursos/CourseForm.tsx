@@ -1,6 +1,6 @@
-'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 
 interface CourseFormProps {
   onClose: () => void;
@@ -12,15 +12,17 @@ const CourseForm: React.FC<CourseFormProps> = ({ onClose, onSave }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   const [formData, setFormData] = useState({
-    title: '',
-    institution: '',
-    duration: '',
-    date_obtained: '',
-    course_url: '',
-    information: '',
+    title: "",
+    institution: "",
+    duration: "",
+    date_obtained: "",
+    course_url: "",
+    information: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -30,7 +32,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ onClose, onSave }) => {
       ...formData,
       courseId: Date.now(),
       validated: false,
-      reviser: 'Sin asignar',
+      reviser: "Sin asignar",
       date_obtained: new Date(formData.date_obtained),
     });
     closeAnimation();
@@ -45,12 +47,15 @@ const CourseForm: React.FC<CourseFormProps> = ({ onClose, onSave }) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !(modalRef.current as any).contains(event.target)) {
+      if (
+        modalRef.current &&
+        !(modalRef.current as any).contains(event.target)
+      ) {
         closeAnimation();
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return ReactDOM.createPortal(
@@ -58,7 +63,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ onClose, onSave }) => {
       <div
         ref={modalRef}
         className={`bg-[#f3e8ff] text-[#2b2b2b] rounded-3xl p-8 max-w-xl w-full relative shadow-xl transition-all duration-300 ease-in-out ${
-          isVisible ? 'animate-fadeInModal' : 'animate-fadeOutModal'
+          isVisible ? "animate-fadeInModal" : "animate-fadeOutModal"
         }`}
       >
         <button
@@ -108,7 +113,9 @@ const CourseForm: React.FC<CourseFormProps> = ({ onClose, onSave }) => {
             </div>
 
             <div className="flex-1">
-              <label className="block font-medium mb-1">Fecha de obtención</label>
+              <label className="block font-medium mb-1">
+                Fecha de obtención
+              </label>
               <input
                 type="date"
                 name="date_obtained"
