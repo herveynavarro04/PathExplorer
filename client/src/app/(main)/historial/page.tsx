@@ -35,13 +35,12 @@ const Historial: React.FC = () => {
   const [isPatch, setIsPatch] = useState<boolean>(false);
   const [isPost, setIsPost] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
-
+  const [fadeIn, setFadeIn] = useState(false);
   const router = useRouter();
   const url = "http://localhost:8080/api";
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingHistories, setLoadingHistories] = useState<boolean>(true);
   const [histories, setHistories] = useState<GetHistoryResponseDto[]>([]);
-
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -71,10 +70,10 @@ const Historial: React.FC = () => {
         }
 
         setHistories(response.histories);
+        setLoadingHistories(false);
+        setTimeout(() => setFadeIn(true), 25);
       } catch (error) {
         console.error("Error while fetching", error);
-      } finally {
-        setLoadingHistories(false);
       }
     };
     LoadHistories();
@@ -85,7 +84,7 @@ const Historial: React.FC = () => {
   }, [loadingHistories]);
 
   return (
-    <LoadingPage loading={loading}>
+    <div>
       <>
         {openDeleteCard && (
           <DeleteCard
@@ -114,8 +113,11 @@ const Historial: React.FC = () => {
             setRefresh={setRefresh}
           />
         )}
-
-        <div className="relative w-full text-white px-5">
+        <div
+          className={`mx-auto w-full relative text-white px-5 max-w-[970px] transition-opacity duration-500 ${
+            fadeIn ? "opacity-100" : "opacity-0"
+          }`}
+        >
           <div className="relative flex justify-between items-center px-10 py-4">
             <Breadcrumb pageName="Historial" />
             <div
@@ -190,7 +192,7 @@ const Historial: React.FC = () => {
           </div>
         </div>
       </>
-    </LoadingPage>
+    </div>
   );
 };
 

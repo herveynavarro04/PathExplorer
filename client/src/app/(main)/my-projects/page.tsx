@@ -29,11 +29,10 @@ export default function MyProjectsPage() {
   const [appliedMessage, setAppliedMessage] = useState("");
   const [triggerPost, setTriggerPost] = useState<boolean>(false);
   const [triggerRefresh, setTriggerRefresh] = useState<boolean>(false);
-
+  const [fadeIn, setFadeIn] = useState(false);
   const url = `http://localhost:8080/api`;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 6;
   const indexOfLastProject = currentPage * projectsPerPage;
@@ -93,6 +92,7 @@ export default function MyProjectsPage() {
 
         setProjects(projectsData.employeeProjects);
         setLoading(false);
+        setTimeout(() => setFadeIn(true), 25);
       } catch (err) {
         console.error("Unexpected fetch error:", err);
       }
@@ -136,9 +136,18 @@ export default function MyProjectsPage() {
     loadData();
   }, [triggerPost]);
 
+  if (loading || !currentProjects) {
+    return <div className="min-h-screen bg-[#d0bfdb]" />;
+  }
+
   return (
-    <LoadingPage loading={loading}>
-      <div className="mx-auto w-full max-w-[970px]">
+    <div>
+      <div
+        className={`mx-auto w-full max-w-[970px] transition-opacity duration-500 ${
+          fadeIn ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {" "}
         <div className="flex justify-between">
           <div className="flex">
             <div className="pt-5">
@@ -160,7 +169,6 @@ export default function MyProjectsPage() {
             <option value="rejected">Solicitudes rechazadas</option>
           </select>
         </div>
-
         <div className="flex flex-col min-h-[34rem]">
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
             {currentProjects.length === 0 ? (
@@ -194,7 +202,6 @@ export default function MyProjectsPage() {
             />
           )}
         </div>
-
         {currentProjects.length > 0 && (
           <div className="w-full bg-transparent mt-8 flex justify-between">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-8 px-4 sm:px-0">
@@ -235,6 +242,6 @@ export default function MyProjectsPage() {
           </div>
         )}
       </div>
-    </LoadingPage>
+    </div>
   );
 }

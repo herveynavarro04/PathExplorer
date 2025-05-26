@@ -42,7 +42,6 @@ const TechSkillsCard = ({ skills, userSkills, url }: TechSkillsCardProps) => {
   const MAX_SKILLS = 20;
 
   useEffect(() => {
-    if (!userSkills || !skills) return;
     const userTechSkillNames = new Set(
       userSkills.technicalSkills.map((s) => s.skillName)
     );
@@ -56,7 +55,7 @@ const TechSkillsCard = ({ skills, userSkills, url }: TechSkillsCardProps) => {
     console.log(techSkillMap);
 
     setTechSkillMap(techSkillMap);
-  }, [userSkills, skills]);
+  }, []);
 
   useEffect(() => {
     if (!techSkillMap) return;

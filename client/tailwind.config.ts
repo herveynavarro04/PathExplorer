@@ -313,6 +313,10 @@ const config: Config = {
         5: "0px 1px 5px rgba(0, 0, 0, 0.2)",
       },
       keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
         linspin: {
           "100%": { transform: "rotate(360deg)" },
         },
@@ -357,7 +361,14 @@ const config: Config = {
           "50%": { transform: "translateY(0)" },
         },
       },
+      animationDelay: {
+        25: "25ms",
+        75: "75ms",
+        100: "100ms",
+        150: "150ms",
+      },
       animation: {
+        "fade-in-fast": "fadeIn 0.3s ease-out forwards",
         linspin: "linspin 1568.2353ms linear infinite",
         easespin: "easespin 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both",
         "left-spin":

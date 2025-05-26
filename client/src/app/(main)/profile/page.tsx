@@ -7,7 +7,6 @@ import TechSkillsCard from "./TechSkillsCard";
 import SoftSkillsCard from "./SoftSkillsCard";
 import { authFetch } from "@utils/authFetch";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
-import LoadingPage from "components/LoadingPage";
 import ChargeabilityCard from "./ChargeabilityCard";
 
 type ProfileData = {
@@ -35,19 +34,13 @@ type UserSkillsResponse = {
   softSkills: Skill[];
 };
 
-export class AuthError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "AuthError";
-  }
-}
-
 const Page = () => {
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [skills, setSkills] = useState<SkillsResponse | null>(null);
+  const [userSkills, setUserSkills] = useState<UserSkillsResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [skills, setSkills] = useState<SkillsResponse>(null);
-  const [userSkills, setUserSKills] = useState<UserSkillsResponse>(null);
+  const [fadeIn, setFadeIn] = useState(false);
   const [reloadTrigger, setReloadTrigger] = useState(false);
 
   const url = "http://localhost:8080/api";
@@ -61,13 +54,13 @@ const Page = () => {
       }
 
       try {
-        const [userData, skills, userSkills] = await Promise.all([
+        const [userData, skillsRes, userSkillsRes] = await Promise.all([
           authFetch<any>(`${url}/employee`),
           authFetch<SkillsResponse>(`${url}/skills`),
           authFetch<UserSkillsResponse>(`${url}/skills/employee`),
         ]);
 
-        if (!userData || !skills || !userSkills) {
+        if (!userData || !skillsRes || !userSkillsRes) {
           router.push("/login");
           return;
         }
@@ -82,12 +75,13 @@ const Page = () => {
           mime_type: userData.mimeType ?? "image/png",
         });
 
-        setSkills(skills);
-        setUserSKills(userSkills);
-
+        setSkills(skillsRes);
+        setUserSkills(userSkillsRes);
         setLoading(false);
-      } catch (err) {
-        console.error("Error loading data:", err);
+
+        setTimeout(() => setFadeIn(true), 25);
+      } catch (error) {
+        console.error("Error loading profile data:", error);
         router.push("/login");
       }
     };
@@ -96,15 +90,20 @@ const Page = () => {
   }, [reloadTrigger]);
 
   const updateProfileState = (newData: Partial<ProfileData>) => {
-    setProfile((prev) => ({
-      ...prev,
-      ...newData,
-    }));
+    setProfile((prev) => ({ ...prev, ...newData }));
   };
 
+  if (loading || !profile || !skills || !userSkills) {
+    return <div className="min-h-screen bg-[#d0bfdb]" />;
+  }
+
   return (
-    <LoadingPage loading={loading}>
-      <div className="mx-auto w-full max-w-[970px]">
+    <div>
+      <div
+        className={`mx-auto w-full max-w-[970px] transition-opacity duration-500 ${
+          fadeIn ? "opacity-100" : "opacity-0"
+        }`}
+      >
         <Breadcrumb pageName="Perfil" />
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
           <PersonalInfoForm
@@ -120,7 +119,7 @@ const Page = () => {
           </div>
         </div>
       </div>
-    </LoadingPage>
+    </div>
   );
 };
 
