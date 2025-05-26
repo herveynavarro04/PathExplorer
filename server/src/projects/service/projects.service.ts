@@ -29,6 +29,7 @@ export class ProjectsService {
         relations: [
           'projectTechnologyLink',
           'projectTechnologyLink.technology',
+          'employeeProjectLink.employee',
         ],
       });
 
@@ -44,6 +45,10 @@ export class ProjectsService {
         }),
       );
 
+      const manager = project.employeeProjectLink?.find(
+        (link) => link.employee?.employeeId === project.managerId,
+      )?.employee;
+
       const result: ProjectsInfoResponseDto = {
         projectId: project.projectId,
         projectName: project.projectName,
@@ -53,7 +58,7 @@ export class ProjectsService {
         client: project.client,
         active: project.active,
         information: project.information,
-        manager: project.managerName,
+        manager: manager ? `${manager.firstName} ${manager.lastName}` : null,
         technologies: projectTechnologies,
       };
       Logger.log('Project info fetched!', 'ProjectService');
