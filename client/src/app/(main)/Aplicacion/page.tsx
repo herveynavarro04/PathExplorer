@@ -43,10 +43,9 @@ export default function MyProjectsPage() {
   const [triggerRefresh, setTriggerRefresh] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
+  const [fadeIn, setFadeIn] = useState(false);
   const [techsLoaded, setTechsLoaded] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
-
   const url = `http://localhost:8080/api`;
   const projectsPerPage = 6;
   const indexOfLastProject = currentPage * projectsPerPage;
@@ -112,6 +111,7 @@ export default function MyProjectsPage() {
 
         setProjects(projectsData.availableProjects);
         setProjectsLoaded(true);
+        setTimeout(() => setFadeIn(true), 25);
       } catch (err) {
         console.error("Unexpected fetch error:", err);
       }
@@ -255,90 +255,100 @@ export default function MyProjectsPage() {
     }),
   };
 
+  if (loading || !currentProjects || !allTech) {
+    return <div className="min-h-screen bg-[#d0bfdb]" />;
+  }
+
   return (
-    <LoadingPage loading={loading}>
-      <div className="mx-auto w-full max-w-[970px]">
-        <div className="flex justify-between">
-          <div className="flex pt-5">
-            <Breadcrumb pageName="Proyectos disponibles" />
-          </div>
-          {isClient && (
-            <Select
-              options={techOptions}
-              isMulti
-              placeholder="Filtrar por tecnología..."
-              styles={customStyles}
-              className="w-[300px] self-center"
-              onChange={(selected) => {
-                const values = selected.map((s) => s.value);
-                setTechnologyFilter(values);
-                setCurrentPage(1);
-              }}
-            />
-          )}
-        </div>
-
-        <div className="flex flex-col min-h-[34rem]">
-          <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
-            {currentProjects.map((project) => (
-              <ProjectCard
-                key={project.projectId}
-                projectId={project.projectId}
-                projectName={project.projectName}
-                information={project.information}
-                handleProjectClick={handleProjectClick}
+    <div>
+      <div
+        className={`mx-auto w-full max-w-[970px] transition-opacity duration-500 ${
+          fadeIn ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div className="mx-auto w-full max-w-[970px]">
+          <div className="flex justify-between">
+            <div className="flex pt-5">
+              <Breadcrumb pageName="Proyectos disponibles" />
+            </div>
+            {isClient && (
+              <Select
+                options={techOptions}
+                isMulti
+                placeholder="Filtrar por tecnología..."
+                styles={customStyles}
+                className="w-[300px] self-center"
+                onChange={(selected) => {
+                  const values = selected.map((s) => s.value);
+                  setTechnologyFilter(values);
+                  setCurrentPage(1);
+                }}
               />
-            ))}
+            )}
           </div>
 
-          {selectedProject && (
-            <ProyectoModal
-              projectId={selectedProject}
-              onClose={() => setSelectedProject(null)}
-              onApply={handleApplyToProject}
-              addProjects={addProjects}
-            />
-          )}
-        </div>
-
-        <div className="w-full bg-transparent mt-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-8 px-4 sm:px-0">
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-              >
-                Anterior
-              </button>
-              <span className="self-center text-lg">
-                {currentPage} de {totalPages}
-              </span>
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-              >
-                Siguiente
-              </button>
+          <div className="flex flex-col min-h-[34rem]">
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
+              {currentProjects.map((project) => (
+                <ProjectCard
+                  key={project.projectId}
+                  projectId={project.projectId}
+                  projectName={project.projectName}
+                  information={project.information}
+                  handleProjectClick={handleProjectClick}
+                />
+              ))}
             </div>
 
-            {addProjects.length > 0 && (
-              <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4">
-                <div className="bg-[#f3e8ff] text-[#2b2b2b] px-4 py-2 rounded-lg text-center">
-                  {appliedMessage}
-                </div>
+            {selectedProject && (
+              <ProyectoModal
+                projectId={selectedProject}
+                onClose={() => setSelectedProject(null)}
+                onApply={handleApplyToProject}
+                addProjects={addProjects}
+              />
+            )}
+          </div>
+
+          <div className="w-full bg-transparent mt-8">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-8 px-4 sm:px-0">
+              <div className="flex justify-center gap-4">
                 <button
-                  className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto"
-                  onClick={() => setTriggerPost((prev) => !prev)}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
                 >
-                  Finalizar aplicación
+                  Anterior
+                </button>
+                <span className="self-center text-lg">
+                  {currentPage} de {totalPages}
+                </span>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                >
+                  Siguiente
                 </button>
               </div>
-            )}
+
+              {addProjects.length > 0 && (
+                <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4">
+                  <div className="bg-[#f3e8ff] text-[#2b2b2b] px-4 py-2 rounded-lg text-center">
+                    {appliedMessage}
+                  </div>
+                  <button
+                    className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto"
+                    onClick={() => setTriggerPost((prev) => !prev)}
+                  >
+                    Finalizar aplicación
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </LoadingPage>
+    </div>
   );
 }

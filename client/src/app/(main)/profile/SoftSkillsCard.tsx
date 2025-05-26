@@ -42,8 +42,6 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
   const MAX_SKILLS = 20;
 
   useEffect(() => {
-    if (!userSkills || !skills) return;
-
     const userSoftSkillNames = new Set(
       userSkills.softSkills.map((s) => s.skillName)
     );
@@ -55,7 +53,7 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
     );
 
     setSoftSkillMap(softSkillMap);
-  }, [userSkills, skills]);
+  }, []);
 
   useEffect(() => {
     if (!softSkillMap) return;

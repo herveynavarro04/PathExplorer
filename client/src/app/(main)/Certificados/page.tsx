@@ -1,18 +1,15 @@
+"use client";
 
-'use client';
-
-import { useState, useEffect } from 'react';
-import CertCard from './CertCard';
-import Breadcrumb from 'components/Breadcrumbs/Breadcrumb';
-import CertForm from './CertForm';
-import { authFetch } from '@utils/authFetch';
-import CertModal from './CertModal';
-import DeleteModal from './DeleteModal';
+import { useState, useEffect } from "react";
+import CertCard from "./CertCard";
+import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
+import CertForm from "./CertForm";
+import { authFetch } from "@utils/authFetch";
+import CertModal from "./CertModal";
+import DeleteModal from "./DeleteModal";
 import { FaInfoCircle, FaClock, FaCheck } from "react-icons/fa";
 import { FiCheckCircle, FiXCircle, FiClock } from "react-icons/fi";
-import LoadingPage from 'components/LoadingPage';
-
-
+import LoadingPage from "components/LoadingPage";
 
 type Certificate = {
   certificateId: string;
@@ -29,9 +26,8 @@ const Page = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [showAddModal, setShowAddModal] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const url = "http://localhost:8080/api"; 
-
+  const [fadeIn, setFadeIn] = useState(false);
+  const url = "http://localhost:8080/api";
   const certsPerPage = 6;
   const indexOfLast = currentPage * certsPerPage;
   const indexOfFirst = indexOfLast - certsPerPage;
@@ -39,7 +35,7 @@ const Page = () => {
   const totalPages = Math.ceil(certs.length / certsPerPage);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-const [certToDelete, setCertToDelete] = useState<string | null>(null);
+  const [certToDelete, setCertToDelete] = useState<string | null>(null);
 
   const handleDeleteClick = (certificateId: string) => {
     setCertToDelete(certificateId);
@@ -49,7 +45,7 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
   const handleConfirmDelete = async () => {
     if (!certToDelete) return;
     const res = await authFetch(`${url}/certificates/${certToDelete}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
     if (res !== false) {
       setCerts((prev) => prev.filter((c) => c.certificateId !== certToDelete));
@@ -69,30 +65,30 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
       `${url}/certificates/${certificate.certificateId}`,
       { method: "GET" }
     );
-  
+
     if (fullData) {
       setSelectedCert({ ...certificate, obtainedAt: fullData.obtainedAt });
     } else {
-      setSelectedCert(certificate); 
+      setSelectedCert(certificate);
     }
   };
-  
 
   const fetchCertificates = async () => {
     setLoading(true);
     const res = await authFetch<{ certificates: Certificate[] }>(
       `${url}/certificates`,
-      { method: 'GET' }
+      { method: "GET" }
     );
     if (res) {
-      const sorted = res.certificates.sort((a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      const sorted = res.certificates.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       setCerts(sorted);
     }
     setLoading(false);
+    setTimeout(() => setFadeIn(true), 25);
   };
-  
 
   const handleAddCert = () => {
     fetchCertificates();
@@ -102,11 +98,19 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
     fetchCertificates();
   }, []);
 
+  if (loading || !certs) {
+    return <div className="min-h-screen bg-[#d0bfdb]" />;
+  }
+
   return (
-    <LoadingPage loading={loading}>
-    <div className="mx-auto w-full max-w-[970px]">
-      <div className="flex justify-between">
-      <div className="flex">
+    <div>
+      <div
+        className={`mx-auto w-full max-w-[970px] transition-opacity duration-500 ${
+          fadeIn ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div className="flex justify-between">
+          <div className="flex">
             <div className="pt-5">
               <Breadcrumb pageName="Mis Certificados" />
             </div>
@@ -146,92 +150,93 @@ const [certToDelete, setCertToDelete] = useState<string | null>(null);
             </div>
           </div>
 
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="w-fit h-fit px-4 self-center py-2 bg-[#65417f] text-white rounded-md hover:bg-opacity-90 transition"
-        >
-          Agregar certificado
-        </button>
-      </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="w-fit h-fit px-4 self-center py-2 bg-[#65417f] text-white rounded-md hover:bg-opacity-90 transition"
+          >
+            Agregar certificado
+          </button>
+        </div>
 
-      <div className="flex flex-col min-h-[34rem]">
-        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
-          {loading ? (
-            <p className="text-center col-span-full mt-10">Cargando certificados...</p>
-          ) : currentCertificates.length === 0 ? (
-            <div className="col-span-full flex justify-center items-end min-h-[20rem]">
-              <p className="text-gray-600 dark:text-gray-300 text-lg text-center">
-                Aún no has agregado certificados.
+        <div className="flex flex-col min-h-[34rem]">
+          <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
+            {loading ? (
+              <p className="text-center col-span-full mt-10">
+                Cargando certificados...
               </p>
+            ) : currentCertificates.length === 0 ? (
+              <div className="col-span-full flex justify-center items-end min-h-[20rem]">
+                <p className="text-gray-600 dark:text-gray-300 text-lg text-center">
+                  Aún no has agregado certificados.
+                </p>
+              </div>
+            ) : (
+              currentCertificates.map((certificate) => (
+                <CertCard
+                  key={certificate.certificateId}
+                  certificateId={certificate.certificateId}
+                  title={certificate.title}
+                  status={certificate.status}
+                  createdAt={certificate.createdAt}
+                  information={certificate.information}
+                  obtainedAt={certificate.obtainedAt}
+                  onClick={() => handleCertClick(certificate)}
+                  onDelete={handleDeleteClick}
+                />
+              ))
+            )}
+          </div>
+        </div>
+
+        {selectedCert && (
+          <CertModal
+            certificate={selectedCert}
+            onClose={() => setSelectedCert(null)}
+          />
+        )}
+
+        {showDeleteModal && (
+          <DeleteModal
+            onConfirm={handleConfirmDelete}
+            onCancel={() => {
+              setCertToDelete(null);
+              setShowDeleteModal(false);
+            }}
+          />
+        )}
+
+        <div className="w-full bg-transparent mt-8">
+          {currentCertificates.length > 0 && (
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+              >
+                Anterior
+              </button>
+              <span className="self-center text-lg">
+                {currentPage} de {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+              >
+                Siguiente
+              </button>
             </div>
-          ) : (
-            currentCertificates.map((certificate) => (
-              <CertCard
-                key={certificate.certificateId}
-                certificateId={certificate.certificateId}
-                title={certificate.title}
-                status={certificate.status}
-                createdAt={certificate.createdAt}
-                information={certificate.information}
-                obtainedAt={certificate.obtainedAt}
-                onClick={() => handleCertClick(certificate)}
-                onDelete={handleDeleteClick}
-              />
-            ))
           )}
         </div>
 
-      </div>
-
-      {selectedCert && (
-        <CertModal
-          certificate={selectedCert}
-          onClose={() => setSelectedCert(null)}
-        />
-      )}
-
-      {showDeleteModal && (
-        <DeleteModal
-          onConfirm={handleConfirmDelete}
-          onCancel={() => {
-            setCertToDelete(null);
-            setShowDeleteModal(false);
-          }}
-        />
-      )}
-
-      <div className="w-full bg-transparent mt-8">
-        {currentCertificates.length > 0 && (
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-          >
-            Anterior
-          </button>
-          <span className="self-center text-lg">
-            {currentPage} de {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-          >
-            Siguiente
-          </button>
-        </div>
+        {showAddModal && (
+          <CertForm
+            onClose={() => setShowAddModal(false)}
+            onSave={handleAddCert}
+          />
         )}
       </div>
-
-      {showAddModal && (
-        <CertForm
-          onClose={() => setShowAddModal(false)}
-          onSave={handleAddCert}
-        />
-      )}
     </div>
-    </LoadingPage>
   );
 };
 

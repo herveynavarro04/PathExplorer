@@ -30,6 +30,7 @@ const Page = () => {
   const router = useRouter();
   const url = "http://localhost:8080/api";
   const [loading, setLoading] = useState<boolean>(true);
+  const [fadeIn, setFadeIn] = useState(false);
 
   const handleAddCourse = (newCourse: any) => {
     setCourses((prev) => [...prev, newCourse]);
@@ -79,6 +80,7 @@ const Page = () => {
         console.log(response);
         setCourses(response.courses);
         setLoading(false);
+        setTimeout(() => setFadeIn(true), 25);
       } catch (error) {
         console.error("Failed fetching courses", error);
       }
@@ -86,9 +88,18 @@ const Page = () => {
     laodCourses();
   }, []);
 
+  if (loading || !courses) {
+    return <div className="min-h-screen bg-[#d0bfdb]" />;
+  }
+
   return (
-    <LoadingPage loading={loading}>
-      <div className="mx-auto w-full max-w-[970px]">
+    <div>
+      <div
+        className={`mx-auto w-full max-w-[970px] transition-opacity duration-500 ${
+          fadeIn ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {" "}
         <div className="flex justify-between">
           <div className="flex">
             <div className="pt-5">
@@ -107,7 +118,6 @@ const Page = () => {
             <option value={"false"}>Cursos en progreso</option>
           </select>
         </div>
-
         <div className="flex flex-col min-h-[34rem]">
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
             {currentCourses.map((course) => (
@@ -129,7 +139,6 @@ const Page = () => {
             />
           )}
         </div>
-
         <div className="w-full bg-transparent mt-8">
           <div className="flex justify-center gap-4">
             <button
@@ -158,7 +167,7 @@ const Page = () => {
           />
         )}
       </div>
-    </LoadingPage>
+    </div>
   );
 };
 

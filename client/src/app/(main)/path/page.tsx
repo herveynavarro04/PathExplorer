@@ -40,11 +40,10 @@ const Page = () => {
   const [skills, setSkills] = useState<SkillsResponse>(null);
   const [userInterests, setUserInterests] = useState<UserInterests>(null);
   const [refreshGoals, setRefreshGoals] = useState<boolean>(false);
-
+  const [fadeIn, setFadeIn] = useState(false);
   const [loadingGoals, setLoadingGoals] = useState(true);
   const [loadingInterests, setLoadingInterests] = useState(true);
   const [loading, setLoading] = useState(true);
-
   const router = useRouter();
   const url = "http://localhost:8080/api";
 
@@ -81,10 +80,9 @@ const Page = () => {
         });
 
         setGoals(formattedGoals);
+        setLoadingGoals(false);
       } catch (error) {
         console.error("Error fetching goals:", error);
-      } finally {
-        setLoadingGoals(false);
       }
     };
 
@@ -112,10 +110,9 @@ const Page = () => {
 
         setSkills(skills);
         setUserInterests(userInterests);
+        setLoadingInterests(false);
       } catch (error) {
         console.error("Error fetching interests:", error);
-      } finally {
-        setLoadingInterests(false);
       }
     };
 
@@ -125,34 +122,41 @@ const Page = () => {
   useEffect(() => {
     if (!loadingGoals && !loadingInterests) {
       setLoading(false);
+      setTimeout(() => setFadeIn(true), 25);
     }
   }, [loadingGoals, loadingInterests]);
 
+  if (loading || !goals || !userInterests) {
+    return <div className="min-h-screen bg-[#d0bfdb]" />;
+  }
+
   return (
-    <LoadingPage loading={loading}>
-      <>
-        {openForm && (
-          <GoalsForm
-            setOpenForm={setOpenForm}
-            setRefreshGoals={setRefreshGoals}
+    <>
+      {openForm && (
+        <GoalsForm
+          setOpenForm={setOpenForm}
+          setRefreshGoals={setRefreshGoals}
+        />
+      )}
+
+      <div
+        className={`mx-auto w-full max-w-[970px] transition-opacity duration-500 ${
+          fadeIn ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <Breadcrumb pageName="Path de Carrera" />
+
+        <GoalCardClient goals={goals} setOpenForm={setOpenForm} />
+
+        <div className="mt-10">
+          <TechInterestsCard
+            skills={skills}
+            userInterests={userInterests}
+            url={url}
           />
-        )}
-
-        <div className="mx-auto w-full max-w-[970px]">
-          <Breadcrumb pageName="Path de Carrera" />
-
-          <GoalCardClient goals={goals} setOpenForm={setOpenForm} />
-
-          <div className="mt-10">
-            <TechInterestsCard
-              skills={skills}
-              userInterests={userInterests}
-              url={url}
-            />
-          </div>
         </div>
-      </>
-    </LoadingPage>
+      </div>
+    </>
   );
 };
 
