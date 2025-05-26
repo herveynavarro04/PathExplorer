@@ -128,6 +128,50 @@ export class EmployeeProjectsService {
     }
   }
 
+  async getManagerProjects(
+    employeeId: string,
+  ): Promise<GetEmployeeProjectsResponseDto> {
+    try {
+      const employeeProjects = await this.employeeProjectRepository.find({
+        where: { employeeId: employeeId },
+        relations: ['employee', 'project'],
+      });
+      if (!employeeProjects) {
+        Logger.warn('employee not found', 'EmployeeProjectsService');
+        throw new NotFoundException('employee not found');
+      }
+      Logger.log('employee projects fetched', 'EmployeeProjectsService');
+      const projects: ProjectInfoPreviewResponseDto[] = employeeProjects.map(
+        (employeeProjectsLink) => ({
+          projectId: employeeProjectsLink.projectId,
+          projectName: employeeProjectsLink.project.projectName,
+          information: employeeProjectsLink.project.information,
+          client: employeeProjectsLink.project.client,
+          progress: employeeProjectsLink.project.progress,
+          startDate: employeeProjectsLink.project.startDate,
+          endDate: employeeProjectsLink.project.endDate,
+          active: employeeProjectsLink.project.active,
+          status: employeeProjectsLink.status,
+        }),
+      );
+      return {
+        employeeProjects: projects,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during delete transaction',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to fetch employee projects',
+      );
+    }
+  }
+
   async updateEmployeeProjects(
     employeeId: string,
     updateProjectsPayload: UpdateEmployeeProjectsRequestDto,

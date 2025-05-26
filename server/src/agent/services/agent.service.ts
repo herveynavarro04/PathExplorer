@@ -91,14 +91,23 @@ export class AgentService {
         where: {
           projectId: In(projectRecs),
         },
-        select: ['client', 'projectId', 'managerName', 'projectName'],
+        select: ['client', 'projectId', 'managerId', 'projectName'],
+        relations: ['employeeProjectLink.employee'],
       });
-      return projects.map((project) => ({
-        projectId: project.projectId,
-        projectName: project.projectName,
-        managerName: project.managerName,
-        client: project.client,
-      }));
+
+      return projects.map((project) => {
+        const manager = project.employeeProjectLink?.find(
+          (link) => link.employee?.employeeId === project.managerId,
+        )?.employee;
+        return {
+          projectId: project.projectId,
+          projectName: project.projectName,
+          managerName: manager
+            ? `${manager.firstName} ${manager.lastName}`
+            : null,
+          client: project.client,
+        };
+      });
     } catch (error) {
       Logger.error('Error fetching project info', error.stack, 'AgentService');
       throw new InternalServerErrorException('Failed to fetch project info');

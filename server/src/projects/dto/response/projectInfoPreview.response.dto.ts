@@ -1,4 +1,11 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { TechDto } from 'src/common/dto/tech.dto';
 export class ProjectInfoPreviewResponseDto {
   @IsString()
@@ -16,4 +23,20 @@ export class ProjectInfoPreviewResponseDto {
   @IsArray()
   @IsNotEmpty()
   technologies?: TechDto[];
+
+  @IsString()
+  @IsOptional()
+  client?: string;
+
+  @IsDate()
+  @IsOptional()
+  startDate?: Date;
+
+  @IsDate()
+  @IsOptional()
+  endDate?: Date;
+
+  @IsNumber()
+  @IsOptional()
+  progress?: number;
 }

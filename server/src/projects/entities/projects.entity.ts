@@ -34,14 +34,17 @@ export class ProjectsEntity {
   @Column({ name: 'limit_employees' })
   limitEmployees: number;
 
-  @Column({ name: 'manager_name' })
-  managerName: string;
+  @Column({ name: 'manager_id' })
+  managerId: string;
 
   @Column({ name: 'created_at' })
   createdAt: string;
 
   @Column({ name: 'updated_at' })
   updatedAt: string;
+
+  @Column({ name: 'progress' })
+  progress: number;
 
   @OneToMany(() => EmployeeProjectEntity, (link) => link.project, {
     cascade: true,

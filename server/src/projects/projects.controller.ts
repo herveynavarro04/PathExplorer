@@ -40,6 +40,15 @@ export class ProjectsController {
     return this.employeeProjectsService.getEmployeeProjects(employeeId);
   }
 
+  @Get('employee/manager')
+  @UseGuards(JwtGuard)
+  async getManagerProjects(
+    @Req() req: Request,
+  ): Promise<GetEmployeeProjectsResponseDto> {
+    const employeeId = req.user['employeeId'];
+    return this.employeeProjectsService.getEmployeeProjects(employeeId);
+  }
+
   @Get('employee/available')
   @UseGuards(JwtGuard)
   async getAvailableProjects(
