@@ -15,6 +15,7 @@ import { AgentRepository } from '../repository/agent.repository';
 import { ProjectsEntity } from 'src/projects/entities/projects.entity';
 import { MsAgentResponse } from '../dto/response/msAgent.response.dto';
 import { IProjectsInfo } from '../interfaces/projectsInfo.interface';
+import { PastProjects } from '../interfaces/pastProjects.interface';
 
 @Injectable()
 export class AgentService {
@@ -36,12 +37,14 @@ export class AgentService {
     const skills = await this.getEmployeeSkills(employeeId);
     const interests = await this.getEmployeeInterests(employeeId);
     const pastProjects = await this.getEmployeeProjects(employeeId);
-    const availableProjects = await this.getAvailableProjects(pastProjects);
+    const pastProjectIds = pastProjects.map((project) => project.projectId);
+    const pastProjectsInfo = pastProjects.map((project) => project.information);
+    const availableProjects = await this.getAvailableProjects(pastProjectIds);
 
     const employeeInfo: IEmployeeInfo = {
       skills: skills,
       interests: interests,
-      pastProjects: pastProjects,
+      pastProjects: pastProjectsInfo,
     };
 
     const payload: ProjectRecomendationsRequestDto = {
@@ -165,14 +168,19 @@ export class AgentService {
       );
     }
   }
-  private async getEmployeeProjects(employeeId: string): Promise<string[]> {
+  private async getEmployeeProjects(
+    employeeId: string,
+  ): Promise<PastProjects[]> {
     try {
       const projectIds = await this.employeeProjectsRepository.find({
         where: { employeeId: employeeId },
         select: ['projectId'],
         relations: ['employee', 'project'],
       });
-      const projects = projectIds.map((link) => link.project.information);
+      const projects = projectIds.map((link) => ({
+        projectId: link.projectId,
+        information: link.project.information,
+      }));
       Logger.log('Employee projects successfully fetched', 'AgentAgentService');
       return projects;
     } catch (error) {
