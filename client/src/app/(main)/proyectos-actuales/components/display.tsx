@@ -10,7 +10,13 @@ import DatesCard from "./DatesCard";
 import ClientCard from "./ClientCard";
 import TechStackCard from "./TechStackCard";
 
-export default function DisplayViewer({ selectedProject }: { selectedProject: any }) {
+export default function DisplayViewer({
+  selectedProject,
+  onProgressChange,
+}: {
+  selectedProject: any;
+  onProgressChange: (progress: number) => void;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
 
@@ -18,7 +24,7 @@ export default function DisplayViewer({ selectedProject }: { selectedProject: an
 
   return (
     <div>
-<div className="grid grid-cols-1 xl:grid-cols-3 gap-6 ">
+<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
   <div className="flex flex-col gap-6">
     <DatesCard
       startDate={selectedProject.start_date}
@@ -42,7 +48,10 @@ export default function DisplayViewer({ selectedProject }: { selectedProject: an
       }}
     />
     </div>
-  <ProgressCard progress={selectedProject.progress} />
+  <ProgressCard
+  progress={selectedProject.progress}
+  onProgressChange={onProgressChange}
+/>
 </div>
 
 
