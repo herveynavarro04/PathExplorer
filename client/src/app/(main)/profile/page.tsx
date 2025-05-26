@@ -17,7 +17,7 @@ type ProfileData = {
   email: string;
   url_pic: string;
   position: string;
-  mime_type:string;
+  mime_type: string;
 };
 
 type Skill = {
@@ -102,16 +102,17 @@ const Page = () => {
     }));
   };
 
-
   return (
     <LoadingPage loading={loading}>
       <div className="mx-auto w-full max-w-[970px]">
         <Breadcrumb pageName="Perfil" />
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
-          <PersonalInfoForm userData={profile} 
-          triggerReload={() => setReloadTrigger((prev) => !prev)}
+          <PersonalInfoForm
+            userData={profile}
+            triggerReload={() => setReloadTrigger((prev) => !prev)}
             updateProfileState={updateProfileState}
-            setGlobalLoading={setLoading}/>
+            setGlobalLoading={setLoading}
+          />
           <div className="max-h-auto flex flex-col gap-2">
             <ChargeabilityCard />
             <TechSkillsCard skills={skills} userSkills={userSkills} url={url} />

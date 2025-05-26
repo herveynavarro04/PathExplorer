@@ -8,7 +8,7 @@ import { AgentService } from '../services/agent.service';
 export class AgentController {
   constructor(private agentService: AgentService) {}
 
-  @Get('project/recomendations')
+  @Get('project/recommendations')
   @UseGuards(JwtGuard)
   async AgentProjectRecomendations(
     @Req() req: Request,

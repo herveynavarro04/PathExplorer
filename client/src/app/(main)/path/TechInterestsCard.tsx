@@ -49,6 +49,7 @@ const TechInterestsCard = ({
   const MAX_INTERESTS = 20;
 
   useEffect(() => {
+    if (!skills || !userInterests) return;
     const userTechInterestNames = new Set<string>(
       userInterests.technicalSkills.map((skill) => skill.skillName)
     );
@@ -65,7 +66,7 @@ const TechInterestsCard = ({
     console.log(interestMap);
 
     setInterestMap(interestMap);
-  }, []);
+  }, [skills, userInterests]);
 
   useEffect(() => {
     if (!interestMap) return;
@@ -139,19 +140,19 @@ const TechInterestsCard = ({
   };
 
   const cancelEdit = () => {
-  if (!interestMap) return;
-  const selected: string[] = [];
+    if (!interestMap) return;
+    const selected: string[] = [];
 
-  interestMap.forEach(([_, isSelected], skillName) => {
-    if (isSelected) selected.push(skillName);
-  });
+    interestMap.forEach(([_, isSelected], skillName) => {
+      if (isSelected) selected.push(skillName);
+    });
 
-  setSelectedTechInterests(selected);
-  setAddInterests([]);
-  setDeleteInterests([]);
-  setSearchTerm("");
-  setIsEditing(false);
-};
+    setSelectedTechInterests(selected);
+    setAddInterests([]);
+    setDeleteInterests([]);
+    setSearchTerm("");
+    setIsEditing(false);
+  };
 
   return (
     <ShowcaseSectionSkill
@@ -185,7 +186,6 @@ const TechInterestsCard = ({
           </button>
         )
       }
-
     >
       <div className="flex flex-col justify-between h-full">
         {isEditing && (
@@ -223,31 +223,30 @@ const TechInterestsCard = ({
             }`}
           >
             {selectedTechInterests.length === 0 ? (
-        <div className="w-full flex items-center justify-center h-full">
-          <p className="text-gray-500 dark:text-gray-300 text-sm text-center">
-            Aún no has agregado intereses técnicos.
-          </p>
-        </div>
-      ) : (
-        selectedTechInterests.map((skill) => (
-          <span
-            key={skill}
-            className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
-          >
-            {skill}
-            {isEditing && (
-              <button
-                type="button"
-                onClick={() => removeInterest(skill)}
-                className="text-gray-500 hover:text-red"
-              >
-                ×
-              </button>
+              <div className="w-full flex items-center justify-center h-full">
+                <p className="text-gray-500 dark:text-gray-300 text-sm text-center">
+                  Aún no has agregado intereses técnicos.
+                </p>
+              </div>
+            ) : (
+              selectedTechInterests.map((skill) => (
+                <span
+                  key={skill}
+                  className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
+                >
+                  {skill}
+                  {isEditing && (
+                    <button
+                      type="button"
+                      onClick={() => removeInterest(skill)}
+                      className="text-gray-500 hover:text-red"
+                    >
+                      ×
+                    </button>
+                  )}
+                </span>
+              ))
             )}
-          </span>
-        ))
-      )}
-
           </div>
         </div>
       </div>

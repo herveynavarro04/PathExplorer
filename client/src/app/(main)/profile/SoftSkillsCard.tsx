@@ -42,6 +42,8 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
   const MAX_SKILLS = 20;
 
   useEffect(() => {
+    if (!userSkills || !skills) return;
+
     const userSoftSkillNames = new Set(
       userSkills.softSkills.map((s) => s.skillName)
     );
@@ -53,7 +55,7 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
     );
 
     setSoftSkillMap(softSkillMap);
-  }, []);
+  }, [userSkills, skills]);
 
   useEffect(() => {
     if (!softSkillMap) return;
@@ -109,7 +111,7 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
     setDeleteSkills([...deleteSkills, softSkillMap?.get(skill)![0]]);
   };
 
-    const cancelEdit = () => {
+  const cancelEdit = () => {
     if (!softSkillMap) return;
     const selected: string[] = [];
 
@@ -122,40 +124,42 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
     setDeleteSkills([]);
     setSearchTerm("");
     setIsEditing(false);
-};
+  };
 
   return (
     <ShowcaseSectionSkill
       title="Habilidades Blandas"
       className="!p-7 h-[11rem]"
-      action={isEditing ? (
-        <div className="flex gap-2">
+      action={
+        isEditing ? (
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setTriggerSave((prev) => !prev);
+              }}
+              className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-white hover:bg-opacity-90"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              onClick={cancelEdit}
+              className="rounded-lg border border-gray-400 bg-transparent px-6 py-[7px] font-medium text-gray-700 hover:bg-gray-200 dark:text-white dark:hover:bg-dark-3 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+        ) : (
           <button
             type="button"
-            onClick={() => {
-              setTriggerSave((prev) => !prev);
-            }}
-            className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-white hover:bg-opacity-90"
+            onClick={() => setIsEditing(true)}
+            className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75 transition-colors"
           >
-            Guardar
+            Editar
           </button>
-          <button
-            type="button"
-            onClick={cancelEdit}
-            className="rounded-lg border border-gray-400 bg-transparent px-6 py-[7px] font-medium text-gray-700 hover:bg-gray-200 dark:text-white dark:hover:bg-dark-3 transition-colors"
-          >
-            Cancelar
-          </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setIsEditing(true)}
-          className="rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75 transition-colors"
-        >
-          Editar
-        </button>
-      )}
+        )
+      }
     >
       <div className="flex flex-col justify-between h-full">
         {isEditing && (
@@ -195,30 +199,30 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
             }`}
           >
             {selectedSoftSkills.length === 0 ? (
-            <div className="w-full flex items-center justify-center h-full">
-              <p className="text-gray-500 dark:text-gray-300 text-sm text-center">
-                Aún no has agregado habilidades blandas.
-              </p>
-            </div>
-          ) : (
-            selectedSoftSkills.map((skill) => (
-              <span
-                key={skill}
-                className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
-              >
-                {skill}
-                {isEditing && (
-                  <button
-                    type="button"
-                    onClick={() => removeSkill(skill)}
-                    className="text-gray-500 hover:text-red"
-                  >
-                    ×
-                  </button>
-                )}
-              </span>
-            ))
-          )}
+              <div className="w-full flex items-center justify-center h-full">
+                <p className="text-gray-500 dark:text-gray-300 text-sm text-center">
+                  Aún no has agregado habilidades blandas.
+                </p>
+              </div>
+            ) : (
+              selectedSoftSkills.map((skill) => (
+                <span
+                  key={skill}
+                  className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:border-[#877691] dark:bg-[#a896b3] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
+                >
+                  {skill}
+                  {isEditing && (
+                    <button
+                      type="button"
+                      onClick={() => removeSkill(skill)}
+                      className="text-gray-500 hover:text-red"
+                    >
+                      ×
+                    </button>
+                  )}
+                </span>
+              ))
+            )}
           </div>
         </div>
       </div>
