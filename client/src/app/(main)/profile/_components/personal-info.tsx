@@ -1,13 +1,17 @@
-
-
-
 "use client";
 
-import { EmailIcon, UploadIcon, UserIcon, PasswordIcon , GlobeIcon, TrashIcon} from "assets/icons";
+import {
+  EmailIcon,
+  UploadIcon,
+  UserIcon,
+  PasswordIcon,
+  GlobeIcon,
+  TrashIcon,
+} from "assets/icons";
 import InputGroup from "components/FormElements/InputGroup";
 import { ShowcaseSection } from "components/Layouts/showcase-section";
 import Image from "next/image";
-import { useState, FormEvent, useEffect} from "react";
+import { useState, FormEvent, useEffect } from "react";
 import Loading from "components/Loading";
 
 type PersonalInfoFormProps = {
@@ -21,21 +25,24 @@ type PersonalInfoFormProps = {
     password: string;
   };
   triggerReload: () => void;
-  updateProfileState: (newData: Partial<PersonalInfoFormProps["userData"]>) => void;
+  updateProfileState: (
+    newData: Partial<PersonalInfoFormProps["userData"]>
+  ) => void;
   setGlobalLoading: (val: boolean) => void;
 };
 
-export function PersonalInfoForm({ userData, triggerReload, updateProfileState, setGlobalLoading }: PersonalInfoFormProps) {
+export function PersonalInfoForm({
+  userData,
+  triggerReload,
+  updateProfileState,
+  setGlobalLoading,
+}: PersonalInfoFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(userData.url_pic);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
   const [password, setPassword] = useState("");
 
   const [showPasswordField, setShowPasswordField] = useState(false);
-
-  if (!userData) {
-    return <Loading />;
-  }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -53,7 +60,7 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setGlobalLoading(true);
-  
+
     const formData = new FormData();
     if (selectedImage) {
       formData.append("pictureFile", selectedImage);
@@ -61,7 +68,7 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
     if (password) {
       formData.append("password", password);
     }
-  
+
     await fetch("http://localhost:8080/api/employee", {
       method: "PATCH",
       headers: {
@@ -70,14 +77,14 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
       body: formData,
     });
 
-    await new Promise(resolve => setTimeout(resolve, 200));
-  
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
     const updated = await fetch("http://localhost:8080/api/employee", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-  
+
     const data = await updated.json();
     setPreviewUrl(
       data.profilePicture && data.mimeType
@@ -86,12 +93,12 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
     );
     updateProfileState({
       url_pic: data.profilePicture,
-      mime_type: data.mimeType
+      mime_type: data.mimeType,
     });
     setIsEditing(false);
     setSelectedImage(null);
     setPassword("");
-    
+
     triggerReload();
     setGlobalLoading(false);
   };
@@ -102,123 +109,121 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
   };
 
   useEffect(() => {
-  if (isEditing) {
-    const timer = setTimeout(() => setShowPasswordField(true), 200);
-    return () => clearTimeout(timer);
-  } else {
-    setShowPasswordField(false);
+    if (isEditing) {
+      const timer = setTimeout(() => setShowPasswordField(true), 200);
+      return () => clearTimeout(timer);
+    } else {
+      setShowPasswordField(false);
+    }
+  }, [isEditing]);
+
+  if (!userData) {
+    return <Loading />;
   }
-}, [isEditing]);
 
   return (
     <ShowcaseSection
-  title="Información Personal"
-  className="!p-7 !pt-2 !pb-0"
-  action={
-    !isEditing ? (
-      <button
-        className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
-        type="button"
-        onClick={() => setIsEditing(true)}
-      >
-        Editar
-      </button>
-    ) : (
-      <div className="flex gap-2">
-        
-        <button
-          className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
-          type="submit"
-          form="personal-info-form" 
-        >
-          Guardar
-        </button>
-        <button
-          className="rounded-lg border border-gray-400 bg-transparent px-6 py-[7px] font-medium text-gray-700 hover:bg-gray-200 dark:text-white dark:hover:bg-dark-3 transition-colors"
-          type="button"
-          onClick={() => {
-            setIsEditing(false);
-            setPassword("");
-            setSelectedImage(null);
-            setPreviewUrl(userData.url_pic);
-          }}
-        >
-          Cancelar
-        </button>
-      </div>
-    )
-  }
->
-      <form id="personal-info-form" onSubmit={handleSubmit}>
-        <div className={`mb-0 ${isEditing ? "flex flex-row items-center gap-9" : "flex justify-center"}`}>
-          <div className="flex flex-col items-center justify-center ">
-  <Image
-    src={
-      previewUrl.startsWith("data:") || previewUrl.startsWith("blob:")
-        ? previewUrl
-        : userData.url_pic && userData.mime_type
-        ? `data:${userData.mime_type};base64,${userData.url_pic}`
-        : "/profile.png"
-    }
-    width={isEditing ? 66 : 180}
-    height={isEditing ? 66 : 180}
-    alt="User"
-    className={`rounded-full object-cover transition-all duration-300 ease-in-out ${
-      isEditing ? "size-33" : "size-56"
-    }`}
-    quality={90}
-  />
-
-
-  {isEditing && (userData.url_pic || selectedImage) && (
-    <button
-      type="button"
-      onClick={async () => {
-        const defaultImage = await getDefaultProfilePictureFile();
-        setSelectedImage(defaultImage);
-        setPreviewUrl(URL.createObjectURL(defaultImage));
-      }}
-      className="text-sm text-red-500 underline pt-1"
-    >
-      <TrashIcon/>
-    </button>
-  )}
-
-  </div>
-
-
-  {isEditing && (
-    <div className="flex flex-col gap-2 w-60 transition-all duration-500 ease-in-out items-start">
-      
-      <div className="relative block w-full rounded-xl border border-dashed border-gray-4 bg-gray-2 hover:border-primary dark:border-dark-3 dark:bg-dark-2 dark:hover:border-primary">
-        <input
-          type="file"
-          name="profilePhoto"
-          id="profilePhoto"
-          accept="image/png, image/jpg, image/jpeg"
-          hidden
-          onChange={handleImageChange}
-        />
-        <label
-          htmlFor="profilePhoto"
-          className="flex cursor-pointer flex-col items-center justify-center p-4 sm:py-2"
-        >
-          <div className="flex size-13.5 items-center justify-center rounded-full border border-stroke bg-white dark:border-dark-3 dark:bg-gray-dark">
-            <UploadIcon />
+      title="Información Personal"
+      className="!p-7 !pt-2 !pb-0"
+      action={
+        !isEditing ? (
+          <button
+            className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
+            type="button"
+            onClick={() => setIsEditing(true)}
+          >
+            Editar
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            <button
+              className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
+              type="submit"
+              form="personal-info-form"
+            >
+              Guardar
+            </button>
+            <button
+              className="rounded-lg border border-gray-400 bg-transparent px-6 py-[7px] font-medium text-gray-700 hover:bg-gray-200 dark:text-white dark:hover:bg-dark-3 transition-colors"
+              type="button"
+              onClick={() => {
+                setIsEditing(false);
+                setPassword("");
+                setSelectedImage(null);
+                setPreviewUrl(userData.url_pic);
+              }}
+            >
+              Cancelar
+            </button>
           </div>
-          <p className="mt-2.5 text-body-sm font-medium">
-            <span className="text-primary">Sube</span> o arrastra el archivo
-          </p>
-          <p className="mt-1 text-xs">
-            PNG, JPG o JPEG (máx. 10MB)
-          </p>
-        </label>
-      </div>
-    </div>
-  )}
-</div>
+        )
+      }
+    >
+      <form id="personal-info-form" onSubmit={handleSubmit}>
+        <div
+          className={`mb-0 ${isEditing ? "flex flex-row items-center gap-9" : "flex justify-center"}`}
+        >
+          <div className="flex flex-col items-center justify-center ">
+            <Image
+              src={
+                previewUrl.startsWith("data:") || previewUrl.startsWith("blob:")
+                  ? previewUrl
+                  : userData.url_pic && userData.mime_type
+                    ? `data:${userData.mime_type};base64,${userData.url_pic}`
+                    : "/profile.png"
+              }
+              width={isEditing ? 66 : 180}
+              height={isEditing ? 66 : 180}
+              alt="User"
+              className={`rounded-full object-cover transition-all duration-300 ease-in-out ${
+                isEditing ? "size-33" : "size-56"
+              }`}
+              quality={90}
+            />
 
+            {isEditing && (userData.url_pic || selectedImage) && (
+              <button
+                type="button"
+                onClick={async () => {
+                  const defaultImage = await getDefaultProfilePictureFile();
+                  setSelectedImage(defaultImage);
+                  setPreviewUrl(URL.createObjectURL(defaultImage));
+                }}
+                className="text-sm text-red-500 underline pt-1"
+              >
+                <TrashIcon />
+              </button>
+            )}
+          </div>
 
+          {isEditing && (
+            <div className="flex flex-col gap-2 w-60 transition-all duration-500 ease-in-out items-start">
+              <div className="relative block w-full rounded-xl border border-dashed border-gray-4 bg-gray-2 hover:border-primary dark:border-dark-3 dark:bg-dark-2 dark:hover:border-primary">
+                <input
+                  type="file"
+                  name="profilePhoto"
+                  id="profilePhoto"
+                  accept="image/png, image/jpg, image/jpeg"
+                  hidden
+                  onChange={handleImageChange}
+                />
+                <label
+                  htmlFor="profilePhoto"
+                  className="flex cursor-pointer flex-col items-center justify-center p-4 sm:py-2"
+                >
+                  <div className="flex size-13.5 items-center justify-center rounded-full border border-stroke bg-white dark:border-dark-3 dark:bg-gray-dark">
+                    <UploadIcon />
+                  </div>
+                  <p className="mt-2.5 text-body-sm font-medium">
+                    <span className="text-primary">Sube</span> o arrastra el
+                    archivo
+                  </p>
+                  <p className="mt-1 text-xs">PNG, JPG o JPEG (máx. 10MB)</p>
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
 
         <InputGroup
           className="mb-3.5 text-sm"
@@ -231,7 +236,7 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
           iconPosition="left"
           height="sm"
         />
-  
+
         <InputGroup
           className="mb-3.5 text-sm"
           type="email"
@@ -244,8 +249,6 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
           height="sm"
         />
 
-
-  
         <InputGroup
           className="mb-3.5 text-sm"
           type="text"
@@ -258,32 +261,27 @@ export function PersonalInfoForm({ userData, triggerReload, updateProfileState, 
           height="sm"
         />
 
-            {isEditing && (
-  <div
-    className={`transition-opacity duration-700 ${
-      showPasswordField ? "opacity-100" : "opacity-0"
-    }`}
-  >
-    <InputGroup
-      className=" text-sm"
-      type="password"
-      name="password"
-      label="Contraseña"
-      placeholder="Nueva contraseña..."
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-      icon={<PasswordIcon />}
-      iconPosition="left"
-      height="sm"
-    />
-  </div>
-)}
-  
-        
+        {isEditing && (
+          <div
+            className={`transition-opacity duration-700 ${
+              showPasswordField ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <InputGroup
+              className=" text-sm"
+              type="password"
+              name="password"
+              label="Contraseña"
+              placeholder="Nueva contraseña..."
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              icon={<PasswordIcon />}
+              iconPosition="left"
+              height="sm"
+            />
+          </div>
+        )}
       </form>
     </ShowcaseSection>
   );
-  
 }
-
-

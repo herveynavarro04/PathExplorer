@@ -1,0 +1,34 @@
+{
+  "projectRecs": [
+    {
+      "projectId": "10000000-0000-0000-0000-000000000015",
+      "projectName": "Sistema de Reservas",
+      "managerName": "Hervey",
+      "client": "Cliente F"
+    },
+    {
+      "projectId": "10000000-0000-0000-0000-000000000011",
+      "projectName": "Aplicación Móvil Salud",
+      "managerName": "Hervey",
+      "client": "Cliente B"
+    },
+    {
+      "projectId": "10000000-0000-0000-0000-000000000012",
+      "projectName": "Dashboard Financiero",
+      "managerName": "Hervey",
+      "client": "Cliente C"
+    },
+    {
+      "projectId": "10000000-0000-0000-0000-000000000025",
+      "projectName": "Gestión de Documentos",
+      "managerName": "Hervey",
+      "client": "Cliente P"
+    },
+    {
+      "projectId": "10000000-0000-0000-0000-000000000018",
+      "projectName": "Plataforma de Cursos",
+      "managerName": "Hervey",
+      "client": "Cliente I"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import ProyectoModal from "./ProyectoModal";
+import ProyectoModal from "../../../components/ProyectoModal";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
 import ProjectCard from "./ProjectCard";
 import Select from "react-select";

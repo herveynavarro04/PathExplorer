@@ -7,6 +7,7 @@ import CourseForm from "./CourseForm";
 import { validation } from "@utils/validation";
 import { useRouter } from "next/navigation";
 import { authFetch } from "@utils/authFetch";
+import LoadingPage from "components/LoadingPage";
 
 interface GetCoursePreviewDto {
   courseId: string;
@@ -28,6 +29,7 @@ const Page = () => {
   const [filter, setFilter] = useState<boolean>(true);
   const router = useRouter();
   const url = "http://localhost:8080/api";
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleAddCourse = (newCourse: any) => {
     setCourses((prev) => [...prev, newCourse]);
@@ -76,6 +78,7 @@ const Page = () => {
         }
         console.log(response);
         setCourses(response.courses);
+        setLoading(false);
       } catch (error) {
         console.error("Failed fetching courses", error);
       }
@@ -84,76 +87,78 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="mx-auto w-full max-w-[970px]">
-      <div className="flex justify-between">
-        <div className="flex">
-          <div className="pt-5">
-            <Breadcrumb pageName="Mis Cursos" />
+    <LoadingPage loading={loading}>
+      <div className="mx-auto w-full max-w-[970px]">
+        <div className="flex justify-between">
+          <div className="flex">
+            <div className="pt-5">
+              <Breadcrumb pageName="Mis Cursos" />
+            </div>
+          </div>
+
+          <select
+            className="px-3 rounded dark:text-gray-2 text-sm h-[2rem] bg-[#e8deef] dark:bg-[#513d63] self-center"
+            value={String(filter)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              setFilter(e.target.value === "true")
+            }
+          >
+            <option value={"true"}>Cursos completados</option>
+            <option value={"false"}>Cursos en progreso</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col min-h-[34rem]">
+          <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
+            {currentCourses.map((course) => (
+              <CourseCard
+                key={course.courseId}
+                courseId={course.courseId}
+                title={course.title}
+                mandatory={course.mandatory}
+                information={course.information}
+                handleCourseClick={handleCourseClick}
+              />
+            ))}
+          </div>
+
+          {selectedCourse && (
+            <CourseModal
+              courseId={selectedCourse}
+              handleOnClose={() => setSelectedCourse(null)}
+            />
+          )}
+        </div>
+
+        <div className="w-full bg-transparent mt-8">
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+            >
+              Anterior
+            </button>
+            <span className="self-center text-lg">
+              {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
+            >
+              Siguiente
+            </button>
           </div>
         </div>
-
-        <select
-          className="px-3 rounded dark:text-gray-2 text-sm h-[2rem] bg-[#e8deef] dark:bg-[#513d63] self-center"
-          value={String(filter)}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            setFilter(e.target.value === "true")
-          }
-        >
-          <option value={"true"}>Cursos completados</option>
-          <option value={"false"}>Cursos en progreso</option>
-        </select>
-      </div>
-
-      <div className="flex flex-col min-h-[34rem]">
-        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
-          {currentCourses.map((course) => (
-            <CourseCard
-              key={course.courseId}
-              courseId={course.courseId}
-              title={course.title}
-              mandatory={course.mandatory}
-              information={course.information}
-              handleCourseClick={handleCourseClick}
-            />
-          ))}
-        </div>
-
-        {selectedCourse && (
-          <CourseModal
-            courseId={selectedCourse}
-            handleOnClose={() => setSelectedCourse(null)}
+        {showAddModal && (
+          <CourseForm
+            onClose={() => setShowAddModal(false)}
+            onSave={handleAddCourse}
           />
         )}
       </div>
-
-      <div className="w-full bg-transparent mt-8">
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-          >
-            Anterior
-          </button>
-          <span className="self-center text-lg">
-            {currentPage} de {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50"
-          >
-            Siguiente
-          </button>
-        </div>
-      </div>
-      {showAddModal && (
-        <CourseForm
-          onClose={() => setShowAddModal(false)}
-          onSave={handleAddCourse}
-        />
-      )}
-    </div>
+    </LoadingPage>
   );
 };
 
