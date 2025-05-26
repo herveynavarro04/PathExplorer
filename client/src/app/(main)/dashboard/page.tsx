@@ -65,65 +65,65 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const loadRecommendedProjects = async () => {
-      const res = validation();
-      if (!res) {
-        router.push("/login");
-        return;
-      }
-
-      setProjectsLoading(true);
-      try {
-        const response = await authFetch<ProjectRecomendationsResponseDto>(
-          `${url}/agent/project/recommendations`
-        );
-        if (!response) {
-          router.push("/login");
-          return;
-        }
-        setProjects(response.projectRecs);
-        console.log("✅ Projects fetched");
-        console.log(response);
-      } catch (error) {
-        console.error(`Error fetching recommended projects ${error}`);
-      } finally {
-        setProjectsLoading(false);
-      }
-    };
-
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      loadRecommendedProjects();
-      return;
-    }
-
-    if (triggerRefresh) {
-      loadRecommendedProjects();
-      setTriggerRefresh(false);
-    }
-  }, [triggerRefresh]);
-
   // useEffect(() => {
-  //   const timer = setTimeout(() => setProjectsLoading(false), 2000);
-  //   return () => clearTimeout(timer);
-  // }, [projects]);
+  //   const loadRecommendedProjects = async () => {
+  //     const res = validation();
+  //     if (!res) {
+  //       router.push("/login");
+  //       return;
+  //     }
 
-  // useEffect(() => {
-  //   const fetchProjects = async () => {
   //     setProjectsLoading(true);
   //     try {
-  //       const res = await fetch("/recommendedProjects.json");
-  //       const data = await res.json();
-  //       setProjects(data.projectRecs);
-  //       setTriggerRefresh(false);
-  //     } catch (err) {
-  //       console.error("Error loading recommended projects", err);
+  //       const response = await authFetch<ProjectRecomendationsResponseDto>(
+  //         `${url}/agent/project/recommendations`
+  //       );
+  //       if (!response) {
+  //         router.push("/login");
+  //         return;
+  //       }
+  //       setProjects(response.projectRecs);
+  //       console.log("✅ Projects fetched");
+  //       console.log(response);
+  //     } catch (error) {
+  //       console.error(`Error fetching recommended projects ${error}`);
+  //     } finally {
+  //       setProjectsLoading(false);
   //     }
   //   };
 
-  //   fetchProjects();
+  //   if (!hasMounted.current) {
+  //     hasMounted.current = true;
+  //     loadRecommendedProjects();
+  //     return;
+  //   }
+
+  //   if (triggerRefresh) {
+  //     loadRecommendedProjects();
+  //     setTriggerRefresh(false);
+  //   }
   // }, [triggerRefresh]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setProjectsLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, [projects]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setProjectsLoading(true);
+      try {
+        const res = await fetch("/recommendedProjects.json");
+        const data = await res.json();
+        setProjects(data.projectRecs);
+        setTriggerRefresh(false);
+      } catch (err) {
+        console.error("Error loading recommended projects", err);
+      }
+    };
+
+    fetchProjects();
+  }, [triggerRefresh]);
 
   const patchProjects = async () => {
     const token = localStorage.getItem("token");
