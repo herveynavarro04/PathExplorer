@@ -42,7 +42,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-2 px-4">
+      <div className="flex justify-between items-center mb-9 px-4">
         <ProjectViewer
           projects={projects}
           selectedProject={selectedProject}
@@ -78,6 +78,7 @@ export default function Home() {
         <DisplayViewer
           selectedProject={selectedProject}
           onProgressChange={(value: number) => setProjectProgress(value)} 
+          editable={true} 
         />
       </LoadingPage>
     </>

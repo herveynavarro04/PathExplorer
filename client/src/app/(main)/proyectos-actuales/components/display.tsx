@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -13,9 +12,11 @@ import TechStackCard from "./TechStackCard";
 export default function DisplayViewer({
   selectedProject,
   onProgressChange,
+  editable = true,
 }: {
   selectedProject: any;
   onProgressChange: (progress: number) => void;
+  editable?: boolean;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
@@ -24,36 +25,37 @@ export default function DisplayViewer({
 
   return (
     <div>
-<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-  <div className="flex flex-col gap-8">
-    <DatesCard
-      startDate={selectedProject.start_date}
-      endDate={selectedProject.end_date}
-    />
-    <ClientCard client={selectedProject.client} />
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="flex flex-col gap-8">
+          <DatesCard
+            startDate={selectedProject.start_date}
+            endDate={selectedProject.end_date}
+            className=""
+            editable={editable}
+          />
+          <ClientCard client={selectedProject.client} editable={editable} />
+        </div>
 
-  </div>
+        <DescriptionCard description={selectedProject.description} editable={editable} />
+        <TechStackCard stack={selectedProject.stack} editable={editable} />
 
-  <DescriptionCard description={selectedProject.description}  />
+        <div className="col-span-2 rounded-xl shadow">
+          <TeamCard
+            team={selectedProject.team}
+            onFeedbackClick={(memberName: string) => {
+              setSelectedMember(memberName);
+              setIsModalOpen(true);
+            }}
+            editable={editable}
+          />
+        </div>
 
-  <TechStackCard stack={selectedProject.stack} />
-
-
-  <div className="col-span-2 rounded-xl shadow" >
-    <TeamCard
-      team={selectedProject.team}
-      onFeedbackClick={(memberName: string) => {
-        setSelectedMember(memberName);
-        setIsModalOpen(true);
-      }}
-    />
-    </div>
-  <ProgressCard
-  progress={selectedProject.progress}
-  onProgressChange={onProgressChange}
-/>
-</div>
-
+        <ProgressCard
+          progress={selectedProject.progress}
+          onProgressChange={onProgressChange}
+          editable={editable}
+        />
+      </div>
 
       <ModalFeedback
         isOpen={isModalOpen}

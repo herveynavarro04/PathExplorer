@@ -42,7 +42,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-2 px-4">
+      <div className="flex justify-between items-center mb-9 px-4">
         <ProjectViewer
           projects={projects}
           selectedProject={selectedProject}
@@ -50,34 +50,16 @@ export default function Home() {
             setSelectedProject(project);
             setProjectProgress(project?.progress || 0); 
           }}
+          terminated={true}
         />
-
-        {projectProgress === 100 && (
-  <button
-    className="bg-[#65417f] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
-    onClick={() => setIsFinalizeModalOpen(true)}
-  >
-    Marcar como finalizado
-  </button>
-)}
-
-{isFinalizeModalOpen && (
-  <EndProjectModal
-    projectName={selectedProject?.projectName || "el proyecto"}
-    onCancel={() => setIsFinalizeModalOpen(false)}
-    onConfirm={() => {
-      console.log("Proyecto finalizado");
-      setIsFinalizeModalOpen(false);
-      // endpoint de backend
-    }}
-  />
-)}
       </div>
 
       <LoadingPage loading={loading}>
         <DisplayViewer
           selectedProject={selectedProject}
           onProgressChange={(value: number) => setProjectProgress(value)} 
+          editable={false}
+
         />
       </LoadingPage>
     </>
