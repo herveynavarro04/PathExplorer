@@ -7,7 +7,6 @@ import Select from "react-select";
 import { useTheme } from "next-themes";
 import { authFetch } from "@utils/authFetch";
 import { useRouter } from "next/navigation";
-import LoadingPage from "components/LoadingPage";
 
 interface TechDto {
   technologyId: string;

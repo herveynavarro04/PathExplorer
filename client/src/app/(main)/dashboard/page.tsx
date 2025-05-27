@@ -2,17 +2,16 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import LoadingPage from "components/LoadingPage";
 import ProyectoModal from "../../../components/ProyectoModal";
 import { authFetch } from "@utils/authFetch";
 import { validation } from "@utils/validation";
 import { OverviewCardsGroup } from "./_components/overview-cards";
 import { TbRefreshDot } from "react-icons/tb";
+import SpinnerLoading from "components/SpinnerLoading";
 
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -31,13 +30,15 @@ interface ProjectRecomendationsResponseDto {
 
 export default function Home() {
   const [projects, setProjects] = useState<ProjectsInfo[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [projectsLoading, setProjectsLoading] = useState<boolean>(true);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [addProjects, setAddProjects] = useState<string[]>([]);
   const [appliedMessage, setAppliedMessage] = useState("");
   const [triggerRefresh, setTriggerRefresh] = useState<boolean>(false);
   const hasMounted = useRef(false);
+  const [fadeInProjects, setFadeInProjects] = useState<boolean>(false);
+  const [fadeInCards, setFadeInCards] = useState<boolean>(false);
+  const [forbidden, setForbidden] = useState<boolean>(false);
 
   const router = useRouter();
   const url = "http://localhost:8080/api";
@@ -53,7 +54,9 @@ export default function Home() {
         : [...prev, projectId];
       const count = updatedProjects.length;
       setAppliedMessage(
-        `${count} proyecto${count !== 1 ? "s" : ""} aplicado${count !== 1 ? "s" : ""}`
+        `${count} proyecto${count !== 1 ? "s" : ""} aplicado${
+          count !== 1 ? "s" : ""
+        }`
       );
       return updatedProjects;
     });
@@ -61,33 +64,32 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
     const loadRecommendedProjects = async () => {
+      setProjectsLoading(true);
+      setFadeInProjects(false);
+      setProjects([]);
+
       const res = validation();
       if (!res) {
         router.push("/login");
         return;
       }
 
-      setProjectsLoading(true);
       try {
         const response = await authFetch<ProjectRecomendationsResponseDto>(
           `${url}/agent/project/recommendations`
         );
         if (!response) {
-          router.push("/login");
+          setForbidden(true);
           return;
         }
+        console.log(response.projectRecs);
         setProjects(response.projectRecs);
-        console.log("✅ Projects fetched");
-        console.log(response);
       } catch (error) {
         console.error(`Error fetching recommended projects ${error}`);
+        setForbidden(true);
       } finally {
+        setTimeout(() => setFadeInProjects(true), 50);
         setProjectsLoading(false);
       }
     };
@@ -102,27 +104,6 @@ export default function Home() {
       loadRecommendedProjects();
       setTriggerRefresh(false);
     }
-  }, [triggerRefresh]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setProjectsLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, [projects]);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setProjectsLoading(true);
-      try {
-        const res = await fetch("/recommendedProjects.json");
-        const data = await res.json();
-        setProjects(data.projectRecs);
-        setTriggerRefresh(false);
-      } catch (err) {
-        console.error("Error loading recommended projects", err);
-      }
-    };
-
-    fetchProjects();
   }, [triggerRefresh]);
 
   const patchProjects = async () => {
@@ -146,19 +127,41 @@ export default function Home() {
       setAddProjects([]);
       setAppliedMessage("");
       setTriggerRefresh(true);
-      setProjectsLoading(false);
     } catch (err) {
       console.error("Unexpected fetch error:", err);
     }
   };
 
+  useEffect(() => {
+    setTimeout(() => setFadeInCards(true), 25);
+  }, []);
+
   return (
     <>
-      <LoadingPage loading={loading}>
+      <div
+        className={`mx-auto w-full max-w-[75rem] transition-opacity duration-500 ${
+          fadeInCards ? "opacity-100" : "opacity-0"
+        }`}
+      >
         <OverviewCardsGroup />
-      </LoadingPage>
-      <LoadingPage loading={projectsLoading} showSpinner spinnerOffsetY={120}>
-        <div className="mt-20 w-full">
+      </div>
+
+      {projectsLoading && (
+        <div className="flex justify-center">
+          <SpinnerLoading spinnerOffsetY={550} spinnerOffsetX={850} />
+        </div>
+      )}
+
+      <div
+        className={`mx-auto w-full mt-20 max-w-[75rem] transition-opacity duration-500 ease-in-out ${
+          projectsLoading
+            ? "opacity-0"
+            : fadeInProjects
+              ? "opacity-100"
+              : "opacity-0"
+        }`}
+      >
+        {!projectsLoading && (
           <div className="rounded-[10px] bg-[#f8f6fa] px-7.5 pb-4 pt-7.5 shadow-1 dark:bg-[#311a42]">
             <div className="flex justify-between">
               <h2 className="text-2xl font-bold text-dark dark:text-white">
@@ -182,44 +185,57 @@ export default function Home() {
               </TableHeader>
 
               <TableBody>
-                {projects.map((project) => (
-                  <ProjectTableRow
-                    key={project.projectId}
-                    projectId={project.projectId}
-                    projectName={project.projectName}
-                    client={project.client}
-                    managerName={project.managerName}
-                    handleProjectClick={handleProjectClick}
-                  />
-                ))}
+                {forbidden || projects.length === 0 ? (
+                  <TableRow>
+                    <td
+                      colSpan={3}
+                      className="text-center py-6 text-gray-700 dark:text-gray-300"
+                    >
+                      No se encontraron proyectos relacionados.
+                    </td>
+                  </TableRow>
+                ) : (
+                  projects.map((project) => (
+                    <ProjectTableRow
+                      key={project.projectId}
+                      projectId={project.projectId}
+                      projectName={project.projectName}
+                      client={project.client}
+                      managerName={project.managerName}
+                      handleProjectClick={handleProjectClick}
+                    />
+                  ))
+                )}
               </TableBody>
             </Table>
+
+            {!forbidden && selectedProject && (
+              <ProyectoModal
+                projectId={selectedProject}
+                onClose={() => setSelectedProject(null)}
+                onApply={handleApplyToProject}
+                addProjects={addProjects}
+              />
+            )}
           </div>
-          {selectedProject && (
-            <ProyectoModal
-              projectId={selectedProject}
-              onClose={() => setSelectedProject(null)}
-              onApply={handleApplyToProject}
-              addProjects={addProjects}
-            />
-          )}
-          {addProjects.length > 0 && (
-            <div className="w-full flex justify-end mt-15">
-              <div className="flex items-center gap-3 md:gap-4">
-                <div className="bg-[#f3e8ff] text-[#2b2b2b] px-4 py-2 rounded-lg text-center">
-                  {appliedMessage}
-                </div>
-                <button
-                  className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto"
-                  onClick={patchProjects}
-                >
-                  Finalizar aplicación
-                </button>
+        )}
+
+        {!forbidden && addProjects.length > 0 && (
+          <div className="w-full flex justify-end mt-15">
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="bg-[#f3e8ff] text-[#2b2b2b] px-4 py-2 rounded-lg text-center">
+                {appliedMessage}
               </div>
+              <button
+                className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto"
+                onClick={patchProjects}
+              >
+                Finalizar aplicación
+              </button>
             </div>
-          )}
-        </div>
-      </LoadingPage>
+          </div>
+        )}
+      </div>
     </>
   );
 }
