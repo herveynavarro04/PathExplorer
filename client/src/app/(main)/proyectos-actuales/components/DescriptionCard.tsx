@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaRegEdit, FaCheck, FaTimes } from "react-icons/fa";
 import { cn } from "lib/utils";
 
-export default function DescriptionCard({ description }: { description: string }) {
+export default function DescriptionCard({description, editable = true,}: {description: string; editable?: boolean;}) {
   const [isEditing, setIsEditing] = useState(false);
   const [desc, setDesc] = useState(description);
   const [tempDesc, setTempDesc] = useState(description);
@@ -25,38 +25,40 @@ export default function DescriptionCard({ description }: { description: string }
         <h2 className="text-sm sm:text-base font-medium text-dark dark:text-white">
           Descripción
         </h2>
-        <div className="flex items-center gap-2">
-          {isEditing ? (
-            <div className="flex gap-2">
+        {editable && (
+          <div className="flex items-center gap-2">
+            {isEditing ? (
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  className="rounded-lg bg-[#65417f] px-2 py-[5px] font-medium text-white hover:bg-opacity-90"
+                >
+                  <FaCheck size={14} />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="text-red-600 hover:text-red-800"
+                >
+                  <FaTimes size={14} />
+                </button>
+              </div>
+            ) : (
               <button
-                type="button"
-                onClick={handleSave}
-                className="rounded-lg bg-[#65417f] px-2 py-[5px] font-medium text-white hover:bg-opacity-90"
+                onClick={() => setIsEditing(true)}
+                className="text-gray-500 hover:text-[#65417f] dark:text-gray-300 dark:hover:text-white"
               >
-                <FaCheck size={14} />
+                <FaRegEdit size={16} />
               </button>
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="text-red-600 hover:text-red-800"
-              >
-                <FaTimes size={14} />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="text-gray-500 hover:text-[#65417f] dark:text-gray-300 dark:hover:text-white"
-            >
-              <FaRegEdit size={16} />
-            </button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className={cn("p-4 sm:p-6 xl:p-10")}>
         <div className="flex items-center justify-center text-xs text-gray-700 dark:text-gray-300">
-          {isEditing ? (
+          {editable && isEditing ? (
             <textarea
               value={tempDesc}
               onChange={(e) => setTempDesc(e.target.value)}
@@ -70,4 +72,5 @@ export default function DescriptionCard({ description }: { description: string }
       </div>
     </div>
   );
+
 }

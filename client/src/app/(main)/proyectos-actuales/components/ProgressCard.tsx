@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,9 +7,11 @@ import { FaCheck, FaRegEdit, FaTimes } from "react-icons/fa";
 export default function ProgressCard({
   progress,
   onProgressChange,
+  editable = true,
 }: {
   progress: number;
   onProgressChange: (value: number) => void;
+  editable?: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [localProgress, setLocalProgress] = useState(progress);
@@ -25,7 +26,6 @@ export default function ProgressCard({
     setLocalProgress(tempProgress);
     onProgressChange(tempProgress);
     setIsEditing(false);
-    
   };
 
   const handleCancel = () => {
@@ -37,9 +37,10 @@ export default function ProgressCard({
     <div className="rounded-[10px] bg-[#f8f6fa] shadow-1 dark:bg-[#311a42] dark:shadow-card">
       <div className="flex items-center justify-between border-b border-stroke px-4 py-4 sm:px-6 xl:px-7.5 dark:border-dark-3">
         <h2 className="font-medium text-dark dark:text-white">Progreso del proyecto</h2>
-        {isEditing ? (
-          <div className="flex gap-2">
-            <button
+        {editable && (
+          isEditing ? (
+            <div className="flex gap-2">
+              <button
                 type="button"
                 onClick={handleSave}
                 className="rounded-lg bg-[#65417f] px-2 py-[5px] font-medium text-white hover:bg-opacity-90"
@@ -53,19 +54,20 @@ export default function ProgressCard({
               >
                 <FaTimes size={14} />
               </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="text-gray-500 hover:text-[#65417f] dark:text-gray-300 dark:hover:text-white"
-          >
-            <FaRegEdit size={15} />
-          </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-gray-500 hover:text-[#65417f] dark:text-gray-300 dark:hover:text-white"
+            >
+              <FaRegEdit size={15} />
+            </button>
+          )
         )}
       </div>
 
       <div className="p-4 sm:p-6 xl:p-10">
-<div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto mt-4 relative">
+        <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto mt-4 relative">
           <svg className="w-full h-full" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="45" stroke="#c6b0dc" strokeWidth="10" fill="none" />
             <motion.circle
@@ -88,16 +90,15 @@ export default function ProgressCard({
           </div>
         </div>
 
-{!isEditing && (
-  <div className="mt-4 text-center">
-    <p className="inline-block text-xs rounded-md px-2 py-1 text-gray-900 dark:text-white ">
-      Actualiza el progreso del proyecto
-    </p>
-  </div>
-)}
+        {!isEditing && editable && (
+          <div className="mt-4 text-center">
+            <p className="inline-block text-xs rounded-md px-2 py-1 text-gray-900 dark:text-white">
+              Actualiza el progreso del proyecto
+            </p>
+          </div>
+        )}
 
-
-        {isEditing && (
+        {editable && isEditing && (
           <div className="mt-4 text-center">
             <input
               type="number"

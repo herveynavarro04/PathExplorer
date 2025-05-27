@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import LoadingPage from "components/LoadingPage";
-import ProjectViewer from "./components/selector";
-import DisplayViewer from "./components/display";
-import { getProjects } from "./fetch";
-import EndProjectModal from "./components/EndProjectModal";
+import ProjectViewer from "../proyectos-actuales/components/selector";
+import DisplayViewer from "../proyectos-actuales/components/display";
+import { getProjects } from "../proyectos-actuales/fetch";
+import EndProjectModal from "../proyectos-actuales/components/EndProjectModal";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -50,35 +50,16 @@ export default function Home() {
             setSelectedProject(project);
             setProjectProgress(project?.progress || 0); 
           }}
+          terminated={true}
         />
-
-        {projectProgress === 100 && (
-  <button
-    className="bg-[#65417f] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
-    onClick={() => setIsFinalizeModalOpen(true)}
-  >
-    Marcar como finalizado
-  </button>
-)}
-
-{isFinalizeModalOpen && (
-  <EndProjectModal
-    projectName={selectedProject?.projectName || "el proyecto"}
-    onCancel={() => setIsFinalizeModalOpen(false)}
-    onConfirm={() => {
-      console.log("Proyecto finalizado");
-      setIsFinalizeModalOpen(false);
-      // endpoint de backend
-    }}
-  />
-)}
       </div>
 
       <LoadingPage loading={loading}>
         <DisplayViewer
           selectedProject={selectedProject}
           onProgressChange={(value: number) => setProjectProgress(value)} 
-          editable={true} 
+          editable={false}
+
         />
       </LoadingPage>
     </>

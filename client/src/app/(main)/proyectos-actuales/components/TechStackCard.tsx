@@ -1,44 +1,79 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { ShowcaseSectionSkill } from "components/Layouts/showcase-skill";
 import { FaRegEdit, FaCheck, FaTimes } from "react-icons/fa";
 
-export default function TechStackCard({ stack }: { stack: string[] }) {
+export default function TechStackCard({
+  stack,
+  editable = true,
+}: {
+  stack: string[];
+  editable?: boolean;
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStack, setSelectedStack] = useState<string[]>([]);
   const [allStack, setAllStack] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState(false);
 
-  const uniqueTech = Array.from(new Set(stack.concat(["PostgreSQL", "Next.js", "Node.js", "React", "MongoDB"])));
+  const [addStack, setAddStack] = useState<string[]>([]);
+  const [deleteStack, setDeleteStack] = useState<string[]>([]);
+  const [triggerSave, setTriggerSave] = useState(false);
+
+  const uniqueTech = Array.from(
+    new Set(stack.concat(["PostgreSQL", "Next.js", "Node.js", "React", "MongoDB", "Tailwind", "NestJS", "TypeScript"]))
+  );
 
   useEffect(() => {
     setSelectedStack(stack);
     setAllStack(uniqueTech);
+    setAddStack([]);
+    setDeleteStack([]);
   }, [stack]);
+
+  useEffect(() => {
+    if (!triggerSave) return;
+
+    // Simular persistencia
+    console.log("🟢 Guardado:");
+    console.log("➕ Añadidos:", addStack);
+    console.log("➖ Eliminados:", deleteStack);
+
+    setTriggerSave(false);
+    setIsEditing(false);
+    setAddStack([]);
+    setDeleteStack([]);
+  }, [triggerSave]);
 
   const addTech = (tech: string) => {
     if (!selectedStack.includes(tech)) {
       setSelectedStack([...selectedStack, tech]);
+      setAddStack([...addStack, tech]);
+      setDeleteStack(deleteStack.filter((t) => t !== tech));
       setSearchTerm("");
     }
   };
 
   const removeTech = (tech: string) => {
     setSelectedStack(selectedStack.filter((item) => item !== tech));
+    if (stack.includes(tech)) {
+      setDeleteStack([...deleteStack, tech]);
+    } else {
+      setAddStack(addStack.filter((t) => t !== tech));
+    }
   };
 
   const cancelEdit = () => {
     setSelectedStack(stack);
+    setAddStack([]);
+    setDeleteStack([]);
     setSearchTerm("");
     setIsEditing(false);
   };
 
   const saveChanges = () => {
-    console.log("Nuevo stack guardado:", selectedStack);
-    setIsEditing(false);
+    setTriggerSave(true);
   };
 
   const filteredStack = allStack.filter(
@@ -50,25 +85,25 @@ export default function TechStackCard({ stack }: { stack: string[] }) {
   return (
     <ShowcaseSectionSkill
       title="Stack Tecnológico"
-      className="!p-7 h-[6rem]"
+      className="!p-7 h-[8rem]"
       action={
-        isEditing ? (
+        editable &&
+        (isEditing ? (
           <div className="flex gap-2">
-
             <button
-                type="button"
-                onClick={saveChanges}
-                className="rounded-lg bg-[#65417f] px-2 py-[5px] font-medium text-white hover:bg-opacity-90"
-              >
-                <FaCheck size={14} />
-              </button>
-              <button
-                type="button"
-                onClick={cancelEdit}
-                className="text-red-600 hover:text-red-800"
-              >
-                <FaTimes size={14} />
-              </button>
+              type="button"
+              onClick={saveChanges}
+              className="rounded-lg bg-[#65417f] px-2 py-[5px] font-medium text-white hover:bg-opacity-90"
+            >
+              <FaCheck size={14} />
+            </button>
+            <button
+              type="button"
+              onClick={cancelEdit}
+              className="text-red-600 hover:text-red-800"
+            >
+              <FaTimes size={14} />
+            </button>
           </div>
         ) : (
           <button
@@ -78,11 +113,11 @@ export default function TechStackCard({ stack }: { stack: string[] }) {
           >
             <FaRegEdit size={16} />
           </button>
-        )
+        ))
       }
     >
       <div className="flex flex-col justify-between h-full">
-        {isEditing && (
+        {editable && isEditing && (
           <div className="relative">
             <input
               type="text"
@@ -123,7 +158,7 @@ export default function TechStackCard({ stack }: { stack: string[] }) {
                 className="inline-flex items-center gap-1 rounded-full bg-[#e8deef] dark:bg-[#a896b3] dark:border-[#877691] px-4 py-1.5 text-sm text-gray-700 dark:text-gray-800"
               >
                 {tech}
-                {isEditing && (
+                {editable && isEditing && (
                   <button
                     type="button"
                     onClick={() => removeTech(tech)}

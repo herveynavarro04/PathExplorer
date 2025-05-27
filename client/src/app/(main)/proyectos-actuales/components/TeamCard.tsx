@@ -9,9 +9,11 @@ import DeleteMemberModal from "./DeleteMemberModal";
 export default function TeamCard({
   team,
   onFeedbackClick,
+  editable = true,
 }: {
   team: any[];
   onFeedbackClick: (memberName: string) => void;
+  editable?: boolean;
 }) {
   const membersPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,25 +34,26 @@ export default function TeamCard({
   return (
     <div className={cn("rounded-[10px] bg-[#f8f6fa] shadow-1 dark:bg-[#311a42] dark:shadow-card min-h-[24rem] sm:min-h-[20rem] xl:min-h-[27rem] flex flex-col justify-between")}>
       <div className="flex items-center justify-between border-b border-stroke px-4 py-4 sm:px-6 xl:px-7.5 dark:border-dark-3">
-          <h2 className="font-medium text-dark dark:text-white">Equipo</h2>
+        <h2 className="font-medium text-dark dark:text-white">Equipo</h2>
+        {editable && (
           <div className="flex items-center gap-2">
             {isEditing ? (
               <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(false)}
-                    className="rounded-lg bg-[#65417f] px-2 py-[5px] font-medium text-white hover:bg-opacity-90"
-                  >
-                    <FaCheck size={14} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(false)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <FaTimes size={14} />
-                  </button>
-                        </div>
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="rounded-lg bg-[#65417f] px-2 py-[5px] font-medium text-white hover:bg-opacity-90"
+                >
+                  <FaCheck size={14} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="text-red-600 hover:text-red-800"
+                >
+                  <FaTimes size={14} />
+                </button>
+              </div>
             ) : (
               <button
                 onClick={() => setIsEditing(true)}
@@ -60,8 +63,8 @@ export default function TeamCard({
               </button>
             )}
           </div>
-        </div>
-
+        )}
+      </div>
 
       <div className="p-4 sm:p-6 xl:p-10 flex-grow">
         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-4">
@@ -71,7 +74,7 @@ export default function TeamCard({
                 <h4 className="text-[#65417f] dark:text-white font-semibold">
                   {member.name}
                 </h4>
-                {isEditing && (
+                {editable && isEditing && (
                   <button
                     onClick={() => setMemberToDelete(member.name)}
                     className="text-red-500 hover:text-red-700"
@@ -123,7 +126,7 @@ export default function TeamCard({
         )}
       </div>
 
-      {memberToDelete && (
+      {editable && memberToDelete && (
         <DeleteMemberModal
           memberName={memberToDelete}
           onCancel={() => setMemberToDelete(null)}
