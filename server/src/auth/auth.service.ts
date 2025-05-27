@@ -41,6 +41,7 @@ export class AuthService {
       email: employeePayload.email,
       password: hashedPassword,
       rol: employeePayload.rol,
+      level: 1,
       createdAt: new Date(),
       updatedAt: null,
       firstName: employeePayload.firstName,

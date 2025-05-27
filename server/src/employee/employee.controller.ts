@@ -25,7 +25,9 @@ export class EmployeeController {
 
   @Get()
   @UseGuards(JwtGuard)
-  async getEmployee(@Req() req: Request): Promise<GetEmployeeInfoResponseDto> {
+  async getEmployeeInfo(
+    @Req() req: Request,
+  ): Promise<GetEmployeeInfoResponseDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeService.getEmployeeInfo(employeeId);
   }
@@ -64,5 +66,13 @@ export class EmployeeController {
     @Param('employeeId') employeeId: string,
   ): Promise<DeleteEmployeeResponseDto> {
     return this.employeeService.deleteEmployee(employeeId);
+  }
+
+  @Get(':employeeId')
+  @UseGuards(JwtGuard)
+  async getEmployeeInfoById(
+    @Param('employeeId') employeeId: string,
+  ): Promise<GetEmployeeInfoResponseDto> {
+    return this.employeeService.getEmployeeInfo(employeeId);
   }
 }

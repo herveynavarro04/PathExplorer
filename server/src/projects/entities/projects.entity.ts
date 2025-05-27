@@ -38,10 +38,10 @@ export class ProjectsEntity {
   managerId: string;
 
   @Column({ name: 'created_at' })
-  createdAt: string;
+  createdAt: Date;
 
   @Column({ name: 'updated_at' })
-  updatedAt: string;
+  updatedAt: Date;
 
   @Column({ name: 'progress' })
   progress: number;

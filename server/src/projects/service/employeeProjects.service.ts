@@ -5,14 +5,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Not, Repository } from 'typeorm';
-import { ProjectInfoPreviewResponseDto } from '../../projects/dto/response/projectInfoPreview.response.dto';
-import { UpdateEmployeeProjectsRequestDto } from '../../projects/dto/request/updateEmployeeProjects.request.dto';
-import { UpdateEmployeeProjectsResponseDto } from '../../projects/dto/response/updateEmployeeProjects.response.dto';
 import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
+import { In, Not, Repository } from 'typeorm';
+import { UpdateEmployeeProjectsRequestDto } from '../../projects/dto/request/updateEmployeeProjects.request.dto';
+import { ProjectInfoPreviewResponseDto } from '../../projects/dto/response/projectInfoPreview.response.dto';
+import { UpdateEmployeeProjectsResponseDto } from '../../projects/dto/response/updateEmployeeProjects.response.dto';
 import { GetAvailableResponseDto } from '../dto/response/getAvailableProjects.response.dto';
-import { ProjectsEntity } from '../entities/projects.entity';
 import { GetEmployeeProjectsResponseDto } from '../dto/response/getEmployeeProjectsResponse.dto';
+import { GetEmployeesByProjectResponseDto } from '../dto/response/getEmployeesByProject.response.dto';
+import { UpdateEmployeesFromProjectResponseDto } from '../dto/response/upateEmployeesFromProject.response.dto';
+import { ProjectsEntity } from '../entities/projects.entity';
+import { GetPastProjectsResponseDto } from '../dto/response/getPastProjects.response.dto';
 
 @Injectable()
 export class EmployeeProjectsService {
@@ -23,6 +26,93 @@ export class EmployeeProjectsService {
     @InjectRepository(ProjectsEntity)
     private projectsRepository: Repository<ProjectsEntity>,
   ) {}
+
+  async addEmployeesToNewProject(
+    projectId: string,
+    employeesArray: string[],
+  ): Promise<void> {
+    try {
+      await this.employeeProjectRepository.save({
+        projectId: projectId,
+        employeesArray,
+      });
+      Logger.log('Employees added to new project', 'ProjectService');
+    } catch (error) {
+      Logger.error(
+        'Error saving employees to new project',
+        error.stack,
+        'ProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to save employees to new project',
+      );
+    }
+  }
+
+  async getEmployeePastProjectsById(
+    employeeId: string,
+  ): Promise<GetPastProjectsResponseDto[]> {
+    try {
+      const employeeProjects = await this.employeeProjectRepository.find({
+        where: { employeeId: employeeId, status: 'finished' },
+        relations: [
+          'employee',
+          'project',
+          'project.projectTechnologyLink',
+          'project.projectTechnologyLink.technology',
+          'project.employeeProjectLink',
+          'project.employeeProjectLink.employee',
+        ],
+      });
+      if (!employeeProjects) {
+        Logger.warn('Employee not found', 'EmployeeProjectsService');
+        throw new NotFoundException('Employee not found');
+      }
+      Logger.log('Employee projects fetched', 'EmployeeProjectsService');
+      const projects: GetPastProjectsResponseDto[] = employeeProjects.map(
+        (employeeProjectsLink) => {
+          const managerLink =
+            employeeProjectsLink.project.employeeProjectLink?.find(
+              (link) =>
+                link.employee.employeeId ===
+                employeeProjectsLink.project.managerId,
+            );
+          return {
+            projectId: employeeProjectsLink.projectId,
+            projectName: employeeProjectsLink.project.projectName,
+            active: employeeProjectsLink.project.active,
+            position: employeeProjectsLink.position,
+            client: employeeProjectsLink.project.client,
+            startDate: employeeProjectsLink.project.startDate,
+            endDate: employeeProjectsLink.project.endDate,
+            manager: managerLink
+              ? `${managerLink.employee.firstName} ${managerLink.employee.lastName}`
+              : null,
+            technologies:
+              employeeProjectsLink.project.projectTechnologyLink.map(
+                (tech) => ({
+                  technologyId: tech.technologyId,
+                  technologyName: tech.technology.technologyName,
+                }),
+              ),
+          };
+        },
+      );
+      return projects;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during employee projects fetching',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to fetch employee projects',
+      );
+    }
+  }
 
   async getEmployeeAvailableProjects(
     employeeId: string,
@@ -128,19 +218,100 @@ export class EmployeeProjectsService {
     }
   }
 
+  async removeEmployeesFromProject(
+    projectId: string,
+    employeeId: string,
+  ): Promise<UpdateEmployeesFromProjectResponseDto> {
+    try {
+      await this.employeeProjectRepository.update(
+        { projectId: projectId, employeeId: employeeId },
+        { status: 'finished' },
+      );
+      Logger.log(
+        'employee succesfully removed from project',
+        'EmployeeProjectsService',
+      );
+      return {
+        projectId: projectId,
+        employeeId: employeeId,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error removing employee from project',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to remove employee from project',
+      );
+    }
+  }
+
+  async getEmployeesByProject(
+    projectId: string,
+    empoyeeId: string,
+  ): Promise<GetEmployeesByProjectResponseDto[]> {
+    try {
+      const employeesInfo = await this.employeeProjectRepository.find({
+        where: {
+          projectId: projectId,
+          employeeId: Not(In([empoyeeId])),
+          status: 'approved',
+        },
+        select: ['employeeId', 'chargeability', 'position'],
+        relations: ['employee', 'employee.profilePicture'],
+      });
+      Logger.log('employees fetched', 'EmployeeProjectsService');
+      const employees: GetEmployeesByProjectResponseDto[] = employeesInfo.map(
+        (employeeProjectsLink) => ({
+          employeeId: employeeProjectsLink.employeeId,
+          employeeName: `${employeeProjectsLink.employee.firstName} ${employeeProjectsLink.employee.lastName}`,
+          chargeability: employeeProjectsLink.chargeability || null,
+          position: employeeProjectsLink.position,
+          profilePic:
+            employeeProjectsLink.employee?.profilePicture?.imageData?.toString(
+              'base64',
+            ) || process.env.DEFAULT_PROFILE_IMAGE,
+        }),
+      );
+      return employees;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during employees by project fetching transaction',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to fetch employees by projects',
+      );
+    }
+  }
+
   async getManagerProjects(
     employeeId: string,
   ): Promise<GetEmployeeProjectsResponseDto> {
     try {
       const employeeProjects = await this.employeeProjectRepository.find({
         where: { employeeId: employeeId },
-        relations: ['employee', 'project'],
+        relations: [
+          'employee',
+          'project',
+          'project.projectTechnologyLink',
+          'project.projectTechnologyLink.technology',
+        ],
       });
       if (!employeeProjects) {
         Logger.warn('employee not found', 'EmployeeProjectsService');
         throw new NotFoundException('employee not found');
       }
       Logger.log('employee projects fetched', 'EmployeeProjectsService');
+
       const projects: ProjectInfoPreviewResponseDto[] = employeeProjects.map(
         (employeeProjectsLink) => ({
           projectId: employeeProjectsLink.projectId,
@@ -151,7 +322,12 @@ export class EmployeeProjectsService {
           startDate: employeeProjectsLink.project.startDate,
           endDate: employeeProjectsLink.project.endDate,
           active: employeeProjectsLink.project.active,
-          status: employeeProjectsLink.status,
+          technologies: employeeProjectsLink.project.projectTechnologyLink.map(
+            (tech) => ({
+              technologyId: tech.technologyId,
+              technologyName: tech.technology.technologyName,
+            }),
+          ),
         }),
       );
       return {
@@ -162,7 +338,7 @@ export class EmployeeProjectsService {
         throw error;
       }
       Logger.error(
-        'Error during delete transaction',
+        'Error during employee projects fetching transaction',
         error.stack,
         'EmployeeProjectsService',
       );

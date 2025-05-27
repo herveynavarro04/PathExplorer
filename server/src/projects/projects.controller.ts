@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +18,14 @@ import { UpdateEmployeeProjectsResponseDto } from './dto/response/updateEmployee
 import { ProjectsService } from './service/projects.service';
 import { EmployeeProjectsService } from './service/employeeProjects.service';
 import { GetEmployeeProjectsResponseDto } from './dto/response/getEmployeeProjectsResponse.dto';
+import { GetEmployeesByProjectResponseDto } from './dto/response/getEmployeesByProject.response.dto';
+import { UpdateProjectResponseDto } from './dto/response/updateProject.response.dto';
+import { UpdateProjectRequestDto } from './dto/request/updateProject.request.dto';
+import { UpdateProjectTechRequestDto } from './dto/request/updateProjectTechs.request.dto';
+import { UpdateEmployeesFromProjectResponseDto } from './dto/response/upateEmployeesFromProject.response.dto';
+import { PostProjectResponseDto } from './dto/response/postProject.response.dto';
+import { PostProjectRequestDto } from './dto/request/postProject.request.dto';
+import { GetPastProjectsResponseDto } from './dto/response/getPastProjects.response.dto';
 
 @Controller('projects')
 export class ProjectsController {
@@ -24,6 +33,16 @@ export class ProjectsController {
     private projectsService: ProjectsService,
     private employeeProjectsService: EmployeeProjectsService,
   ) {}
+
+  @Post()
+  @UseGuards(JwtGuard)
+  async postProject(
+    @Req() req: Request,
+    @Body() postProjectPayload: PostProjectRequestDto,
+  ): Promise<PostProjectResponseDto> {
+    const employeeId = req.user['employeeId'];
+    return this.projectsService.postProject(employeeId, postProjectPayload);
+  }
 
   @Get('techs')
   @UseGuards(JwtGuard)
@@ -46,7 +65,7 @@ export class ProjectsController {
     @Req() req: Request,
   ): Promise<GetEmployeeProjectsResponseDto> {
     const employeeId = req.user['employeeId'];
-    return this.employeeProjectsService.getEmployeeProjects(employeeId);
+    return this.employeeProjectsService.getManagerProjects(employeeId);
   }
 
   @Get('employee/available')
@@ -79,5 +98,56 @@ export class ProjectsController {
     @Param('projectId') projectId: string,
   ): Promise<ProjectsInfoResponseDto> {
     return this.projectsService.getProjectInfo(projectId);
+  }
+
+  @Patch(':projectId')
+  @UseGuards(JwtGuard)
+  async updateProjetInfo(
+    @Param('projectId') projectId: string,
+    @Body() updatePayload: UpdateProjectRequestDto,
+  ): Promise<UpdateProjectResponseDto> {
+    return this.projectsService.updateProjetInfo(projectId, updatePayload);
+  }
+
+  @Patch(':projectId/techs')
+  @UseGuards(JwtGuard)
+  async updateProjetTechs(
+    @Param('projectId') projectId: string,
+    @Body() updatePayload: UpdateProjectTechRequestDto,
+  ): Promise<UpdateProjectResponseDto> {
+    return this.projectsService.updateProjectTechs(projectId, updatePayload);
+  }
+
+  @Get(':projectId/employees')
+  @UseGuards(JwtGuard)
+  async getEmployeesByProject(
+    @Param('projectId') projectId: string,
+    @Req() req: Request,
+  ): Promise<GetEmployeesByProjectResponseDto[]> {
+    const employeeId = req.user['employeeId'];
+    return this.employeeProjectsService.getEmployeesByProject(
+      projectId,
+      employeeId,
+    );
+  }
+
+  @Patch(':projectId/:employeeId')
+  @UseGuards(JwtGuard)
+  async removeEmployeesFromProject(
+    @Param('projectId') projectId: string,
+    @Param('employeeId') employeeId: string,
+  ): Promise<UpdateEmployeesFromProjectResponseDto> {
+    return this.employeeProjectsService.removeEmployeesFromProject(
+      projectId,
+      employeeId,
+    );
+  }
+
+  @Get('past/:employeeId')
+  @UseGuards(JwtGuard)
+  async getEmployeePastProjectsById(
+    @Param('employeeId') employeeId: string,
+  ): Promise<GetPastProjectsResponseDto[]> {
+    return this.employeeProjectsService.getEmployeePastProjectsById(employeeId);
   }
 }

@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsNotEmpty,
   IsNumber,
@@ -20,8 +21,16 @@ export class ProjectInfoPreviewResponseDto {
   @IsNotEmpty()
   information: string;
 
-  @IsArray()
+  @IsString()
+  @IsOptional()
+  status?: string;
+
+  @IsBoolean()
   @IsNotEmpty()
+  active?: boolean;
+
+  @IsArray()
+  @IsOptional()
   technologies?: TechDto[];
 
   @IsString()

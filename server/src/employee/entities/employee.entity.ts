@@ -26,6 +26,9 @@ export class EmployeeEntity {
   @Column({ name: 'last_name' })
   lastName: string;
 
+  @Column({ name: 'level' })
+  level: number;
+
   @Column({ name: 'created_at' })
   createdAt: Date;
 
