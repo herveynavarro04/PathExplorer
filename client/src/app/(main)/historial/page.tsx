@@ -83,6 +83,10 @@ const Historial: React.FC = () => {
     if (!loadingHistories) setLoading(false);
   }, [loadingHistories]);
 
+  if (loading || !histories) {
+    return <div className="min-h-screen bg-[#d0bfdb]" />;
+  }
+
   return (
     <div>
       <>

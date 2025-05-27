@@ -2,7 +2,7 @@ interface FetchOptions extends RequestInit {
   headers?: HeadersInit;
 }
 
-export const authFetch = async <T = any,>(
+export const authFetch = async <T = any>(
   url: string,
   options: FetchOptions = {}
 ): Promise<T | false> => {
@@ -19,10 +19,12 @@ export const authFetch = async <T = any,>(
         ...(isFormData ? {} : { "Content-Type": "application/json" }),
       },
     });
+    console.log(res);
 
     if (res.ok) {
       return await res.json();
-    } else {
+    } else if (res.status === 500) return false;
+    else {
       localStorage.removeItem("token");
       return false;
     }
