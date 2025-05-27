@@ -139,7 +139,7 @@ export default function Home() {
   return (
     <>
       <div
-        className={`mx-auto w-full max-w-[75rem] transition-opacity duration-500 ${
+        className={`mx-auto w-full max-w-[75rem] h-[10rem] transition-opacity duration-500 ${
           fadeInCards ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -220,21 +220,23 @@ export default function Home() {
           </div>
         )}
 
-        {!forbidden && addProjects.length > 0 && (
-          <div className="w-full flex justify-end mt-15">
-            <div className="flex items-center gap-3 md:gap-4">
-              <div className="bg-[#f3e8ff] text-[#2b2b2b] px-4 py-2 rounded-lg text-center">
-                {appliedMessage}
-              </div>
-              <button
-                className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto"
-                onClick={patchProjects}
-              >
-                Finalizar aplicación
-              </button>
-            </div>
+        <div
+          className={`fixed bottom-[4rem] right-10 z-50 flex items-center gap-3 md:gap-4 transition-opacity duration-300 ease-in-out ${
+            addProjects.length > 0
+              ? "opacity-100 pointer-events-auto select-auto"
+              : "opacity-0 pointer-events-none select-none"
+          }`}
+        >
+          <div className="bg-[#f3e8ff] text-[#2b2b2b] px-4 py-2 rounded-lg text-center shadow-md">
+            {appliedMessage}
           </div>
-        )}
+          <button
+            className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto shadow-md"
+            onClick={patchProjects}
+          >
+            Finalizar aplicación
+          </button>
+        </div>
       </div>
     </>
   );
