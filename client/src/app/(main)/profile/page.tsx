@@ -8,6 +8,7 @@ import SoftSkillsCard from "./SoftSkillsCard";
 import { authFetch } from "@utils/authFetch";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
 import ChargeabilityCard from "./ChargeabilityCard";
+import PeopleLeadApplyModal from "./_components/PeopleLeadApplyModal";
 
 type ProfileData = {
   firstName: string;
@@ -42,6 +43,7 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [fadeIn, setFadeIn] = useState(false);
   const [reloadTrigger, setReloadTrigger] = useState(false);
+  const [showApplyModal, setShowApplyModal] = useState(false);
 
   const url = "http://localhost:8080/api";
 
@@ -93,18 +95,41 @@ const Page = () => {
     setProfile((prev) => ({ ...prev, ...newData }));
   };
 
+
+  const handleApply = () => {
+    // enviar soliciutd al backlend
+    alert("¡Solicitud enviada con éxito!");
+  };
+
   if (loading || !profile || !skills || !userSkills) {
     return <div className="min-h-screen bg-[#d0bfdb]" />;
   }
 
   return (
     <div>
+      {showApplyModal && (
+        <PeopleLeadApplyModal
+          setOpen={setShowApplyModal}
+          onApply={handleApply}
+        />
+      )}
+
       <div
         className={`mx-auto w-full max-w-[970px] transition-opacity duration-500 ${
           fadeIn ? "opacity-100" : "opacity-0"
         }`}
       >
-        <Breadcrumb pageName="Perfil" />
+        <div className="flex items-center justify-between mb-4">
+          <Breadcrumb pageName="Perfil" />
+          <button
+            className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
+            type="button"
+            onClick={() => setShowApplyModal(true)}
+          >
+            Quiero ser People Lead
+          </button>
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
           <PersonalInfoForm
             userData={profile}
