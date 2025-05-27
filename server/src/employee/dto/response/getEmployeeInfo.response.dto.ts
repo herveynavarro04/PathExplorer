@@ -1,9 +1,19 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class GetEmployeeInfoResponseDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  level: number;
 
   @IsString()
   @IsNotEmpty()

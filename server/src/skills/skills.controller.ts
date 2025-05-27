@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtGuard } from 'src/common/Guards/jwt.guards';
 import { SkillsResponseDto } from './dto/response/skills.response.dto';
 import { SkillsService } from './service/skills.service';
@@ -22,7 +30,7 @@ export class SkillsController {
 
   @Get('employee')
   @UseGuards(JwtGuard)
-  async getemployeeSkills(@Req() req: Request): Promise<SkillsResponseDto> {
+  async getEmployeeSkills(@Req() req: Request): Promise<SkillsResponseDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeSkillsService.getEmployeeSkills(employeeId);
   }
@@ -58,5 +66,13 @@ export class SkillsController {
       employeeId,
       updateSkillsPayload,
     );
+  }
+
+  @Get(':employeeId')
+  @UseGuards(JwtGuard)
+  async getEmployeeSkillsById(
+    @Param('employeeId') employeeId: string,
+  ): Promise<SkillsResponseDto> {
+    return this.employeeSkillsService.getEmployeeSkills(employeeId);
   }
 }

@@ -201,6 +201,7 @@ export class EmployeeService {
         email: employeeInfo.email,
         firstName: employeeInfo.firstName,
         lastName: employeeInfo.lastName,
+        level: employeeInfo.level,
         profilePicture:
           employeeInfo?.profilePicture?.imageData?.toString('base64') ||
           process.env.DEFAULT_PROFILE_IMAGE,
