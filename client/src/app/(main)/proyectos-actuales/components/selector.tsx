@@ -79,10 +79,8 @@ const customStyles = {
 
 
 return (
-  <div className="flex items-center gap-4 pb-2">
-    <span className="text-sm font-medium text-gray-800 dark:text-white">
-      Proyecto:
-    </span>
+  <div className="flex items-center  justify-between gap-15 pb-2">
+    <p className="font-extrabold text-black text-2xl">Proyectos Actuales </p>
 
     <Select
       options={options}

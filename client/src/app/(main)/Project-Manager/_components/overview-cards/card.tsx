@@ -12,7 +12,7 @@ export function OverviewCard({ data, Icon }: PropsType) {
         
       <div className=" flex items-center justify-between">
         <dl>
-          <dd className="text-xl font-medium text-dark dark:text-white">{data}</dd>
+          <dd className="text-lg font-medium text-dark dark:text-white">{data}</dd>
         </dl>
         <Icon />
       </div>

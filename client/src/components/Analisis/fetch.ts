@@ -37,6 +37,13 @@ export async function getRecommendedAnalysis() {
         interests: "5",
         skills: "10",
       },
+      {
+        employee_name: "Katia Martín del Campo Valdés",
+        role: "Senior Developer",
+        cargability: "92%",
+        interests: "5",
+        skills: "10",
+      },
       
     ];
   }

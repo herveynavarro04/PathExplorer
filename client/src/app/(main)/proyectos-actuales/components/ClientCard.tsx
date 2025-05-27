@@ -4,7 +4,13 @@ import { useState } from "react";
 import { cn } from "lib/utils";
 import { FaRegEdit, FaCheck, FaTimes } from "react-icons/fa";
 
-export default function ClientCard({ client }: { client: string }) {
+export default function ClientCard({
+  client,
+  editable = true,
+}: {
+  client: string;
+  editable?: boolean;
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [clientName, setClientName] = useState(client);
   const [tempClient, setTempClient] = useState(client);
@@ -21,10 +27,11 @@ export default function ClientCard({ client }: { client: string }) {
 
   return (
     <div className={cn("relative rounded-xl bg-white dark:bg-[#311a42]2")}>
-      <div className="absolute top-2 right-2 flex gap-2">
-        {isEditing ? (
-          <div className="flex gap-2">
-            <button
+      {editable && (
+        <div className="absolute top-2 right-2 flex gap-2">
+          {isEditing ? (
+            <>
+              <button
                 type="button"
                 onClick={handleSave}
                 className="rounded-lg bg-[#65417f] px-2 py-1 font-medium text-white hover:bg-opacity-90"
@@ -38,23 +45,24 @@ export default function ClientCard({ client }: { client: string }) {
               >
                 <FaTimes size={13} />
               </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="text-gray-500 hover:text-[#65417f] dark:text-gray-300 dark:hover:text-white"
-          >
-            <FaRegEdit size={15} />
-          </button>
-        )}
-      </div>
+            </>
+          ) : (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-gray-500 hover:text-[#65417f] dark:text-gray-300 dark:hover:text-white"
+            >
+              <FaRegEdit size={15} />
+            </button>
+          )}
+        </div>
+      )}
 
       <h3 className="pl-5 pt-1 pb-1 text-md text-gray-800 dark:text-white">
         Cliente
       </h3>
 
       <div className="h-12 flex pb-3 items-center justify-center font-bold text-gray-700 dark:text-gray-300">
-        {isEditing ? (
+        {editable && isEditing ? (
           <input
             value={tempClient}
             onChange={(e) => setTempClient(e.target.value)}

@@ -25,7 +25,7 @@ export default function DisplayViewer({
   return (
     <div>
 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-  <div className="flex flex-col gap-6">
+  <div className="flex flex-col gap-8">
     <DatesCard
       startDate={selectedProject.start_date}
       endDate={selectedProject.end_date}
@@ -34,7 +34,7 @@ export default function DisplayViewer({
 
   </div>
 
-  <DescriptionCard description={selectedProject.description} />
+  <DescriptionCard description={selectedProject.description}  />
 
   <TechStackCard stack={selectedProject.stack} />
 

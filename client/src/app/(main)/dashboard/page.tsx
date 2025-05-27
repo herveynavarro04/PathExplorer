@@ -65,44 +65,44 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const loadRecommendedProjects = async () => {
-      const res = validation();
-      if (!res) {
-        router.push("/login");
-        return;
-      }
+  // useEffect(() => {
+  //   const loadRecommendedProjects = async () => {
+  //     const res = validation();
+  //     if (!res) {
+  //       router.push("/login");
+  //       return;
+  //     }
 
-      setProjectsLoading(true);
-      try {
-        const response = await authFetch<ProjectRecomendationsResponseDto>(
-          `${url}/agent/project/recommendations`
-        );
-        if (!response) {
-          router.push("/login");
-          return;
-        }
-        setProjects(response.projectRecs);
-        console.log("✅ Projects fetched");
-        console.log(response);
-      } catch (error) {
-        console.error(`Error fetching recommended projects ${error}`);
-      } finally {
-        setProjectsLoading(false);
-      }
-    };
+  //     setProjectsLoading(true);
+  //     try {
+  //       const response = await authFetch<ProjectRecomendationsResponseDto>(
+  //         `${url}/agent/project/recommendations`
+  //       );
+  //       if (!response) {
+  //         router.push("/login");
+  //         return;
+  //       }
+  //       setProjects(response.projectRecs);
+  //       console.log("✅ Projects fetched");
+  //       console.log(response);
+  //     } catch (error) {
+  //       console.error(`Error fetching recommended projects ${error}`);
+  //     } finally {
+  //       setProjectsLoading(false);
+  //     }
+  //   };
 
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      loadRecommendedProjects();
-      return;
-    }
+  //   if (!hasMounted.current) {
+  //     hasMounted.current = true;
+  //     loadRecommendedProjects();
+  //     return;
+  //   }
 
-    if (triggerRefresh) {
-      loadRecommendedProjects();
-      setTriggerRefresh(false);
-    }
-  }, [triggerRefresh]);
+  //   if (triggerRefresh) {
+  //     loadRecommendedProjects();
+  //     setTriggerRefresh(false);
+  //   }
+  // }, [triggerRefresh]);
 
   useEffect(() => {
     const timer = setTimeout(() => setProjectsLoading(false), 2000);
