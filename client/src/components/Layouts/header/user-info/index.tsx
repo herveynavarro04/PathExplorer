@@ -16,9 +16,10 @@ type UserInfoProps = {
   name: string;
   email: string;
   img: string;
+  level: number;
 };
 
-export function UserInfo({ name, email, img }: UserInfoProps) {
+export function UserInfo({ name, email, img, level }: UserInfoProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -75,7 +76,7 @@ export function UserInfo({ name, email, img }: UserInfoProps) {
 
           <figcaption className="space-y-2 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
-              Nivel 10
+              Nivel {level}
             </div>
 
             <div className="leading-none text-gray-6">{email}</div>
