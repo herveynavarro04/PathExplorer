@@ -100,6 +100,10 @@ export class ProjectsController {
     return this.projectsService.getProjectInfo(projectId);
   }
 
+  // @Get(':projectId/applicants')
+  // @UseGuards(JwtGuard)
+  // async getProjectApplicants(@Param() projectId: string): Promise<any> {}
+
   @Patch(':projectId')
   @UseGuards(JwtGuard)
   async updateProjetInfo(
