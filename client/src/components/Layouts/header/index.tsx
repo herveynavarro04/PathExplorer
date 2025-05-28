@@ -17,6 +17,7 @@ type UserProfile = {
   lastName: string;
   email: string;
   profilePhoto?: string;
+  level: number;
 };
 
 export function Header() {
@@ -49,6 +50,7 @@ export function Header() {
           userData.profilePicture && userData.mimeType
             ? `data:${userData.mimeType};base64,${userData.profilePicture}`
             : "/profile.png",
+        level: userData.level,
       });
     };
 
@@ -92,6 +94,7 @@ export function Header() {
               name={`${user.firstName}`}
               email={user.email}
               img={user.profilePhoto || "/profile.png"}
+              level={user.level}
             />
           )}
         </div>

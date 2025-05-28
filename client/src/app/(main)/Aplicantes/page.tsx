@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import LoadingPage from "components/LoadingPage"; // Adjust path as needed
-import { TopAppsAct } from "components/Proyectos/actualizacion";
-import { TopAppsAuto } from "components/Proyectos/automatizacion";
+import TopApplicants from "components/Aplicaciones/aplicantes";
 
 
 export default function Home() {
@@ -23,11 +22,11 @@ export default function Home() {
             <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-20 2xl:gap-7.5">
                 <div className="col-span-12 grid">
                     <LoadingPage loading={loading}>
-                        <TopAppsAuto />
+                        <TopApplicants />
                     </LoadingPage>
-                    <LoadingPage loading={loading}>
+                    {/* <LoadingPage loading={loading}>
                         <TopAppsAct />
-                    </LoadingPage>
+                    </LoadingPage> */}
                 </div>
             </div>
         </>
