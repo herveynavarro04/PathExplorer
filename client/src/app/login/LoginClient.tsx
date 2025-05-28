@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -10,6 +8,15 @@ import LoadingPage from "components/LoadingPage";
 import LoginError from "./LoginError";
 import Login from "./Login";
 import { authFetch } from "@utils/authFetch";
+import { jwtDecode } from "jwt-decode";
+
+interface JwtPayload {
+  employeeId: string;
+  password: string;
+  rol: string;
+  iat: number;
+  exp: number;
+}
 
 const LoginClient = () => {
   const [loading, setLoading] = useState(true);
@@ -44,6 +51,8 @@ const LoginClient = () => {
         } else {
           const { accessToken } = response;
           localStorage.setItem("token", accessToken);
+          const decoded: any = jwtDecode<JwtPayload>(accessToken);
+          localStorage.setItem("rol", decoded.rol);
           router.push("/dashboard");
         }
       } catch (err) {
@@ -58,7 +67,6 @@ const LoginClient = () => {
   return (
     <LoadingPage loading={loading}>
       <div className="relative h-screen w-full overflow-hidden px-4 flex items-center justify-center">
-
         {/* Background animation */}
         <motion.div
           className="absolute inset-0 z-0"
@@ -79,7 +87,6 @@ const LoginClient = () => {
 
         {/* Main Content */}
         <div className="w-full max-w-7xl h-full grid grid-cols-1 md:grid-cols-2 place-items-center relative z-10">
-          
           {/* Login Form Card */}
           <motion.div
             initial={{ x: -300, opacity: 0 }}
@@ -106,7 +113,9 @@ const LoginClient = () => {
               }}
               onMouseLeave={() => setTilt({ x: 0, y: 0 })}
             >
-              <h1 className="text-3xl font-light text-purple-600 mb-8 text-center">Path Explorer</h1>
+              <h1 className="text-3xl font-light text-purple-600 mb-8 text-center">
+                Path Explorer
+              </h1>
 
               <Login
                 email={email}
@@ -115,8 +124,6 @@ const LoginClient = () => {
                 setPassword={setPassword}
                 setTrigger={setTrigger}
               />
-
-              
             </motion.div>
           </motion.div>
 
