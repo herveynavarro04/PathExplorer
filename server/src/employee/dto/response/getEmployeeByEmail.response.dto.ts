@@ -20,4 +20,8 @@ export class FindEmployeebyEmailResponseDto {
   @IsString()
   @IsNotEmpty()
   lastName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  rol: string;
 }
