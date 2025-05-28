@@ -12,6 +12,8 @@ import { useSidebarContext } from "./sidebar-context";
 export function Sidebar() {
   const pathname = usePathname();
   const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
+  const rol =
+    typeof window !== "undefined" ? localStorage.getItem("rol") : null;
 
   return (
     <>
@@ -57,39 +59,55 @@ export function Sidebar() {
 
           {/* Navigation */}
           <div className="custom-scrollbar mt-6 flex-1 overflow-y-auto pr-3 min-[850px]:mt-10">
-            {NAV_DATA.map((section) => (
-              <div key={section.label} className="mb-6">
-                <h2 className="mb-5 text-sm font-medium text-dark-4 dark:text-dark-6">
-                  {section.label}
-                </h2>
+            {NAV_DATA.map((section) => {
+              const filteredItems = section.items.filter((item) => {
+                if (rol === "STAFF" && item.title === "Project Manager")
+                  return false;
+                if (
+                  rol === "manager" &&
+                  ["Aplicación a Proyectos", "Mis Proyectos"].includes(
+                    item.title
+                  )
+                )
+                  return false;
+                return true;
+              });
 
-                <nav role="navigation" aria-label={section.label}>
-                  <ul className="space-y-2">
-                    {section.items.map((item) => {
-                      const href =
-                        item.url ||
-                        "/" + item.title.toLowerCase().split(" ").join("-");
-                      return (
-                        <li key={item.title}>
-                          <MenuItem
-                            className="flex items-center gap-3 py-3"
-                            as="link"
-                            href={href}
-                            isActive={pathname === href}
-                          >
-                            <item.icon
-                              className="size-6 shrink-0"
-                              aria-hidden="true"
-                            />
-                            <span>{item.title}</span>
-                          </MenuItem>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </nav>
-              </div>
-            ))}
+              if (filteredItems.length === 0) return null;
+
+              return (
+                <div key={section.label} className="mb-6">
+                  <h2 className="mb-5 text-sm font-medium text-dark-4 dark:text-dark-6">
+                    {section.label}
+                  </h2>
+                  <nav role="navigation" aria-label={section.label}>
+                    <ul className="space-y-2">
+                      {filteredItems.map((item) => {
+                        const href =
+                          item.url ||
+                          "/" + item.title.toLowerCase().split(" ").join("-");
+                        return (
+                          <li key={item.title}>
+                            <MenuItem
+                              className="flex items-center gap-3 py-3"
+                              as="link"
+                              href={href}
+                              isActive={pathname === href}
+                            >
+                              <item.icon
+                                className="size-6 shrink-0"
+                                aria-hidden="true"
+                              />
+                              <span>{item.title}</span>
+                            </MenuItem>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </nav>
+                </div>
+              );
+            })}
           </div>
         </div>
       </aside>
