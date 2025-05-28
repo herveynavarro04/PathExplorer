@@ -188,7 +188,7 @@ export default function UserDetailsModal({
 
       setTimeout(() => setFadeIn(true), 25);
     }
-  }, [loadingUserData, loadingSkills]);
+  }, [loadingUserData, loadingSkills, loadingProjects]);
 
   if (loading || !userData || !techSkills || !softSkills || !projects) {
     return null;

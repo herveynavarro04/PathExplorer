@@ -63,15 +63,6 @@ export function TopAnalysis({ employees }: GetManagerEmployeesResponseProps) {
     setSelectedUser(employeeId);
   };
 
-  const handleModalClose = () => {
-    setSelectedUser(null);
-    setModalLoading(false);
-  };
-
-  const handleModalLoadComplete = () => {
-    setModalLoading(false);
-  };
-
   const paginatedRaw = employees.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -210,8 +201,11 @@ export function TopAnalysis({ employees }: GetManagerEmployeesResponseProps) {
       {selectedUser && (
         <UserDetailsModal
           employeeId={selectedUser}
-          onClose={handleModalClose}
-          onLoadComplete={handleModalLoadComplete}
+          onClose={() => {
+            setSelectedUser(null);
+            setModalLoading(false);
+          }}
+          onLoadComplete={() => setModalLoading(false)}
         />
       )}
     </div>
