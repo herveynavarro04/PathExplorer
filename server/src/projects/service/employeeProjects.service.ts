@@ -32,10 +32,15 @@ export class EmployeeProjectsService {
     employeesArray: string[],
   ): Promise<void> {
     try {
-      await this.employeeProjectRepository.save({
-        projectId: projectId,
-        employeesArray,
-      });
+      const register = employeesArray.map((employeeId) => ({
+        projectId,
+        employeeId,
+        status: 'approved',
+        chargeability: null,
+        appliedAt: new Date(),
+        validatedAt: new Date(),
+      }));
+      await this.employeeProjectRepository.save(register);
       Logger.log('Employees added to new project', 'ProjectService');
     } catch (error) {
       Logger.error(
