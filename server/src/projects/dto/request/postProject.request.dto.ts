@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsDate,
@@ -13,10 +14,12 @@ export class PostProjectRequestDto {
   projectName: string;
 
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   startDate: Date;
 
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   endDate: Date;
 

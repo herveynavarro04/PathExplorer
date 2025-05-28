@@ -20,4 +20,8 @@ export class ValidateEmployeeResponseDto {
   @IsString()
   @IsNotEmpty()
   lastName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  rol: string;
 }
