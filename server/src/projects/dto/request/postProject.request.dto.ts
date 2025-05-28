@@ -38,5 +38,9 @@ export class PostProjectRequestDto {
 
   @IsArray()
   @IsOptional()
+  projectTechs?: string[];
+
+  @IsArray()
+  @IsOptional()
   projectEmployees?: string[];
 }
