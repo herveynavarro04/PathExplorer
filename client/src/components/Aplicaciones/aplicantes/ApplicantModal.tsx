@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import Image from "next/image";
-import ProjectUserCard from "components/Analisis/analisis-empleados/ProjectUserCard";
-import TechSkillsUser from "components/Analisis/analisis-empleados/TechSkillsUser";
-import SoftSkillsUser from "components/Analisis/analisis-empleados/SoftSkillsUser";
+import ProjectUserCard from "components/AnalisisEmpleados/analisis-empleados/ProjectUserCard";
+import TechSkillsUser from "components/AnalisisEmpleados/analisis-empleados/TechSkillsUser";
+import SoftSkillsUser from "components/AnalisisEmpleados/analisis-empleados/SoftSkillsUser";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { fetchFeedback } from "../fetchApplicants";
 
@@ -14,7 +14,10 @@ interface ApplicantModalProps {
   employee: any;
 }
 
-export default function ApplicantModal({ onClose, employee }: ApplicantModalProps) {
+export default function ApplicantModal({
+  onClose,
+  employee,
+}: ApplicantModalProps) {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -80,7 +83,10 @@ export default function ApplicantModal({ onClose, employee }: ApplicantModalProp
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         onClose();
       }
     };
@@ -88,14 +94,16 @@ export default function ApplicantModal({ onClose, employee }: ApplicantModalProp
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-    useEffect(() => {
+  useEffect(() => {
     const loadFeedback = async () => {
-        const all = await fetchFeedback();
-        const feedbackForEmployee = all.filter((f: any) => f.employeeId === employee.employeeId);
-        setFeedbackList(feedbackForEmployee);
+      const all = await fetchFeedback();
+      const feedbackForEmployee = all.filter(
+        (f: any) => f.employeeId === employee.employeeId
+      );
+      setFeedbackList(feedbackForEmployee);
     };
     loadFeedback();
-    }, [employee]);
+  }, [employee]);
 
   if (typeof window === "undefined") return null;
 
@@ -108,7 +116,9 @@ export default function ApplicantModal({ onClose, employee }: ApplicantModalProp
         <div className="rounded-xl bg-white dark:bg-[#412859] p-6">
           {!showFeedback ? (
             <>
-              <h2 className="font-semibold text-lg mb-4">Información Personal</h2>
+              <h2 className="font-semibold text-lg mb-4">
+                Información Personal
+              </h2>
               <div className="flex flex-col items-center gap-4">
                 <Image
                   src={employee?.photoUrl || "/profile.png"}
@@ -118,24 +128,42 @@ export default function ApplicantModal({ onClose, employee }: ApplicantModalProp
                   className="rounded-full object-cover"
                 />
                 <div className="w-full">
-                  <label className="text-sm font-medium block mb-1">Nombre</label>
-                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">{employee.name}</div>
+                  <label className="text-sm font-medium block mb-1">
+                    Nombre
+                  </label>
+                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                    {employee.name}
+                  </div>
                 </div>
                 <div className="w-full">
-                  <label className="text-sm font-medium block mb-1">Correo electrónico</label>
-                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">{employee.email || "-"}</div>
+                  <label className="text-sm font-medium block mb-1">
+                    Correo electrónico
+                  </label>
+                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                    {employee.email || "-"}
+                  </div>
                 </div>
                 <div className="w-full">
                   <label className="text-sm font-medium block mb-1">Rol</label>
-                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">{employee.role || "-"}</div>
+                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                    {employee.role || "-"}
+                  </div>
                 </div>
                 <div className="w-full">
-                  <label className="text-sm font-medium block mb-1">Nivel</label>
-                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">{employee.level || "-"}</div>
+                  <label className="text-sm font-medium block mb-1">
+                    Nivel
+                  </label>
+                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                    {employee.level || "-"}
+                  </div>
                 </div>
                 <div className="w-full">
-                  <label className="text-sm font-medium block mb-1">Cargabilidad</label>
-                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">{employee.cargability || "-"}</div>
+                  <label className="text-sm font-medium block mb-1">
+                    Cargabilidad
+                  </label>
+                  <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                    {employee.cargability || "-"}
+                  </div>
                 </div>
               </div>
               <button
@@ -150,12 +178,21 @@ export default function ApplicantModal({ onClose, employee }: ApplicantModalProp
               <h2 className="font-semibold text-lg mb-4">Opiniones Pasadas</h2>
               <div className="flex flex-col gap-4 h-[36rem] overflow-y-auto">
                 {feedbackList.length === 0 ? (
-                  <p className="text-sm">Este empleado no tiene retroalimentaciones registradas.</p>
+                  <p className="text-sm">
+                    Este empleado no tiene retroalimentaciones registradas.
+                  </p>
                 ) : (
                   feedbackList.map((f, index) => (
-                    <div key={index} className="bg-gray-100 dark:bg-[#503866] rounded-md p-3">
-                      <p className="text-sm font-medium mb-1">{f.projectManager}</p>
-                      <span className="text-xs text-gray-600 dark:text-gray-300 mb-2">{f.date}</span>
+                    <div
+                      key={index}
+                      className="bg-gray-100 dark:bg-[#503866] rounded-md p-3"
+                    >
+                      <p className="text-sm font-medium mb-1">
+                        {f.projectManager}
+                      </p>
+                      <span className="text-xs text-gray-600 dark:text-gray-300 mb-2">
+                        {f.date}
+                      </span>
                       <p className="text-sm">{f.comment}</p>
                     </div>
                   ))
