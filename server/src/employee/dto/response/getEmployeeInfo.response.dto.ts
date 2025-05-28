@@ -15,6 +15,10 @@ export class GetEmployeeInfoResponseDto {
   @IsNotEmpty()
   level: number;
 
+  @IsNumber()
+  @IsNotEmpty()
+  chargeability: number;
+
   @IsString()
   @IsNotEmpty()
   firstName: string;

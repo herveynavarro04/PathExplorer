@@ -206,7 +206,7 @@ export class EmployeeService {
         firstName: employeeInfo.firstName,
         lastName: employeeInfo.lastName,
         level: employeeInfo.level,
-        chargeabilitiy:
+        chargeability:
           employeeInfo.employeeProjectLink.find(
             (link) => link.status === 'approved',
           )?.chargeability || null,
