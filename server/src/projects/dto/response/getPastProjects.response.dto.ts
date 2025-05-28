@@ -3,8 +3,6 @@ import {
   IsNotEmpty,
   IsDate,
   IsBoolean,
-  IsOptional,
-  IsNumber,
   IsArray,
 } from 'class-validator';
 import { TechDto } from 'src/common/dto/tech.dto';

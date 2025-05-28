@@ -56,6 +56,12 @@ export class ProjectsService {
         updatedAt: null,
       };
       await this.projectsRepository.save(newProject);
+      const projectTechs = postProjectPayload.projectTechs.map((techId) => ({
+        projectId: projectId,
+        technologyId: techId,
+        createdAt: new Date(),
+      }));
+      await this.projectTechsRepostitory.save(projectTechs);
       if (postProjectPayload.projectEmployees) {
         await this.employeeProjectService.addEmployeesToNewProject(
           projectId,
