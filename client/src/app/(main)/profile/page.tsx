@@ -95,9 +95,7 @@ const Page = () => {
     setProfile((prev) => ({ ...prev, ...newData }));
   };
 
-
   const handleApply = () => {
-    // enviar soliciutd al backlend
     alert("¡Solicitud enviada con éxito!");
   };
 
@@ -115,7 +113,7 @@ const Page = () => {
       )}
 
       <div
-        className={`mx-auto w-full max-w-[970px] transition-opacity duration-500 ${
+        className={`mx-auto w-full max-w-[970px] transition-opacity duration-300 ${
           fadeIn ? "opacity-100" : "opacity-0"
         }`}
       >

@@ -25,6 +25,7 @@ export function UserInfo({ name, email, img, level }: UserInfoProps) {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("rol");
     console.log("Token removed from local storage");
     router.push("/login");
   };
@@ -65,14 +66,14 @@ export function UserInfo({ name, email, img, level }: UserInfoProps) {
         <h2 className="sr-only">User information</h2>
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
-            <Image
-              src={img}
-              alt={`Avatar for ${name}`}
-              width={48}
-              height={48}
-              className="rounded-full object-cover w-16 h-16"
-              role="presentation"
-            />
+          <Image
+            src={img}
+            alt={`Avatar for ${name}`}
+            width={48}
+            height={48}
+            className="rounded-full object-cover w-16 h-16"
+            role="presentation"
+          />
 
           <figcaption className="space-y-2 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">

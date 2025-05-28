@@ -31,6 +31,7 @@ export const authFetch = async <T = any>(
   } catch (err) {
     console.error("Fetch error:", err);
     localStorage.removeItem("token");
+    localStorage.removeItem("rol");
     return false;
   }
 };

@@ -17,13 +17,30 @@ export default function ClientLayout({
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const rol = localStorage.getItem("rol");
 
     if (!token && pathname !== "/login") {
       router.push("/login");
       setAuthorized(false);
-    } else {
-      setAuthorized(true);
+      return;
     }
+
+    if (
+      rol === "manager" &&
+      ["/Aplicacion", "/my-projects"].includes(pathname)
+    ) {
+      router.push("/dashboard");
+      setAuthorized(false);
+      return;
+    }
+
+    if (rol === "STAFF" && pathname === "/Project-Manager") {
+      router.push("/dashboard");
+      setAuthorized(false);
+      return;
+    }
+
+    setAuthorized(true);
   }, [pathname, router]);
 
   if (authorized === null) {
