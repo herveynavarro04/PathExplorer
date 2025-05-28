@@ -36,10 +36,6 @@ export class PostProjectRequestDto {
   @IsNotEmpty()
   limitEmployees: number;
 
-  @IsDate()
-  @IsNotEmpty()
-  createdAt: Date;
-
   @IsArray()
   @IsOptional()
   projectEmployees?: string[];

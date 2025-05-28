@@ -190,7 +190,11 @@ export class EmployeeService {
     try {
       const employeeInfo = await this.employeesRepository.findOne({
         where: { employeeId },
-        relations: ['profilePicture'],
+        relations: [
+          'profilePicture',
+          'employeeProjectLink',
+          'employeeProjectLink.project',
+        ],
       });
       if (!employeeInfo) {
         Logger.warn('Employee not found', 'EmployeeService');
@@ -202,6 +206,14 @@ export class EmployeeService {
         firstName: employeeInfo.firstName,
         lastName: employeeInfo.lastName,
         level: employeeInfo.level,
+        chargeabilitiy:
+          employeeInfo.employeeProjectLink.find(
+            (link) => link.status === 'approved',
+          )?.chargeability || null,
+        position:
+          employeeInfo.employeeProjectLink.find(
+            (link) => link.status === 'approved',
+          )?.position || null,
         profilePicture:
           employeeInfo?.profilePicture?.imageData?.toString('base64') ||
           process.env.DEFAULT_PROFILE_IMAGE,

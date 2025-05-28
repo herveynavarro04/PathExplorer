@@ -30,4 +30,8 @@ export class GetEmployeeInfoResponseDto {
   @IsString()
   @IsOptional()
   mimeType?: string;
+
+  @IsString()
+  @IsOptional()
+  position?: string;
 }
