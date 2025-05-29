@@ -19,7 +19,7 @@
     scrollbar-width: none; /* Firefox */
   }
 
-   .custom-scrollbar {
+  .custom-scrollbar {
     @apply overflow-auto;
   }
 
@@ -34,11 +34,9 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply relative flex-1 rounded-full bg-neutral-200/40 dark:bg-stroke-dark;
   }
-
 }
 
 /* third-party libraries CSS */
-
 
 .noUi-horizontal .noUi-handle:after,
 .noUi-horizontal .noUi-handle:before {
@@ -57,4 +55,23 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .custom-gradient-1 {
   background-image: linear-gradient(145deg, #eef 0%, #fff8fc 100%);
+}
+
+@keyframes toastBar {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
+.toast-success::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background-color: #22c55e;
+  animation: toastBar 4s linear forwards;
 }
