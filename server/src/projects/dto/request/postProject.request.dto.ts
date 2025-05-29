@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { PostProjectEmployeesRequestDto } from './postProjectEmployees.request.dto';
 
 export class PostProjectRequestDto {
   @IsString()
@@ -45,5 +46,5 @@ export class PostProjectRequestDto {
 
   @IsArray()
   @IsOptional()
-  projectEmployees?: string[];
+  projectEmployees?: PostProjectEmployeesRequestDto[];
 }

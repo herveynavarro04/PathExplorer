@@ -16,6 +16,7 @@ import { GetEmployeesByProjectResponseDto } from '../dto/response/getEmployeesBy
 import { UpdateEmployeesFromProjectResponseDto } from '../dto/response/upateEmployeesFromProject.response.dto';
 import { ProjectsEntity } from '../entities/projects.entity';
 import { GetPastProjectsResponseDto } from '../dto/response/getPastProjects.response.dto';
+import { PostProjectEmployeesRequestDto } from '../dto/request/postProjectEmployees.request.dto';
 
 @Injectable()
 export class EmployeeProjectsService {
@@ -29,17 +30,20 @@ export class EmployeeProjectsService {
 
   async addEmployeesToNewProject(
     projectId: string,
-    employeesArray: string[],
+    employeesArray: PostProjectEmployeesRequestDto[],
   ): Promise<void> {
     try {
-      const register = employeesArray.map((employeeId) => ({
-        projectId,
-        employeeId,
-        status: 'approved',
-        chargeability: null,
-        appliedAt: new Date(),
-        validatedAt: new Date(),
-      }));
+      const register: EmployeeProjectEntity[] = employeesArray.map(
+        (employeeInfo) => ({
+          projectId,
+          employeeId: employeeInfo.employeeId,
+          position: employeeInfo.position,
+          status: 'approved',
+          chargeability: null,
+          appliedAt: new Date(),
+          validatedAt: new Date(),
+        }),
+      );
       await this.employeeProjectRepository.save(register);
       Logger.log('Employees added to new project', 'ProjectService');
     } catch (error) {
