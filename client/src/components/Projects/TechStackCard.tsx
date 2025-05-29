@@ -4,42 +4,66 @@ import { useState, useEffect } from "react";
 import { ShowcaseSectionSkill } from "components/Layouts/showcase-skill";
 import { FaRegEdit, FaCheck, FaTimes } from "react-icons/fa";
 
+interface TechStackCardProps {
+  stack: TechDto[];
+  techs: TechDto[];
+  editable: boolean;
+}
+
+interface TechDto {
+  technologyId: string;
+  technologyName: string;
+}
+
 export default function TechStackCard({
   stack,
+  techs,
   editable = true,
-}: {
-  stack: string[];
-  editable?: boolean;
-}) {
+}: TechStackCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStack, setSelectedStack] = useState<string[]>([]);
   const [allStack, setAllStack] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState(false);
-
   const [addStack, setAddStack] = useState<string[]>([]);
   const [deleteStack, setDeleteStack] = useState<string[]>([]);
   const [triggerSave, setTriggerSave] = useState(false);
-
-  const uniqueTech = Array.from(
-    new Set(stack.concat(["PostgreSQL", "Next.js", "Node.js", "React", "MongoDB", "Tailwind", "NestJS", "TypeScript"]))
-  );
+  const [techProjectMap, setTechProjectMap] = useState<Map<
+    string,
+    [string, boolean]
+  > | null>(null);
+  const MAX_TECH = 20;
 
   useEffect(() => {
-    setSelectedStack(stack);
-    setAllStack(uniqueTech);
-    setAddStack([]);
-    setDeleteStack([]);
-  }, [stack]);
+    const techProjecthNames = new Set(stack.map((tech) => tech.technologyName));
+    const techProjectMap = new Map<string, [string, boolean]>(
+      techs.map((tech) => [
+        tech.technologyName,
+        [tech.technologyId, techProjecthNames.has(tech.technologyName)],
+      ])
+    );
+
+    console.log(techProjectMap);
+
+    setTechProjectMap(techProjectMap);
+  }, []);
+
+  useEffect(() => {
+    if (!techProjectMap) return;
+    const selected: string[] = [];
+    const all: string[] = [];
+
+    techProjectMap.forEach(([_, isSelected], skillName) => {
+      all.push(skillName);
+      if (isSelected) selected.push(skillName);
+    });
+
+    setSelectedStack(selected);
+    setAllStack(all);
+  }, [techProjectMap]);
 
   useEffect(() => {
     if (!triggerSave) return;
-
-    // Simular persistencia
-    console.log("🟢 Guardado:");
-    console.log("➕ Añadidos:", addStack);
-    console.log("➖ Eliminados:", deleteStack);
-
     setTriggerSave(false);
     setIsEditing(false);
     setAddStack([]);
@@ -47,45 +71,46 @@ export default function TechStackCard({
   }, [triggerSave]);
 
   const addTech = (tech: string) => {
-    if (!selectedStack.includes(tech)) {
+    if (selectedStack.length < MAX_TECH) {
       setSelectedStack([...selectedStack, tech]);
-      setAddStack([...addStack, tech]);
-      setDeleteStack(deleteStack.filter((t) => t !== tech));
+      setAddStack([...addStack, techProjectMap!.get(tech)![0]]);
       setSearchTerm("");
     }
   };
 
   const removeTech = (tech: string) => {
-    setSelectedStack(selectedStack.filter((item) => item !== tech));
-    if (stack.includes(tech)) {
-      setDeleteStack([...deleteStack, tech]);
-    } else {
-      setAddStack(addStack.filter((t) => t !== tech));
-    }
+    setSelectedStack(selectedStack.filter((t) => t !== tech));
+    setDeleteStack([...deleteStack, techProjectMap.get(tech)[0]]);
   };
 
   const cancelEdit = () => {
-    setSelectedStack(stack);
+    if (!techProjectMap) return;
+    const selected: string[] = [];
+
+    techProjectMap.forEach(([_, isSelected], tech) => {
+      if (isSelected) selected.push(tech);
+    });
+
+    setSelectedStack(selected);
     setAddStack([]);
     setDeleteStack([]);
     setSearchTerm("");
     setIsEditing(false);
   };
-
   const saveChanges = () => {
     setTriggerSave(true);
   };
 
   const filteredStack = allStack.filter(
     (tech) =>
-      tech.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      !selectedStack.includes(tech)
+      !selectedStack.includes(tech) &&
+      tech.toLowerCase().includes(searchTerm.toLocaleLowerCase())
   );
 
   return (
     <ShowcaseSectionSkill
       title="Stack Tecnológico"
-      className="!p-7 h-[8rem]"
+      className="!p-3 h-[8rem]"
       action={
         editable &&
         (isEditing ? (
@@ -130,7 +155,7 @@ export default function TechStackCard({
             />
             {isFocused && (
               <div className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
-                {filteredStack.slice(0, 10).map((tech) => (
+                {filteredStack.map((tech) => (
                   <div
                     key={tech}
                     className="cursor-pointer px-4 py-2 hover:bg-gray-2 dark:hover:bg-gray-7"

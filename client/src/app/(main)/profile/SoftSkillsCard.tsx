@@ -175,7 +175,6 @@ const SoftSkillsCard = ({ skills, userSkills, url }: SoftSkillsCardProps) => {
               <div className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border dark:border-dark-3 dark:bg-dark-2 border-gray-3 bg-white text-sm shadow-lg">
                 {(searchTerm === "" ? allSoftSkills : filteredSkills)
                   .filter((skill) => !selectedSoftSkills.includes(skill))
-                  .slice(0, 10)
                   .map((skill) => (
                     <div
                       key={skill}

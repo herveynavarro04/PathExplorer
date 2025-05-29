@@ -4,19 +4,17 @@ import { useState } from "react";
 import { cn } from "lib/utils";
 import { FaRegEdit, FaCheck, FaTimes } from "react-icons/fa";
 
-type PropsType = {
+interface DatesCardProps {
   startDate: Date;
   endDate: Date;
-  className?: string;
   editable?: boolean;
-};
+}
 
 export default function DatesCard({
   startDate,
   endDate,
-  className,
   editable = true,
-}: PropsType) {
+}: DatesCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [currentStartDate, setCurrentStartDate] = useState(startDate);
   const [currentEndDate, setCurrentEndDate] = useState(endDate);
@@ -38,8 +36,7 @@ export default function DatesCard({
   return (
     <div
       className={cn(
-        "relative rounded-xl bg-white dark:bg-[#311a42] px-4 py-3 sm:px-6 sm:py-4 text-sm text-gray-700 dark:text-gray-300",
-        className
+        "relative rounded-xl bg-white dark:bg-[#311a42] px-4 py-3 sm:px-6 sm:py-4 text-sm text-gray-700 dark:text-gray-300"
       )}
     >
       {editable && (
@@ -72,7 +69,9 @@ export default function DatesCard({
 
       <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-6">
         <div className="flex-1">
-          <p className="text-sm font-medium text-black dark:text-white">Inicio</p>
+          <p className="text-sm font-medium text-black dark:text-white">
+            Inicio
+          </p>
           {editable && isEditing ? (
             <input
               type="date"
