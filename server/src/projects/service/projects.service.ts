@@ -49,7 +49,7 @@ export class ProjectsService {
         managerId: employeeId,
         projectId: projectId,
         progress: 0,
-        active: false,
+        active: true,
         full: projectFull,
         ...postProjectPayload,
         createdAt: new Date(),

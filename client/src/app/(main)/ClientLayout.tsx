@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Sidebar } from "components/Layouts/sidebar";
 import { Header } from "components/Layouts/header";
 import Loading from "components/Loading";
+import { Toaster } from "react-hot-toast";
 
 export default function ClientLayout({
   children,
@@ -64,6 +65,25 @@ export default function ClientLayout({
           {children}
         </main>
       </div>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            borderRadius: "8px",
+            background: "#fff",
+            color: "#333",
+            boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
+          },
+          success: {
+            iconTheme: {
+              primary: "#22c55e",
+              secondary: "#e7f9ee",
+            },
+            className: "relative overflow-hidden",
+          },
+        }}
+      />
     </div>
   );
 }
