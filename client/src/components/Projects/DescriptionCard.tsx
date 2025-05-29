@@ -4,7 +4,18 @@ import { useState } from "react";
 import { FaRegEdit, FaCheck, FaTimes } from "react-icons/fa";
 import { cn } from "lib/utils";
 
-export default function DescriptionCard({description, editable = true,}: {description: string; editable?: boolean;}) {
+interface DescriptionCardProps {
+  description: string;
+  editable: boolean;
+}
+
+export default function DescriptionCard({
+  description,
+  editable = true,
+}: {
+  description: string;
+  editable?: boolean;
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [desc, setDesc] = useState(description);
   const [tempDesc, setTempDesc] = useState(description);
@@ -72,5 +83,4 @@ export default function DescriptionCard({description, editable = true,}: {descri
       </div>
     </div>
   );
-
 }

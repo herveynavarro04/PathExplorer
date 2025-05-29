@@ -6,23 +6,33 @@ import { cn } from "lib/utils";
 import { FaRegEdit, FaCheck, FaTimes } from "react-icons/fa";
 import DeleteMemberModal from "./DeleteMemberModal";
 
-export default function TeamCard({
-  team,
-  onFeedbackClick,
-  editable = true,
-}: {
-  team: any[];
+interface GetEmployeesByProjectResponseDto {
+  profilePic: string;
+  position: string;
+  employeeName: string;
+  employeeId: string;
+  chargeability: number;
+}
+
+interface TeamCardProps {
+  employees: GetEmployeesByProjectResponseDto[];
   onFeedbackClick: (memberName: string) => void;
   editable?: boolean;
-}) {
+}
+
+export default function TeamCard({
+  employees,
+  onFeedbackClick,
+  editable = true,
+}: TeamCardProps) {
   const membersPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
   const [isEditing, setIsEditing] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState<string | null>(null);
 
-  const totalPages = Math.ceil(team.length / membersPerPage);
+  const totalPages = Math.ceil(employees.length / membersPerPage);
   const startIdx = (currentPage - 1) * membersPerPage;
-  const currentMembers = team.slice(startIdx, startIdx + membersPerPage);
+  const currentMembers = employees.slice(startIdx, startIdx + membersPerPage);
 
   const handleDeleteConfirm = () => {
     if (memberToDelete) {
@@ -32,7 +42,11 @@ export default function TeamCard({
   };
 
   return (
-    <div className={cn("rounded-[10px] bg-[#f8f6fa] shadow-1 dark:bg-[#311a42] dark:shadow-card min-h-[24rem] sm:min-h-[20rem] xl:min-h-[27rem] flex flex-col justify-between")}>
+    <div
+      className={cn(
+        "rounded-[10px] bg-[#f8f6fa] shadow-1 dark:bg-[#311a42] dark:shadow-card min-h-[24rem] sm:min-h-[20rem] xl:min-h-[27rem] flex flex-col justify-between"
+      )}
+    >
       <div className="flex items-center justify-between border-b border-stroke px-4 py-4 sm:px-6 xl:px-7.5 dark:border-dark-3">
         <h2 className="font-medium text-dark dark:text-white">Equipo</h2>
         {editable && (
@@ -68,15 +82,15 @@ export default function TeamCard({
 
       <div className="p-4 sm:p-6 xl:p-10 flex-grow">
         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-4">
-          {currentMembers.map((member, i) => (
-            <div key={i} className="text-center relative">
+          {currentMembers.map((member) => (
+            <div key={member.employeeId} className="text-center relative">
               <div className="flex justify-center items-center gap-2 pb-1">
                 <h4 className="text-[#65417f] dark:text-white font-semibold">
-                  {member.name}
+                  {member.employeeName}
                 </h4>
                 {editable && isEditing && (
                   <button
-                    onClick={() => setMemberToDelete(member.name)}
+                    onClick={() => setMemberToDelete(member.employeeName)}
                     className="text-red-500 hover:text-red-700"
                   >
                     <FaTimes size={12} />
@@ -85,17 +99,22 @@ export default function TeamCard({
               </div>
 
               <Image
-                src="/profile.png"
-                alt={member.name}
-                width={80}
-                height={80}
-                className="mx-auto rounded-xl mb-2 object-cover w-20 h-20 pb-3"
+                src={
+                  member.profilePic
+                    ? `data:image/png;base64,${member.profilePic}`
+                    : "/profile.png"
+                }
+                alt="Foto de perfil"
+                width={180}
+                height={180}
+                className="rounded-full object-cover"
               />
-              <p className="text-sm">{member.role}</p>
-              <p className="text-sm pb-3">{member.cargability}</p>
+
+              <p className="text-sm">{member.position}</p>
+              <p className="text-sm pb-3">{member.chargeability}</p>
               <button
                 className="text-sm text-[#5a3bb3] dark:text-white mt-1 hover:bg-[#ece5f1] dark:hover:bg-[#FFFFFF1A] rounded-[10px] p-2"
-                onClick={() => onFeedbackClick(member.name)}
+                onClick={() => onFeedbackClick(member.employeeName)}
               >
                 + Añadir retroalimentación
               </button>
@@ -116,7 +135,9 @@ export default function TeamCard({
               {currentPage} de {totalPages}
             </span>
             <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
               className="px-4 py-1 bg-gray-200 rounded-md disabled:opacity-50"
             >

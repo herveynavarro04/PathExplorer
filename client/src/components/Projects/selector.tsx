@@ -4,10 +4,29 @@ import Select from "react-select";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
+interface ProjectInfoPreviewResponseDto {
+  projectId: string;
+  projectName: string;
+  information: string;
+  status?: string;
+  active?: boolean;
+  technologies?: TechDto[];
+  client?: string;
+  startDate?: Date;
+  endDate?: Date;
+  progress?: number;
+}
+
+interface TechDto {
+  technologyId: string;
+  technologyName: string;
+}
+
 type ProjectViewerProps = {
-  projects: any[];
-  selectedProject: any;
-  setSelectedProject: (project: any) => void;
+  projects: ProjectInfoPreviewResponseDto[];
+  selectedProject: ProjectInfoPreviewResponseDto;
+  setSelectedProject: (project: ProjectInfoPreviewResponseDto) => void;
+
   terminated?: boolean;
 };
 
@@ -21,7 +40,9 @@ export default function ProjectViewer({
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    setOptions(projects.map((p) => ({ label: p.name, value: p.id })));
+    setOptions(
+      projects.map((p) => ({ label: p.projectName, value: p.projectId }))
+    );
   }, [projects]);
 
   const customStyles = {
@@ -75,6 +96,10 @@ export default function ProjectViewer({
     }),
   };
 
+  useEffect(() => {
+    console.log(selectedProject);
+  }, [selectedProject]);
+
   return (
     <div className="w-full flex items-center justify-between gap-6 pb-2">
       <p className="font-extrabold text-black text-2xl whitespace-nowrap shrink-0">
@@ -83,10 +108,10 @@ export default function ProjectViewer({
 
       <Select
         options={options}
-        value={options.find((o) => o.value === selectedProject?.id)}
+        value={options.find((o) => o.value === selectedProject?.projectId)}
         onChange={(selectedOption) =>
           setSelectedProject(
-            projects.find((p) => p.id === selectedOption?.value)
+            projects.find((p) => p.projectId === selectedOption?.value)
           )
         }
         styles={customStyles}

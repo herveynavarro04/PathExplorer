@@ -19,7 +19,6 @@ export const authFetch = async <T = any>(
         ...(isFormData ? {} : { "Content-Type": "application/json" }),
       },
     });
-    console.log(res);
 
     if (res.ok) {
       return await res.json();
