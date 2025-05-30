@@ -25,19 +25,17 @@ interface GetEmployeesResponseDto {
 interface GetManagerEmployeesResponseProps {
   employees: GetEmployeesResponseDto[];
   onEmployeeSelect?: (employeeId: string) => void;
-  selectedEmployeeIds?: string[];
+  selectedEmployees?: { employeeId: string; position: string }[];
 }
 
 export function EmployeesTable({
   employees,
   onEmployeeSelect,
-  selectedEmployeeIds,
+  selectedEmployees = [],
 }: GetManagerEmployeesResponseProps) {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [sortKey, setSortKey] = useState<
-    | "position"
-    | "chargeability"
     | "interestCount"
     | "skillCount"
     | "employee_name"
@@ -48,7 +46,7 @@ export function EmployeesTable({
   const totalPages = Math.ceil(employees.length / itemsPerPage);
 
   const availableEmployees = employees.filter(
-    (e) => !selectedEmployeeIds?.includes(e.employeeId)
+    (e) => !selectedEmployees.some((se) => se.employeeId === e.employeeId)
   );
 
   const paginatedRaw = availableEmployees.slice(
@@ -58,8 +56,6 @@ export function EmployeesTable({
 
   const handleSort = (
     key:
-      | "position"
-      | "chargeability"
       | "interestCount"
       | "skillCount"
       | "employee_name"
@@ -106,8 +102,6 @@ export function EmployeesTable({
   function renderHeader(
     label: string,
     key:
-      | "position"
-      | "chargeability"
       | "interestCount"
       | "skillCount"
       | "employee_name"
@@ -152,8 +146,6 @@ export function EmployeesTable({
         <TableHeader>
           <TableRow className="border-none uppercase [&>th]:text-center dark:hover:bg-transparent">
             {renderHeader("Nombre", "employee_name")}
-            {renderHeader("Puesto", "position")}
-            {renderHeader("Cargabilidad", "chargeability")}
             {renderHeader("Intereses", "interestCount")}
             {renderHeader("Habilidades", "skillCount")}
           </TableRow>
@@ -169,8 +161,6 @@ export function EmployeesTable({
               <TableCell className="text-left">
                 {employee.firstName + " " + employee.lastName}
               </TableCell>
-              <TableCell>{employee.position}</TableCell>
-              <TableCell>{employee.chargeability}</TableCell>
               <TableCell>{employee.interestCount}</TableCell>
               <TableCell>{employee.skillCount}</TableCell>
             </TableRow>

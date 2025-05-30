@@ -60,7 +60,7 @@ export function UserInfo({ name, email, img, level }: UserInfoProps) {
       </DropdownTrigger>
 
       <DropdownContent
-        className="border border-stroke bg-[#f8f6fa] shadow-md dark:border-[#1b0e23] dark:bg-[#2e2137] min-[230px]:min-w-[17.5rem]"
+        className="border border-stroke bg-[#f8f6fa] shadow-md dark:border-[#1b0e23] dark:bg-[#2e2137] min-[290px]:min-w-[20rem]"
         align="end"
       >
         <h2 className="sr-only">User information</h2>

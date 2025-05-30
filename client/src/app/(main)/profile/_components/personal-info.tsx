@@ -57,6 +57,16 @@ export function PersonalInfoForm({
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+  const resolvedImageSrc = (() => {
+  if (previewUrl) {
+    return previewUrl;
+  } else if (userData.url_pic && userData.mime_type && userData.url_pic.trim() !== "") {
+    return `data:${userData.mime_type};base64,${userData.url_pic}`;
+  } else {
+    return "/profile.png";
+  }
+})();
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setGlobalLoading(true);
@@ -91,6 +101,7 @@ export function PersonalInfoForm({
         ? `data:${data.mimeType};base64,${data.profilePicture}?${Date.now()}`
         : `/profile.png?${Date.now()}`
     );
+
     updateProfileState({
       url_pic: data.profilePicture,
       mime_type: data.mimeType,
@@ -165,21 +176,18 @@ export function PersonalInfoForm({
         >
           <div className="flex flex-col items-center justify-center ">
             <Image
-              src={
-                previewUrl.startsWith("data:") || previewUrl.startsWith("blob:")
-                  ? previewUrl
-                  : userData.url_pic && userData.mime_type
-                    ? `data:${userData.mime_type};base64,${userData.url_pic}`
-                    : "/profile.png"
-              }
-              width={isEditing ? 66 : 180}
-              height={isEditing ? 66 : 180}
-              alt="User"
-              className={`rounded-full object-cover transition-all duration-300 ease-in-out ${
-                isEditing ? "size-33" : "size-56"
-              }`}
-              quality={90}
-            />
+  src={resolvedImageSrc}
+  width={isEditing ? 66 : 180}
+  height={isEditing ? 66 : 180}
+  alt="User"
+  onError={(e) => {
+    e.currentTarget.src = "/profile.png";
+  }}
+  className={`rounded-full object-cover transition-all duration-300 ease-in-out ${
+    isEditing ? "size-33" : "size-56"
+  }`}
+  quality={90}
+/>
 
             {isEditing && (userData.url_pic || selectedImage) && (
               <button

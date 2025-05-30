@@ -278,14 +278,7 @@ export default function UserDetailsRegisterModal({
                       {userData.email}
                     </div>
                   </div>
-                  <div className="w-full">
-                    <label className="text-sm font-medium block mb-1">
-                      Puesto
-                    </label>
-                    <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                      {userData.position}
-                    </div>
-                  </div>
+
                   <div className="w-full">
                     <label className="text-sm font-medium block mb-1">
                       Nivel
@@ -294,14 +287,7 @@ export default function UserDetailsRegisterModal({
                       {userData.level}
                     </div>
                   </div>
-                  <div className="w-full">
-                    <label className="text-sm font-medium block mb-1">
-                      Cargabilidad
-                    </label>
-                    <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                      {userData.chargeability}
-                    </div>
-                  </div>
+
                 </div>
                 <button
                   onClick={() => setShowFeedback(true)}
