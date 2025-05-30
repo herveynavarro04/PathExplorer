@@ -54,12 +54,12 @@ export default function RegisterProjectPage() {
   const [projectType, setProjectType] = useState("");
   const [client, setClient] = useState("");
   const [information, setInformation] = useState("");
-  const [limitEmployees, setLimitEmployees] = useState(0);
+  const [limitEmployees, setLimitEmployees] = useState<string>("");
   const [projectTechs, setProjectTechs] = useState<string[]>([]);
   const [allTechs, setAllTechs] = useState<TechDto[]>([]);
-  const [projectEmployees, setProjectEmployees] = useState<(string | null)[]>(
-    []
-  );
+  const [projectEmployees, setProjectEmployees] = useState<
+  { employeeId: string | null; position: string }[]
+>([]);
   const [selectingIndex, setSelectingIndex] = useState<number | null>(null);
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
   const [employees, setEmployees] = useState<GetEmployeesResponseDto[]>([]);
@@ -75,7 +75,7 @@ export default function RegisterProjectPage() {
     const loadEmployees = async () => {
       try {
         const response = await authFetch<GetManagerEmployeesResponseDto>(
-          `${url}/employee/manager/employees`
+          `${url}/employee/available/employees`
         );
 
         if (!response) {
@@ -168,7 +168,12 @@ export default function RegisterProjectPage() {
       information,
       limitEmployees: Number(limitEmployees),
       projectTechs,
-      projectEmployees: projectEmployees.filter(Boolean),
+      projectEmployees: projectEmployees
+    .filter((emp) => emp.employeeId)
+    .map((emp) => ({
+      employeeId: emp.employeeId,
+      position: emp.position,
+    })),
     };
 
     console.log("📦 Payload being sent:", payload);
@@ -287,74 +292,95 @@ export default function RegisterProjectPage() {
             </div>
 
             <input
-              type="number"
-              min={0}
-              placeholder="Límite de Empleados"
-              value={limitEmployees}
-              onChange={(e) => {
-                const value = Number(e.target.value);
+        type="number"
+        min={0}
+        placeholder="Límite de Empleados"
+        value={limitEmployees}
+        onChange={(e) => {
+          const raw = e.target.value;
 
-                const safeValue = isNaN(value) || value < 0 ? 0 : value;
+          // Si está vacío, permitirlo
+          if (raw === "") {
+            setLimitEmployees("");
+            setProjectEmployees([]);
+            return;
+          }
 
-                setLimitEmployees(safeValue);
+          // Si contiene solo ceros iniciales, evitarlo
+          const parsed = Number(raw);
+          if (!isNaN(parsed) && parsed >= 0) {
+            setLimitEmployees(String(parsed)); // elimina ceros a la izquierda
 
-                const updated = [...projectEmployees];
-                updated.length = safeValue;
-                for (let i = 0; i < safeValue; i++) {
-                  if (updated[i] === undefined) updated[i] = null;
-                }
-                setProjectEmployees(updated);
-              }}
-              className="w-full p-3 border rounded-md bg-[#f3edf7] dark:bg-[#4b2e67] text-gray-900 dark:text-white"
-              required
-            />
-            {limitEmployees > 0 && (
+            const updated = [...projectEmployees];
+            updated.length = parsed;
+            for (let i = 0; i < parsed; i++) {
+              if (!updated[i]) updated[i] = { employeeId: null, position: "" };
+            }
+            setProjectEmployees(updated);
+          }
+        }}
+        className="w-full p-3 border rounded-md bg-[#f3edf7] dark:bg-[#4b2e67] text-gray-900 dark:text-white"
+      />
+            {limitEmployees !== "" && Number(limitEmployees) > 0 && (
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
                 Asignar empleados es opcional. Puedes dejar el proyecto abierto
-                para que los aplicantes se postulen.
+                para que los aplicantes se postulen. Al asignar empleados, asegúrate de asignar su puesto dentro del proyecto.
               </p>
             )}
             <div className="flex flex-wrap gap-3 mt-2">
-              {projectEmployees.map((empId, index) => {
-                const employee = employees.find((e) => e.employeeId === empId);
+              {projectEmployees.map((emp, index) => {
+  const employee = employees.find((e) => e.employeeId === emp.employeeId);
 
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 bg-[#ece5f1] dark:bg-[#4b2e67] px-3 py-2 rounded-md border border-gray-400"
-                  >
-                    {empId && employee ? (
-                      <>
-                        <span className="text-sm text-gray-800 dark:text-white">
-                          {employee.firstName} {employee.lastName}
-                        </span>
-                        <button
-                          onClick={() => {
-                            const updated = [...projectEmployees];
-                            updated[index] = null;
-                            setProjectEmployees(updated);
-                          }}
-                          className="text-red-500 hover:text-red-700 font-bold"
-                          title="Eliminar"
-                        >
-                          ✖
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectingIndex(index);
-                          setEmployeeModalOpen(true);
-                        }}
-                        className="w-32 h-10 flex items-center justify-center text-sm rounded-md active:border-violet-800"
-                      >
-                        +
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
+  return (
+    <div
+      key={index}
+      className="flex items-center gap-2 bg-[#ece5f1] dark:bg-[#4b2e67] px-3 py-2 rounded-md border border-gray-400"
+    >
+      {emp.employeeId && employee ? (
+        <>
+          <span className="text-sm text-gray-800 dark:text-white">
+            {employee.firstName} {employee.lastName}
+          </span>
+          <input
+            type="text"
+            placeholder="Puesto"
+            value={emp.position}
+            onChange={(e) => {
+              const updated = [...projectEmployees];
+              updated[index].position = e.target.value;
+              setProjectEmployees(updated);
+            }}
+            className="ml-2 p-1 rounded border text-sm"
+            style={{ minWidth: 100 }}
+            required
+          />
+          <button
+            onClick={() => {
+              const updated = [...projectEmployees];
+              updated[index] = { employeeId: null, position: "" };
+              setProjectEmployees(updated);
+            }}
+            className="text-red-500 hover:text-red-700 font-bold"
+            title="Eliminar"
+          >
+            ✖
+          </button>
+        </>
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            setSelectingIndex(index);
+            setEmployeeModalOpen(true);
+          }}
+          className="w-32 h-10 flex items-center justify-center text-sm rounded-md active:border-violet-800"
+        >
+          +
+        </button>
+      )}
+    </div>
+  );
+})}
             </div>
 
             {employeeModalOpen && (
@@ -369,23 +395,20 @@ export default function RegisterProjectPage() {
                 </div>
                 <EmployeesTable
                   employees={employees}
-                  selectedEmployeeIds={
-                    projectEmployees.filter(Boolean) as string[]
-                  }
+                  selectedEmployees={projectEmployees.filter((emp) => emp.employeeId) as { employeeId: string; position: string }[]}
                   onEmployeeSelect={(employeeId: string) => {
-                    if (selectingIndex !== null) {
-                      if (projectEmployees.includes(employeeId)) {
-                        toast.error("Este empleado ya ha sido asignado.");
-                        return;
-                      }
-
-                      const updated = [...projectEmployees];
-                      updated[selectingIndex] = employeeId;
-                      setProjectEmployees(updated);
-                      setEmployeeModalOpen(false);
-                      setSelectingIndex(null);
-                    }
-                  }}
+  if (selectingIndex !== null) {
+    if (projectEmployees.some((emp) => emp.employeeId === employeeId)) {
+      toast.error("Este empleado ya ha sido asignado.");
+      return;
+    }
+    const updated = [...projectEmployees];
+    updated[selectingIndex] = { employeeId, position: "" };
+    setProjectEmployees(updated);
+    setEmployeeModalOpen(false);
+    setSelectingIndex(null);
+  }
+}}
                 />
               </div>
             )}

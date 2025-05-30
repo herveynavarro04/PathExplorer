@@ -14,6 +14,7 @@ type ProfileData = {
   firstName: string;
   lastName: string;
   password: string;
+  level?:number;
   email: string;
   url_pic: string;
   position: string;
@@ -71,6 +72,7 @@ const Page = () => {
           firstName: userData.firstName,
           lastName: userData.lastName,
           password: userData.password,
+          level: userData.level,
           email: userData.email,
           url_pic: userData.profilePicture || "/profile.png",
           position: userData.position || "Front-end Developer",
@@ -119,13 +121,15 @@ const Page = () => {
       >
         <div className="flex items-center justify-between mb-4">
           <Breadcrumb pageName="Perfil" />
-          <button
-            className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
-            type="button"
-            onClick={() => setShowApplyModal(true)}
-          >
-            Quiero ser People Lead
-          </button>
+          {profile.level && profile.level >= 5 && profile.level <= 9 && (
+            <button
+              className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
+              type="button"
+              onClick={() => setShowApplyModal(true)}
+            >
+              Quiero ser People Lead
+            </button>
+          )}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">

@@ -39,16 +39,17 @@ const PeopleLeadApplyModal = ({ setOpen, onApply }: PeopleLeadApplyModalProps) =
           isVisible ? "animate-fadeInModal" : "animate-fadeOutModal"
         }`}
       >
-        <h2 className="text-xl font-semibold mb-4">Aplicación para People Lead</h2>
+        <h2 className="text-xl font-semibold mb-4">Convertirse en People Lead</h2>
         <p className="mb-6 text-sm text-gray-700 dark:text-gray-300">
-          Has llegado al nivel requerido para ser People Lead. 
-          Un People Lead da seguimiento a las metas de sus compañeros y actúa como mentor.
+          Has alcanzado el nivel necesario para convertirte en People Lead. Al confirmar, 
+          <strong> serás asignado automáticamente </strong> a este rol.
           <br />
           <br />
-          Serás responsable de guiar a 5 empleados, gestionando sus metas, cursos y certificaciones.
+          Como People Lead, serás responsable de guiar a otros empleados, hacer seguimiento de sus metas,
+          cursos y certificaciones.
           <br />
           <br />
-          ¿Deseas aplicar para este rol?
+          ¿Deseas asumir este nuevo rol?
         </p>
         <div className="flex justify-end gap-4">
           <button
@@ -64,7 +65,7 @@ const PeopleLeadApplyModal = ({ setOpen, onApply }: PeopleLeadApplyModalProps) =
             }}
             className="px-4 py-2 text-sm font-semibold bg-[#65417f] text-white rounded-md hover:bg-opacity-90 transition"
           >
-            Aplicar
+            Confirmar
           </button>
         </div>
       </div>
