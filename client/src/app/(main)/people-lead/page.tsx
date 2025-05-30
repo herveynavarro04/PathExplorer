@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 // import { TopProjects } from "components/RecommendedProjects/top-projects";
 import { OverviewCardsGroup } from "./components/overview-cards";
 import LoadingPage from "components/LoadingPage"; // Adjust path as needed
-import { TopAnalysis } from "components/AnalisisEmpleados/analisis-empleados";
+// import { TopAnalysis } from "components/AnalisisEmpleados/analisis-empleados";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
 import { TeamCardGroup } from "./components/team-card";
 
