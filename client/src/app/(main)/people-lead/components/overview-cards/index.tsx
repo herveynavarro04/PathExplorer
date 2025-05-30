@@ -13,7 +13,7 @@ export function OverviewCardsGroup() {
       />
       </Link>
 
-      <Link href="/Aplicantes">
+      <Link href="/Notificaciones">
       <OverviewCard
         data="Notificaciones"
         Icon={icons.ArrowRight}

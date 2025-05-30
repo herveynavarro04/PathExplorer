@@ -9,6 +9,7 @@ import { authFetch } from "@utils/authFetch";
 interface CourseModalProps {
   courseId: string;
   handleOnClose: () => void;
+  onCourseUpdated: (courseId: string) => void;
 }
 
 interface GetCourseInfoDto {
@@ -21,7 +22,7 @@ interface GetCourseInfoDto {
   createdAt: string;
 }
 
-const CourseModal = ({ courseId, handleOnClose }: CourseModalProps) => {
+const CourseModal = ({ courseId, handleOnClose, onCourseUpdated }: CourseModalProps) => {
   const [course, setCourse] = useState<GetCourseInfoDto>(null);
   const modalRef = useRef(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -44,6 +45,38 @@ const CourseModal = ({ courseId, handleOnClose }: CourseModalProps) => {
       return "Fecha no disponible";
     }
   };
+
+const markAsCompleted = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${url}/courses/update/${courseId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status: true }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update course status");
+    }
+
+    setCourse((prev) => ({
+      ...prev,
+      status: true,
+    }));
+
+    onCourseUpdated(courseId);
+
+    setTimeout(() => {
+      handleOnClose();
+    }, 300);
+  } catch (error) {
+    console.error("Error marking course as completed:", error);
+  }
+};
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -127,10 +160,13 @@ const CourseModal = ({ courseId, handleOnClose }: CourseModalProps) => {
         >
           ✕
         </button>
+        
 
         <h2 className="text-2xl font-semibold mb-4 border-b border-[#d7bff1] pb-2">
           {course.title}
+          
         </h2>
+        
 
         <p className="mb-6 text-[#4b3b61] leading-relaxed">
           {course.information}
@@ -170,7 +206,18 @@ const CourseModal = ({ courseId, handleOnClose }: CourseModalProps) => {
             </div>
           </div>
         </div>
+        {!course.status && (
+  <div className="flex justify-end mt-4">
+    <button
+      onClick={markAsCompleted}
+      className="px-4 py-2 text-sm font-semibold bg-[#65417f] text-white rounded-md hover:bg-opacity-80 transition"
+    >
+      Marcar como completado
+    </button>
+  </div>
+)}
       </div>
+      
     </div>,
     document.body
   );

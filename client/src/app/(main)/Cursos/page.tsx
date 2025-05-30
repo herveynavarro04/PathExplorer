@@ -62,6 +62,14 @@ const Page = () => {
     setSelectedCourse(courseId);
   };
 
+  const handleCourseUpdated = (courseId: string) => {
+  setCourses((prevCourses) =>
+    prevCourses.map((course) =>
+      course.courseId === courseId ? { ...course, status: true } : course
+    )
+  );
+};
+
   useEffect(() => {
     const laodCourses = async () => {
       const res = validation();
@@ -133,11 +141,12 @@ const Page = () => {
           </div>
 
           {selectedCourse && (
-            <CourseModal
-              courseId={selectedCourse}
-              handleOnClose={() => setSelectedCourse(null)}
-            />
-          )}
+        <CourseModal
+          courseId={selectedCourse}
+          handleOnClose={() => setSelectedCourse(null)}
+          onCourseUpdated={handleCourseUpdated} 
+        />
+      )}
         </div>
         <div className="w-full bg-transparent mt-8">
           <div className="flex justify-center gap-4">
