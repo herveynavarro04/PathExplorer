@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UpdateApplicantStatusRequestDto {
   @IsString()
@@ -6,6 +6,6 @@ export class UpdateApplicantStatusRequestDto {
   status: string;
 
   @IsString()
-  @IsNotEmpty()
-  position: string;
+  @IsOptional()
+  position?: string;
 }

@@ -29,6 +29,7 @@ import { GetPastProjectsResponseDto } from './dto/response/getPastProjects.respo
 import { GetProjectApplicants } from './dto/response/getProjectApplicants.response.dto';
 import { UpdateApplicantStatusRequestDto } from './dto/request/updateApplicantStatus.request.dto';
 import { UpdateApplicantStatusResponseDto } from './dto/response/updateApplicantStatus.response.dto';
+import { GetManagerNotFullProjectsResponseDto } from './dto/response/getManagerNotFullProjects.response.dto';
 
 @Controller('projects')
 export class ProjectsController {
@@ -51,6 +52,14 @@ export class ProjectsController {
   @UseGuards(JwtGuard)
   async getProjectsTech(): Promise<GetProjectsTechResponseDto> {
     return this.projectsService.getProjectsTech();
+  }
+  @Get('manager/notFull')
+  @UseGuards(JwtGuard)
+  async getManagerNotFullProjects(
+    @Req() req: Request,
+  ): Promise<GetManagerNotFullProjectsResponseDto[]> {
+    const employeeId = req.user['employeeId'];
+    return this.employeeProjectsService.getManagerNotFullProjects(employeeId);
   }
 
   @Get('employee')
