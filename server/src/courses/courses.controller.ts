@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -15,6 +16,8 @@ import { PostCourseResponseDto } from './dto/response/postCourseResponse.dto';
 import { employeeCoursesService } from './service/employeeCourses.service';
 import { GetEmployeeCoursesDto } from './dto/response/getEmployeeCourses.dto';
 import { GetCourseInfoDto } from './dto/response/getCourseInfo.dto';
+import { UpdateEmployeeCourseResponseDto } from './dto/response/updateEmployeeCourse.response.dto';
+import { UpdateEmployeeCourseRequestDto } from './dto/request/updateEmployeeCourse.request.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -50,5 +53,20 @@ export class CoursesController {
   ): Promise<GetCourseInfoDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeCourseService.getCourseInfo(employeeId, courseId);
+  }
+
+  @Patch('update/:courseId')
+  @UseGuards(JwtGuard)
+  async completeCourse(
+    @Req() req: Request,
+    @Param('courseId') courseId: string,
+    @Body() status: UpdateEmployeeCourseRequestDto,
+  ): Promise<UpdateEmployeeCourseResponseDto> {
+    const employeeId = req.user['employeeId'];
+    return this.employeeCourseService.completeCourse(
+      courseId,
+      employeeId,
+      status,
+    );
   }
 }

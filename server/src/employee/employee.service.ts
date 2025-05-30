@@ -18,7 +18,7 @@ import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity
 import { ImageService } from 'src/Utilities/imageService.utilities';
 import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
 import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
-import { GetManagerEmployeesResponseDto } from './dto/response/getManagerEmployees.response.dto';
+import { GetEmployeesListResponseDto } from './dto/response/getEmployeesList.response.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -51,6 +51,64 @@ export class EmployeeService {
       throw new InternalServerErrorException('Failed to create employee');
     }
   }
+
+  async getAvailableEmployees(
+    employeeId: string,
+  ): Promise<GetEmployeesListResponseDto> {
+    try {
+      const managerEmployees = await this.employeesRepository
+        .createQueryBuilder('employee')
+        .leftJoin('employee.employeeInterestLink', 'interest')
+        .leftJoin('employee.employeeSkillLink', 'skill')
+        .where('employee.employeeId != :employeeId', { employeeId })
+        .andWhere((qb) => {
+          const subQuery = qb
+            .subQuery()
+            .select('1')
+            .from('employee_project', 'ep')
+            .where('ep.employee_id = employee.employeeId')
+            .andWhere('ep.status = :approvedStatus')
+            .getQuery();
+          return `NOT EXISTS ${subQuery}`;
+        })
+        .setParameter('approvedStatus', 'approved')
+        .select([
+          'employee.employeeId AS "employeeId"',
+          'employee.email AS email',
+          'employee.firstName AS "firstName"',
+          'employee.lastName AS "lastName"',
+          'COUNT(DISTINCT interest.skillId) AS "interestCount"',
+          'COUNT(DISTINCT skill.skillId) AS "skillCount"',
+        ])
+        .groupBy(
+          'employee.employeeId, employee.email, employee.firstName, employee.lastName',
+        )
+        .getRawMany();
+
+      const employees = managerEmployees.map((emp) => ({
+        ...emp,
+        interestCount: Number(emp.interestCount),
+        skillCount: Number(emp.skillCount),
+      }));
+      Logger.log('Available employees found', 'EmployeeService');
+      return {
+        employees: employees,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Unexpected error during available employees fetching',
+        error.stack,
+        'EmployeeService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to validate available employees',
+      );
+    }
+  }
+
   async verifyEmployeeExistance(email: string): Promise<boolean> {
     try {
       const employee = await this.employeesRepository.exists({
@@ -99,7 +157,7 @@ export class EmployeeService {
 
   async getManagerEmployees(
     employeeId: string,
-  ): Promise<GetManagerEmployeesResponseDto> {
+  ): Promise<GetEmployeesListResponseDto> {
     const managerProjects = await this.getManagerProjects(employeeId);
     if (managerProjects.length < 1) {
       return null;

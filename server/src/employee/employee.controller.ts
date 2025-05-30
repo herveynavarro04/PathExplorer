@@ -18,6 +18,7 @@ import { GetEmployeeInfoResponseDto } from './dto/response/getEmployeeInfo.respo
 import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
 import { EmployeeService } from './employee.service';
 import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
+import { GetEmployeesListResponseDto } from './dto/response/getEmployeesList.response.dto';
 
 @Controller('employee')
 export class EmployeeController {
@@ -53,9 +54,20 @@ export class EmployeeController {
     return this.employeeService.deleteProfilePicture(employeeId);
   }
 
+  @Get('available/employees')
+  @UseGuards(JwtGuard)
+  async getAvailableEmployees(
+    @Req() req: Request,
+  ): Promise<GetEmployeesListResponseDto> {
+    const employeeId = req.user['employeeId'];
+    return this.employeeService.getAvailableEmployees(employeeId);
+  }
+
   @Get('manager/employees')
   @UseGuards(JwtGuard)
-  async getManagerEmployees(@Req() req: Request): Promise<any> {
+  async getManagerEmployees(
+    @Req() req: Request,
+  ): Promise<GetEmployeesListResponseDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeService.getManagerEmployees(employeeId);
   }

@@ -26,6 +26,9 @@ import { UpdateEmployeesFromProjectResponseDto } from './dto/response/upateEmplo
 import { PostProjectResponseDto } from './dto/response/postProject.response.dto';
 import { PostProjectRequestDto } from './dto/request/postProject.request.dto';
 import { GetPastProjectsResponseDto } from './dto/response/getPastProjects.response.dto';
+import { GetProjectApplicants } from './dto/response/getProjectApplicants.response.dto';
+import { UpdateApplicantStatusRequestDto } from './dto/request/updateApplicantStatus.request.dto';
+import { UpdateApplicantStatusResponseDto } from './dto/response/updateApplicantStatus.response.dto';
 
 @Controller('projects')
 export class ProjectsController {
@@ -100,10 +103,6 @@ export class ProjectsController {
     return this.projectsService.getProjectInfo(projectId);
   }
 
-  // @Get(':projectId/applicants')
-  // @UseGuards(JwtGuard)
-  // async getProjectApplicants(@Param() projectId: string): Promise<any> {}
-
   @Patch(':projectId')
   @UseGuards(JwtGuard)
   async updateProjetInfo(
@@ -145,6 +144,29 @@ export class ProjectsController {
       projectId,
       employeeId,
     );
+  }
+
+  @Patch(':projectId/applicant/:employeeId')
+  @UseGuards(JwtGuard)
+  async updateApplicantStatus(
+    @Param('projectId') projectId: string,
+    @Param('employeeId') employeeId: string,
+    @Body()
+    updatePayload: UpdateApplicantStatusRequestDto,
+  ): Promise<UpdateApplicantStatusResponseDto> {
+    return this.employeeProjectsService.updateApplicantStatus(
+      projectId,
+      employeeId,
+      updatePayload,
+    );
+  }
+
+  @Get(':projectId/applicants')
+  @UseGuards(JwtGuard)
+  async getApplicantsByProjectId(
+    @Param('projectId') projectId: string,
+  ): Promise<GetProjectApplicants[]> {
+    return this.employeeProjectsService.getApplicantsByProjectId(projectId);
   }
 
   @Get('past/:employeeId')
