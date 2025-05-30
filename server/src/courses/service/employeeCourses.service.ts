@@ -4,10 +4,12 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { EmployeeCoursesEntity } from 'src/common/entities/employeeCourses.entity';
-import { GetEmployeeCoursesDto } from '../dto/response/getEmployeeCourses.dto';
+import { Repository } from 'typeorm';
 import { GetCourseInfoDto } from '../dto/response/getCourseInfo.dto';
+import { GetEmployeeCoursesDto } from '../dto/response/getEmployeeCourses.dto';
+import { UpdateEmployeeCourseResponseDto } from '../dto/response/updateEmployeeCourse.response.dto';
+import { UpdateEmployeeCourseRequestDto } from '../dto/request/updateEmployeeCourse.request.dto';
 @Injectable()
 export class employeeCoursesService {
   constructor(
@@ -71,9 +73,10 @@ export class employeeCoursesService {
         mandatory: employeeCoursesLink.course.mandatory,
         createdAt: employeeCoursesLink.course.createdAt,
       };
-
-      Logger.log(courseInfo);
-
+      Logger.log(
+        'Course info succesfully fetched',
+        'EmployeeEmployeeCoursesService',
+      );
       return courseInfo;
     } catch (error) {
       Logger.error(
@@ -82,6 +85,36 @@ export class employeeCoursesService {
         'EmployeeCoursesService',
       );
       throw new InternalServerErrorException('Failed to fetch course info');
+    }
+  }
+
+  async completeCourse(
+    courseId: string,
+    employeeId: string,
+    updateStatusPayload: UpdateEmployeeCourseRequestDto,
+  ): Promise<UpdateEmployeeCourseResponseDto> {
+    try {
+      await this.employeeCoursesRepository.update(
+        { employeeId: employeeId, courseId: courseId },
+        { status: updateStatusPayload.status, updatedAt: new Date() },
+      );
+      Logger.log(
+        'Employee courses succesfully updated',
+        'EmployeeEmployeeCoursesService',
+      );
+      return {
+        courseId: courseId,
+        updatedAt: new Date(),
+      };
+    } catch (error) {
+      Logger.error(
+        'Error during employee course update',
+        error.stack,
+        'EmployeeCoursesService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to update employee course',
+      );
     }
   }
 }

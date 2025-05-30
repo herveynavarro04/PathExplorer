@@ -142,6 +142,11 @@ export class ProjectsService {
         { projectId: projectId },
         { ...updatePayload, updatedAt: new Date() },
       );
+      if (updatePayload.active === false) {
+        await this.employeeProjectService.changeEmployeesStatusOnProjectFinish(
+          projectId,
+        );
+      }
       Logger.log('Project succesfully updated', 'ProjectService');
       return {
         projectId: projectId,

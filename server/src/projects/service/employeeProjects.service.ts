@@ -17,6 +17,9 @@ import { UpdateEmployeesFromProjectResponseDto } from '../dto/response/upateEmpl
 import { ProjectsEntity } from '../entities/projects.entity';
 import { GetPastProjectsResponseDto } from '../dto/response/getPastProjects.response.dto';
 import { PostProjectEmployeesRequestDto } from '../dto/request/postProjectEmployees.request.dto';
+import { GetProjectApplicants } from '../dto/response/getProjectApplicants.response.dto';
+import { UpdateApplicantStatusRequestDto } from '../dto/request/updateApplicantStatus.request.dto';
+import { UpdateApplicantStatusResponseDto } from '../dto/response/updateApplicantStatus.response.dto';
 
 @Injectable()
 export class EmployeeProjectsService {
@@ -302,6 +305,153 @@ export class EmployeeProjectsService {
     }
   }
 
+  async changeEmployeesStatusOnProjectFinish(projectId: string): Promise<void> {
+    try {
+      await this.employeeProjectRepository.update(
+        { projectId: projectId, status: 'pending' },
+        { status: 'rejected' },
+      );
+      await this.employeeProjectRepository.update(
+        {
+          projectId: projectId,
+          status: 'approved',
+        },
+        { status: 'finished', chargeability: 0 },
+      );
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during employees status update',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to update employees status',
+      );
+    }
+  }
+
+  private async checkProjectCapacity(projectId: string): Promise<void> {
+    try {
+      const employeesNumber = await this.employeeProjectRepository.count({
+        where: {
+          projectId: projectId,
+          status: 'approved',
+          position: Not('manager'),
+        },
+      });
+      const project = await this.projectsRepository.findOne({
+        where: { projectId: projectId },
+        select: ['limitEmployees'],
+      });
+      if (project && employeesNumber >= project.limitEmployees) {
+        await this.projectsRepository.update(
+          { projectId: projectId },
+          { full: true },
+        );
+        await this.employeeProjectRepository.update(
+          {
+            projectId: projectId,
+            status: 'pending',
+          },
+          { status: 'rejected' },
+        );
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during project status update',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to project applicant status',
+      );
+    }
+  }
+
+  async updateApplicantStatus(
+    projectId: string,
+    employeeId: string,
+    updatePayload: UpdateApplicantStatusRequestDto,
+  ): Promise<UpdateApplicantStatusResponseDto> {
+    try {
+      await this.employeeProjectRepository.update(
+        {
+          projectId: projectId,
+          employeeId: employeeId,
+        },
+        {
+          status: updatePayload.status,
+          validatedAt: new Date(),
+          position: updatePayload.position,
+        },
+      );
+      Logger.log('applicants status updated', 'EmployeeProjectsService');
+      await this.checkProjectCapacity(projectId);
+      return {
+        employeeId: employeeId,
+        projectId: projectId,
+        validatedAt: new Date(),
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during applicant status update',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to update applicant status',
+      );
+    }
+  }
+
+  async getApplicantsByProjectId(
+    projectId: string,
+  ): Promise<GetProjectApplicants[]> {
+    try {
+      const applicantsInfo = await this.employeeProjectRepository.find({
+        where: { projectId: projectId, status: 'pending' },
+        relations: [
+          'employee',
+          'employee.employeeSkillLink',
+          'employee.employeeInterestLink',
+        ],
+      });
+      const applicants = applicantsInfo.map((link) => ({
+        employeeId: link.employeeId,
+        email: link.employee.email,
+        firstName: link.employee.firstName,
+        lastName: link.employee.lastName,
+        appliedAt: link.appliedAt,
+        skillCount: link.employee.employeeSkillLink
+          ? link.employee.employeeSkillLink.length
+          : 0,
+        interestCount: link.employee.employeeInterestLink
+          ? link.employee.employeeInterestLink.length
+          : 0,
+      }));
+      return applicants;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during applicants fetching',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException('Failed to fetch applicants');
+    }
+  }
+
   async getManagerProjects(
     employeeId: string,
   ): Promise<GetEmployeeProjectsResponseDto> {
@@ -389,7 +539,7 @@ export class EmployeeProjectsService {
         employeeId: employeeId,
         projectId: projectId,
         status: 'pending',
-        chargeability: null,
+        chargeability: 0,
         appliedAt: new Date(),
         validatedAt: null,
       }));

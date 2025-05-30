@@ -10,11 +10,8 @@ export class EmployeeCoursesEntity {
   @PrimaryColumn({ name: 'course_id' })
   courseId: string;
 
-  @PrimaryColumn({ name: 'status' })
+  @PrimaryColumn({ name: 'completed' })
   status: boolean;
-
-  @PrimaryColumn({ name: 'validation_date' })
-  validationDate: Date;
 
   @Column({ name: 'created_at', type: 'date' })
   createdAt: Date;
