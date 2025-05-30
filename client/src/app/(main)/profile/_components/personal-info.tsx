@@ -24,7 +24,7 @@ type PersonalInfoFormProps = {
     mime_type: string;
     password: string;
   };
-  triggerReload: () => void;
+  triggerReload: (fade?: boolean) => void;
   updateProfileState: (
     newData: Partial<PersonalInfoFormProps["userData"]>
   ) => void;
@@ -57,10 +57,14 @@ export function PersonalInfoForm({
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  const resolvedImageSrc = (() => {
-  if (previewUrl) {
+const resolvedImageSrc = (() => {
+  if (previewUrl && previewUrl.trim() !== "") {
     return previewUrl;
-  } else if (userData.url_pic && userData.mime_type && userData.url_pic.trim() !== "") {
+  } else if (
+    userData.url_pic &&
+    userData.mime_type &&
+    userData.url_pic.trim() !== ""
+  ) {
     return `data:${userData.mime_type};base64,${userData.url_pic}`;
   } else {
     return "/profile.png";
@@ -110,7 +114,7 @@ export function PersonalInfoForm({
     setSelectedImage(null);
     setPassword("");
 
-    triggerReload();
+    triggerReload(true);
     setGlobalLoading(false);
   };
   const getDefaultProfilePictureFile = async (): Promise<File> => {
@@ -161,7 +165,11 @@ export function PersonalInfoForm({
                 setIsEditing(false);
                 setPassword("");
                 setSelectedImage(null);
-                setPreviewUrl(userData.url_pic);
+                setPreviewUrl(
+                userData.url_pic && userData.mime_type && userData.url_pic.trim() !== ""
+                  ? `data:${userData.mime_type};base64,${userData.url_pic}`
+                  : "/profile.png"
+              );
               }}
             >
               Cancelar
@@ -175,32 +183,41 @@ export function PersonalInfoForm({
           className={`mb-0 ${isEditing ? "flex flex-row items-center gap-9" : "flex justify-center"}`}
         >
           <div className="flex flex-col items-center justify-center ">
-            <Image
-  src={resolvedImageSrc}
-  width={isEditing ? 66 : 180}
-  height={isEditing ? 66 : 180}
-  alt="User"
-  onError={(e) => {
-    e.currentTarget.src = "/profile.png";
-  }}
-  className={`rounded-full object-cover transition-all duration-300 ease-in-out ${
-    isEditing ? "size-33" : "size-56"
-  }`}
-  quality={90}
-/>
+            <div className="rounded-full p-1 bg-transparent dark:bg-gray-800">
+              <Image
+                src={resolvedImageSrc}
+                width={isEditing ? 66 : 180}
+                height={isEditing ? 66 : 180}
+                alt="User"
+                onError={(e) => {
+                  e.currentTarget.src = "/profile.png";
+                }}
+                className={`rounded-full object-cover transition-all duration-300 ease-in-out ${
+                  isEditing ? "size-33" : "size-56"
+                }`}
+                quality={90}
+              />
+            </div>
 
             {isEditing && (userData.url_pic || selectedImage) && (
               <button
-                type="button"
-                onClick={async () => {
-                  const defaultImage = await getDefaultProfilePictureFile();
-                  setSelectedImage(defaultImage);
-                  setPreviewUrl(URL.createObjectURL(defaultImage));
-                }}
-                className="text-sm text-red-500 underline pt-1"
-              >
-                <TrashIcon />
-              </button>
+              type="button"
+              onClick={async () => {
+                await fetch("http://localhost:8080/api/employee/delete/picture", {
+                  method: "PATCH",
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                });
+             
+                setSelectedImage(null);
+                setPreviewUrl("");
+                triggerReload();
+              }}
+              className="text-sm text-red-500 underline pt-1"
+            >
+              <TrashIcon />
+            </button>
             )}
           </div>
 

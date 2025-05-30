@@ -135,7 +135,16 @@ const Page = () => {
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
           <PersonalInfoForm
             userData={profile}
-            triggerReload={() => setReloadTrigger((prev) => !prev)}
+            triggerReload={(fade = false) => {
+              if (fade) {
+                setFadeIn(false);
+                setTimeout(() => {
+                  setReloadTrigger((prev) => !prev);
+                }, 300);
+              } else {
+                setReloadTrigger((prev) => !prev);
+              }
+            }}
             updateProfileState={updateProfileState}
             setGlobalLoading={setLoading}
           />
