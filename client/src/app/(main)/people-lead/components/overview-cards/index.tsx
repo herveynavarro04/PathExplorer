@@ -13,16 +13,9 @@ export function OverviewCardsGroup() {
       />
       </Link>
 
-      {/* <Link href="/mis-cursos">
-        <OverviewCard
-          data="Mis Cursos"
-          Icon={icons.ArrowRight}
-        />
-      </Link> */}
-
-      <Link href="/Notificaciones">
+      <Link href="/mis-cursos-people-lead">
       <OverviewCard
-        data="Notificaciones"
+        data="Mis Cursos"
         Icon={icons.ArrowRight}
       />
       </Link>
