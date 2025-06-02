@@ -231,12 +231,11 @@ export default function UserDetailsRegisterModal({
   }
 
   return ReactDOM.createPortal(
-    <div
-      className={`mx-auto w-full max-w-[75rem] h-full transition-opacity duration-500 ${
-        fadeIn ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6">
+<div
+  className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6 transition-opacity duration-500 ${
+    fadeIn ? "opacity-100" : "opacity-0"
+  }`}
+>
         <div
           ref={modalRef}
           className="w-full max-w-5xl bg-[#d0bfdb] dark:bg-[#311a42] rounded-xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-xl text-gray-800 dark:text-white"
@@ -389,8 +388,7 @@ export default function UserDetailsRegisterModal({
             </div>
           )}
         </div>
-      </div>
-    </div>,
+      </div>,
     document.body
   );
 }
