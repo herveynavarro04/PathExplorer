@@ -3,11 +3,16 @@
 import { useState, useEffect } from "react";
 import { ShowcaseSectionSkill } from "components/Layouts/showcase-skill";
 import { FaRegEdit, FaCheck, FaTimes } from "react-icons/fa";
+import { authFetch } from "@utils/authFetch";
+import { validation } from "@utils/validation";
+import { useRouter } from "next/navigation";
 
 interface TechStackCardProps {
   stack: TechDto[];
   techs: TechDto[];
+  projectId: string;
   editable: boolean;
+  setTriggerRefresh: (triggerRefresh: boolean) => void;
 }
 
 interface TechDto {
@@ -18,21 +23,24 @@ interface TechDto {
 export default function TechStackCard({
   stack,
   techs,
+  projectId,
   editable = true,
+  setTriggerRefresh,
 }: TechStackCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStack, setSelectedStack] = useState<string[]>([]);
   const [allStack, setAllStack] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState(false);
-  const [addStack, setAddStack] = useState<string[]>([]);
-  const [deleteStack, setDeleteStack] = useState<string[]>([]);
-  const [triggerSave, setTriggerSave] = useState(false);
+  const [addTechs, setAddTechs] = useState<string[]>([]);
+  const [deleteTechs, setDeleteTechs] = useState<string[]>([]);
   const [techProjectMap, setTechProjectMap] = useState<Map<
     string,
     [string, boolean]
   > | null>(null);
   const MAX_TECH = 20;
+  const router = useRouter();
+  const url = "http://localhost:8080/api";
 
   useEffect(() => {
     const techProjecthNames = new Set(stack.map((tech) => tech.technologyName));
@@ -42,8 +50,6 @@ export default function TechStackCard({
         [tech.technologyId, techProjecthNames.has(tech.technologyName)],
       ])
     );
-
-    console.log(techProjectMap);
 
     setTechProjectMap(techProjectMap);
   }, []);
@@ -62,25 +68,50 @@ export default function TechStackCard({
     setAllStack(all);
   }, [techProjectMap]);
 
+  const patchTech = async () => {
+    const res = validation();
+    if (!res) {
+      router.push("/login");
+      return;
+    }
+    try {
+      const response = await authFetch(`${url}/projects/${projectId}/techs`, {
+        method: "PATCH",
+        body: JSON.stringify({ addTechs, deleteTechs }),
+      });
+      if (!response) {
+        router.push("/login");
+        return;
+      }
+
+      setIsEditing(false);
+      setAddTechs([]);
+      setDeleteTechs([]);
+      setTriggerRefresh((prev) => !prev);
+    } catch (error) {
+      console.error("Failed to update skills:", error);
+    }
+  };
+
   useEffect(() => {
-    if (!triggerSave) return;
-    setTriggerSave(false);
-    setIsEditing(false);
-    setAddStack([]);
-    setDeleteStack([]);
-  }, [triggerSave]);
+    console.log(addTechs);
+  }, [addTechs]);
+
+  useEffect(() => {
+    console.log(deleteTechs);
+  }, [deleteTechs]);
 
   const addTech = (tech: string) => {
     if (selectedStack.length < MAX_TECH) {
       setSelectedStack([...selectedStack, tech]);
-      setAddStack([...addStack, techProjectMap!.get(tech)![0]]);
+      setAddTechs([...addTechs, techProjectMap!.get(tech)![0]]);
       setSearchTerm("");
     }
   };
 
   const removeTech = (tech: string) => {
     setSelectedStack(selectedStack.filter((t) => t !== tech));
-    setDeleteStack([...deleteStack, techProjectMap.get(tech)[0]]);
+    setDeleteTechs([...deleteTechs, techProjectMap.get(tech)[0]]);
   };
 
   const cancelEdit = () => {
@@ -92,13 +123,10 @@ export default function TechStackCard({
     });
 
     setSelectedStack(selected);
-    setAddStack([]);
-    setDeleteStack([]);
+    setAddTechs([]);
+    setDeleteTechs([]);
     setSearchTerm("");
     setIsEditing(false);
-  };
-  const saveChanges = () => {
-    setTriggerSave(true);
   };
 
   const filteredStack = allStack.filter(
@@ -117,7 +145,7 @@ export default function TechStackCard({
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={saveChanges}
+              onClick={patchTech}
               className="rounded-lg bg-[#65417f] px-2 py-[5px] font-medium text-white hover:bg-opacity-90"
             >
               <FaCheck size={14} />

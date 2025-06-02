@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ProjectViewer from "../../../components/Projects/selector";
 import DisplayViewer from "../../../components/Projects/display";
 import EndProjectModal from "../../../components/Projects/EndProjectModal";
@@ -52,16 +52,49 @@ export default function Home() {
   const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
   const [loadingProjTech, setLodingProjTech] = useState<boolean>(true);
   const [loadingEmployees, setLoadingEmployees] = useState<boolean>(true);
+  const [projectId, setProjectId] = useState<string>("");
+  const [information, setInformation] = useState<string>("");
+  const [client, setClient] = useState<string>("");
+  const [progress, setProgress] = useState<number>(0);
+  const [startDate, setStartDate] = useState<Date>(null);
+  const [endDate, setEndDate] = useState<Date>(null);
+  const [active, setActive] = useState<boolean>(false);
+  const [triggerRefresh, setTriggerRefresh] = useState<boolean>(false);
   const [selectedProject, setSelectedProject] =
     useState<ProjectInfoPreviewResponseDto | null>(null);
-  const [projectProgress, setProjectProgress] = useState<number>(0);
   const [isFinalizeModalOpen, setIsFinalizeModalOpen] =
     useState<boolean>(false);
   const [fadeIn, setFadeIn] = useState<boolean>(false);
+  const [changeRefresh, setChangeRefresh] = useState<boolean>(false);
+  const isFirstProjectRefresh = useRef(true);
+  const [pendingProjectId, setPendingProjectId] = useState<string | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const router = useRouter();
   const url = "http://localhost:8080/api";
 
-  const onProgressChange = (value: number) => setProjectProgress(value);
+  const patchDeleteProject = async () => {
+    const res = validation();
+    if (!res) {
+      router.push("/login");
+      return;
+    }
+    try {
+      const response = await authFetch(`${url}/projects/${projectId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          active: false,
+        }),
+      });
+      if (!response) {
+        router.push("/login");
+        return;
+      }
+      setTriggerRefresh((prev) => !prev);
+      setSelectedProject(null);
+    } catch (error) {
+      console.error("Error patching the progress", error);
+    }
+  };
 
   useEffect(() => {
     const res = validation();
@@ -69,6 +102,8 @@ export default function Home() {
       router.push("/login");
       return;
     }
+
+    const currentProjectId = selectedProject?.projectId;
 
     const loadInitialData = async () => {
       try {
@@ -92,10 +127,12 @@ export default function Home() {
           }))
           .filter((project) => project.active);
 
+        const updatedProject =
+          projects.find((p) => p.projectId === currentProjectId) || projects[0];
+
         setProjects(projects);
         setTechs(techsRes.ProjectsTechs);
-        setSelectedProject(projects[0]);
-
+        setSelectedProject(updatedProject);
         setLodingProjTech(false);
         setLoadingProjects(false);
       } catch (error) {
@@ -104,15 +141,17 @@ export default function Home() {
     };
 
     loadInitialData();
-  }, []);
+  }, [triggerRefresh]);
 
   useEffect(() => {
-    const res = validation();
     if (!selectedProject) return;
+    const res = validation();
     if (!res) {
       router.push("/login");
       return;
     }
+
+    setLoadingEmployees(true);
 
     const loadEmployees = async () => {
       try {
@@ -129,9 +168,18 @@ export default function Home() {
         console.error("Error loading employees for selected project", error);
       }
     };
-
     loadEmployees();
   }, [selectedProject]);
+
+  useEffect(() => {
+    if (!employees) return;
+    setProjectId(selectedProject.projectId);
+    setClient(selectedProject.client);
+    setInformation(selectedProject.information);
+    setStartDate(selectedProject.startDate);
+    setEndDate(selectedProject.endDate);
+    setProgress(selectedProject.progress);
+  }, [employees]);
 
   useEffect(() => {
     if (!loadingEmployees && !loadingProjTech && !loadingProjects) {
@@ -139,135 +187,105 @@ export default function Home() {
       setTimeout(() => setFadeIn(true), 25);
     }
   }, [loadingEmployees, loadingProjTech, loadingProjects]);
+  useEffect(() => {
+    if (isFirstProjectRefresh.current) {
+      isFirstProjectRefresh.current = false;
+      return;
+    }
+
+    setIsTransitioning(true);
+    setFadeIn(false);
+
+    const timeout = setTimeout(() => {
+      if (pendingProjectId) {
+        const newProject = projects.find(
+          (p) => p.projectId === pendingProjectId
+        );
+        setSelectedProject(newProject);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [changeRefresh]);
+
+  useEffect(() => {
+    if (!isTransitioning) return;
+    if (!selectedProject || loadingEmployees) return;
+
+    const timeout = setTimeout(() => {
+      setFadeIn(true);
+      setIsTransitioning(false);
+    }, 50);
+
+    return () => clearTimeout(timeout);
+  }, [selectedProject, loadingEmployees]);
 
   if (loading || !projects || !techs || !employees) {
     return <div className="min-h-screen bg-[#d0bfdb]" />;
   }
 
   return (
-    <div>
-      <div
-        className={`mx-auto w-full  transition-opacity duration-300 ${
-          fadeIn ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <div className="flex justify-between items-center mb-9 px-4">
-          <ProjectViewer
-            projects={projects}
-            selectedProject={selectedProject}
-            setSelectedProject={(project) => {
-              setSelectedProject(project);
-              setProjectProgress(project?.progress || 0);
-            }}
-          />
-
-          {projectProgress === 100 && (
-            <button
-              className="bg-[#65417f] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
-              onClick={() => setIsFinalizeModalOpen(true)}
-            >
-              Marcar como finalizado
-            </button>
-          )}
-
-          {isFinalizeModalOpen && (
-            <EndProjectModal
-              projectName={selectedProject?.projectName || "el proyecto"}
-              onCancel={() => setIsFinalizeModalOpen(false)}
-              onConfirm={() => {
-                console.log("Proyecto finalizado");
-                setIsFinalizeModalOpen(false);
-              }}
-            />
-          )}
-        </div>
-
-        <DisplayViewer
+    <>
+      <div>
+        <div
           key={selectedProject?.projectId}
-          selectedProject={selectedProject}
-          techs={techs}
-          employees={employees}
-          onProgressChange={onProgressChange}
-          editable={false}
-        />
+          className={`mx-auto w-full transition-opacity duration-300 ${
+            !fadeIn ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <div className="flex justify-between items-center mb-9 px-4">
+            <ProjectViewer
+              projects={projects}
+              selectedProject={selectedProject}
+              setEmployees={setEmployees}
+              setChangeRefresh={setChangeRefresh}
+              setPendingProjectId={setPendingProjectId}
+              active={active}
+            />
+
+            {progress === 100 && (
+              <button
+                className="bg-[#65417f] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
+                onClick={() => setIsFinalizeModalOpen(true)}
+              >
+                Marcar como finalizado
+              </button>
+            )}
+
+            {isFinalizeModalOpen && (
+              <EndProjectModal
+                projectName={selectedProject?.projectName || "el proyecto"}
+                onCancel={() => setIsFinalizeModalOpen(false)}
+                onConfirm={() => {
+                  patchDeleteProject();
+                  setIsFinalizeModalOpen(false);
+                  console.log("Proyecto finalizado");
+                }}
+              />
+            )}
+          </div>
+
+          <DisplayViewer
+            key={projectId}
+            projectId={projectId}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            client={client}
+            setClient={setClient}
+            information={information}
+            setInformation={setInformation}
+            progress={progress}
+            setProgress={setProgress}
+            technologies={selectedProject.technologies}
+            techs={techs}
+            employees={employees}
+            setTriggerRefresh={setTriggerRefresh}
+            editable={false}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
-
-//  useEffect(() => {
-//     const res = validation();
-//     if (!res) {
-//       router.push("/login");
-//       return;
-//     }
-//     const loadProjects = async () => {
-//       try {
-//         const response = await authFetch<GetEmployeeProjectsResponseDto>(
-//           ${url}/projects/employee/manager
-//         );
-//         if (!response) {
-//           router.push("/login");
-//           return;
-//         }
-//         console.log(response);
-//         setProjects(response.employeeProjects);
-//         setSelectedProject(response.employeeProjects[0].projectId);
-//         setLoadingProjects(false);
-//       } catch (error) {
-//         console.error("Error while fetching", error);
-//       }
-//     };
-//     loadProjects();
-//   }, []);
-
-//   useEffect(() => {
-//     const res = validation();
-//     if (!res) {
-//       router.push("/login");
-//       return;
-//     }
-//     const loadTech = async () => {
-//       try {
-//         const response = await authFetch<GetProjectsTechResponseDto>(
-//           ${url}/projects/techs
-//         );
-//         if (!response) {
-//           router.push("/login");
-//           return;
-//         }
-//         console.log(response);
-//         setTechs(response.ProjectsTechs);
-//         setLoadingTechs(false);
-//       } catch (error) {
-//         console.error("Error while fetching", error);
-//       }
-//     };
-//     loadTech();
-//   }, []);
-
-//   useEffect(() => {
-//     if (!selectedProject) return;
-//     const res = validation();
-//     if (!res) {
-//       router.push("/login");
-//       return;
-//     }
-//     const loadEmployees = async () => {
-//       try {
-//         const response = await authFetch<GetEmployeesByProjectResponseDto[]>(
-//           ${url}/projects/${selectedProject}/employees
-//         );
-//         if (!response) {
-//           router.push("/login");
-//           return;
-//         }
-//         console.log(response);
-//         setEmployees(response);
-//         setLoadingTechs(false);
-//       } catch (error) {
-//         console.error("Error while fetching", error);
-//       }
-//     };
-//     loadEmployees();
-//   }, [selectedProject]);

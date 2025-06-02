@@ -2,21 +2,74 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
+import { authFetch } from "@utils/authFetch";
+import { useRouter } from "next/navigation";
+import { validation } from "@utils/validation";
 
 interface DeleteMemberModalProps {
-  memberName: string;
-  onCancel: () => void;
-  onConfirm: () => void;
+  projectId: string;
+  employeeIdToDelete: string;
+  setEmployeeIdToDelete: (employeeIdToDelete: string) => void;
+  employeeNameToDelete: string;
+  setEmployeeNameToDelete: (employeeNameToDelete: string) => void;
+  setShowModal: (showModal: boolean) => void;
+  setTriggerRefresh: (triggerRefresh: boolean) => void;
 }
 
-const DeleteMemberModal = ({ memberName, onCancel, onConfirm }: DeleteMemberModalProps) => {
+const DeleteMemberModal = ({
+  projectId,
+  employeeIdToDelete,
+  setEmployeeIdToDelete,
+  employeeNameToDelete,
+  setEmployeeNameToDelete,
+  setShowModal,
+  setTriggerRefresh,
+}: DeleteMemberModalProps) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const router = useRouter();
+  const url = "http://localhost:8080/api";
+
+  const handleDelete = async () => {
+    const res = validation();
+    if (!res) {
+      router.push("/login");
+      return;
+    }
+
+    try {
+      const response = await authFetch(
+        `${url}/projects/${projectId}/${employeeIdToDelete}`,
+        {
+          method: "PATCH",
+        }
+      );
+      if (!response) {
+        router.push("/login");
+        return;
+      }
+      console.log(response);
+
+      onClose();
+      setTriggerRefresh((prev) => !prev);
+    } catch (error) {
+      console.error("Failed to update skills:", error);
+    }
+  };
+
+  const onClose = () => {
+    setShowModal(false);
+    setEmployeeIdToDelete(null);
+    setEmployeeNameToDelete(null);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        onCancel();
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        onClose();
         setIsVisible(false);
       }
     };
@@ -24,7 +77,7 @@ const DeleteMemberModal = ({ memberName, onCancel, onConfirm }: DeleteMemberModa
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onCancel]);
+  }, [onClose]);
 
   if (typeof window === "undefined") return null;
 
@@ -36,19 +89,22 @@ const DeleteMemberModal = ({ memberName, onCancel, onConfirm }: DeleteMemberModa
           isVisible ? "animate-fadeInModal" : "animate-fadeOutModal"
         }`}
       >
-        <h2 className="text-xl font-semibold mb-4">¿Eliminar a {memberName} del equipo?</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          ¿Eliminar a {employeeNameToDelete} del equipo?
+        </h2>
         <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">
-          Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar a este miembro?
+          Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar
+          a este miembro?
         </p>
         <div className="flex justify-end gap-4">
           <button
-            onClick={onCancel}
+            onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
           >
             Cancelar
           </button>
           <button
-            onClick={onConfirm}
+            onClick={handleDelete}
             className="px-4 py-2 text-sm font-semibold bg-red-600 text-white rounded-md hover:bg-red-700 transition"
           >
             Eliminar

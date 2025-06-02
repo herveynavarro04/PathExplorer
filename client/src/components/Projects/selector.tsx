@@ -22,22 +22,32 @@ interface TechDto {
   technologyName: string;
 }
 
+interface GetEmployeesByProjectResponseDto {
+  profilePic: string;
+  position: string;
+  employeeName: string;
+  employeeId: string;
+  chargeability: number;
+}
 type ProjectViewerProps = {
   projects: ProjectInfoPreviewResponseDto[];
   selectedProject: ProjectInfoPreviewResponseDto;
-  setSelectedProject: (project: ProjectInfoPreviewResponseDto) => void;
-
-  terminated?: boolean;
+  setEmployees: (employees: GetEmployeesByProjectResponseDto[]) => void;
+  setChangeRefresh: (changeRefresh: boolean) => void;
+  setPendingProjectId: (projectId: string) => void;
+  active: boolean;
 };
 
 export default function ProjectViewer({
   projects,
   selectedProject,
-  setSelectedProject,
-  terminated = false,
+  setChangeRefresh,
+  setPendingProjectId,
+  active,
 }: ProjectViewerProps) {
   const { theme } = useTheme();
   const [options, setOptions] = useState([]);
+  const [terminated, setTerminated] = useState<boolean>(false);
 
   useEffect(() => {
     setOptions(
@@ -96,24 +106,25 @@ export default function ProjectViewer({
     }),
   };
 
-  useEffect(() => {
-    console.log(selectedProject);
-  }, [selectedProject]);
-
   return (
     <div className="w-full flex items-center justify-between gap-6 pb-2">
       <p className="font-extrabold text-black text-2xl whitespace-nowrap shrink-0">
-        {terminated ? "Proyectos Finalizados" : "Proyectos Actuales"}
+        {active ? "Proyectos Actuales" : "Proyectos Finalizados"}
       </p>
 
       <Select
         options={options}
         value={options.find((o) => o.value === selectedProject?.projectId)}
-        onChange={(selectedOption) =>
-          setSelectedProject(
-            projects.find((p) => p.projectId === selectedOption?.value)
+        onChange={(selectedOption) => {
+          if (
+            !selectedOption ||
+            selectedOption.value === selectedProject?.projectId
           )
-        }
+            return;
+
+          setPendingProjectId(selectedOption.value);
+          setChangeRefresh((prev) => !prev);
+        }}
         styles={customStyles}
         placeholder="Selecciona un proyecto..."
         isSearchable={false}

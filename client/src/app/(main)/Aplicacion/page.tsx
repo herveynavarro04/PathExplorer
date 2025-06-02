@@ -338,7 +338,10 @@ export default function MyProjectsPage() {
                   </div>
                   <button
                     className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto"
-                    onClick={() => setTriggerPost((prev) => !prev)}
+                    onClick={() => {
+                      setTriggerPost((prev) => !prev);
+                      setLoading(true);
+                    }}
                   >
                     Finalizar aplicación
                   </button>
