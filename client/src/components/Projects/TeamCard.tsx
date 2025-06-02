@@ -80,53 +80,72 @@ export default function TeamCard({
       </div>
 
       <div className="p-4 sm:p-6 xl:p-10 flex-grow">
+    {employees.length === 0 ? (
+      <div className="flex justify-center items-center h-60 text-center text-black dark:text-gray-300 text-sm">
+        {editable
+          ? "Aún no agregas empleados al proyecto, revisa la sección de aplicantes"
+          : "Ya no es posible visualizar a los empleados que estuvieron en este proyecto"}
+      </div>
+    ) : (
         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-4">
           {currentMembers.map((member) => (
-            <div key={member.employeeId} className="text-center relative">
-              <div className="flex justify-center items-center gap-2 pb-1">
-                <h4 className="text-[#65417f] dark:text-white font-semibold">
-                  {member.employeeName}
-                </h4>
-                {editable && isEditing && (
-                  <button
-                    onClick={() =>
-                      handleDeleteInfo(member.employeeId, member.employeeName)
-                    }
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <FaTimes size={12} />
-                  </button>
-                )}
-              </div>
+            <div
+  key={member.employeeId}
+  className="flex flex-col items-center text-center relative min-h-[20rem] gap-3 justify-between"
+>
+  <div className="flex items-center gap-2">
+    <h4 className="text-[#65417f] dark:text-white font-semibold">
+      {member.employeeName}
+    </h4>
+    {editable && isEditing && (
+      <button
+        onClick={() =>
+          handleDeleteInfo(member.employeeId, member.employeeName)
+        }
+        className="text-red-500 hover:text-red-700"
+      >
+        <FaTimes size={12} />
+      </button>
+    )}
+  </div>
 
-              <Image
-                src={
-                  member.profilePic
-                    ? `data:image/png;base64,${member.profilePic}`
-                    : "/profile.png"
-                }
-                alt="Foto de perfil"
-                width={180}
-                height={180}
-                className="rounded-full object-cover"
-              />
+  <div className="w-28 sm:w-32 aspect-square relative">
+    <Image
+      src={
+        member.profilePic
+          ? `data:image/png;base64,${member.profilePic}`
+          : "/profile.png"
+      }
+      alt="Foto de perfil"
+      fill
+      className="rounded-full object-cover"
+    />
+  </div>
 
-              <p className="text-sm">{member.position}</p>
-              <p className="text-sm pb-3">{member.chargeability}</p>
-              <button
-                className="text-sm text-[#5a3bb3] dark:text-white mt-1 hover:bg-[#ece5f1] dark:hover:bg-[#FFFFFF1A] rounded-[10px] p-2"
-                onClick={() =>
-                  onFeedbackClick(member.employeeId, member.employeeName)
-                }
-              >
-                + Añadir retroalimentación
-              </button>
-            </div>
+  <div className="flex flex-col items-center gap-1">
+    <p className="text-sm text-gray-600 dark:text-gray-300">
+      {member.position}
+    </p>
+    <p className="text-sm text-gray-600 dark:text-gray-300">
+      {member.chargeability}
+    </p>
+  </div>
+
+  <button
+    className="text-sm text-[#5a3bb3] dark:text-white hover:bg-[#ece5f1] dark:hover:bg-[#FFFFFF1A] rounded-[10px] px-3 py-2"
+    onClick={() => onFeedbackClick(member.employeeId, member.employeeName)}
+  >
+    + Añadir retroalimentación
+  </button>
+</div>
+
+
           ))}
         </div>
+        )}
 
         {totalPages > 1 && (
-          <div className="flex justify-center mt-7 gap-4">
+          <div className="flex justify-center mt-4 gap-4">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}

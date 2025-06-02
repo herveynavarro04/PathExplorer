@@ -208,17 +208,18 @@ export default function UserDetailsModal({
           <div className="rounded-xl bg-white dark:bg-[#412859] p-6">
             <h2 className="font-semibold text-lg mb-4">Información Personal</h2>
             <div className="flex flex-col items-center gap-4">
-              <Image
-                src={
-                  userData.profilePicture && userData.mimeType
-                    ? `data:${userData.mimeType};base64,${userData.profilePicture}`
-                    : "/profile.png"
-                }
-                alt="Foto de perfil"
-                width={180}
-                height={180}
-                className="rounded-full object-cover"
-              />
+          <div className="w-36 sm:w-50 aspect-square relative rounded-full overflow-hidden">
+            <Image
+              src={
+                userData.profilePicture && userData.mimeType
+                  ? `data:${userData.mimeType};base64,${userData.profilePicture}`
+                  : "/profile.png"
+              }
+              alt="Foto de perfil"
+              fill
+              className="object-cover"
+            />
+          </div>
 
               <div className="w-full">
                 <label className="text-sm font-medium block mb-1">Nombre</label>
