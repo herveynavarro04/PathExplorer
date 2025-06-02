@@ -1,26 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import ModalFeedback from "./modal-feedback";
 import TeamCard from "./TeamCard";
-import DescriptionCard from "./DescriptionCard";
+import InformationCard from "./InformationCard";
 import ProgressCard from "./ProgressCard";
 import DatesCard from "./DatesCard";
 import ClientCard from "./ClientCard";
 import TechStackCard from "./TechStackCard";
-
-interface ProjectInfoPreviewResponseDto {
-  projectId: string;
-  projectName: string;
-  information: string;
-  status?: string;
-  active?: boolean;
-  technologies?: TechDto[];
-  client?: string;
-  startDate?: Date;
-  endDate?: Date;
-  progress?: number;
-}
+import { authFetch } from "@utils/authFetch";
+import { useRouter } from "next/navigation";
+import { validation } from "@utils/validation";
 
 interface TechDto {
   technologyId: string;
@@ -36,69 +26,185 @@ interface GetEmployeesByProjectResponseDto {
 }
 
 interface DisplayViewerProps {
-  selectedProject: ProjectInfoPreviewResponseDto;
+  projectId: string;
+  startDate: Date | null;
+  setStartDate: (date: Date) => void;
+  endDate: Date | null;
+  setEndDate: (date: Date) => void;
+  client: string;
+  setClient: (value: string) => void;
+  information: string;
+  setInformation: (value: string) => void;
+  progress: number;
+  setProgress: (value: number) => void;
+  technologies: TechDto[];
   techs: TechDto[];
   employees: GetEmployeesByProjectResponseDto[];
-  onProgressChange: (value: number) => void;
+  setTriggerRefresh: (triggerRefresh: boolean) => void;
+
   editable: boolean;
 }
 export default function DisplayViewer({
-  selectedProject,
+  projectId,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  client,
+  setClient,
+  information,
+  setInformation,
+  progress,
+  setProgress,
+  technologies,
   techs,
   employees,
-  onProgressChange,
+  setTriggerRefresh,
   editable,
 }: DisplayViewerProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<string | null>(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
+    null
+  );
+  const [selectedEmployeeName, setSelectedEmployeeName] =
+    useState<string>(null);
+  const originalValuesRef = useRef<Map<string, any>>(new Map());
+  const router = useRouter();
+  const url = "http://localhost:8080/api";
 
-  if (!selectedProject) return null;
+  const onFeedbackClick = (employeeId: string, employeeName: string) => {
+    setSelectedEmployeeId(employeeId);
+    setSelectedEmployeeName(employeeName);
+    setIsModalOpen(true);
+  };
+
+  const onClose = () => setIsModalOpen(false);
+
+  const patchData = async (updatedFields: Record<string, any>) => {
+    const res = validation();
+    if (!res) {
+      router.push("/login");
+      return;
+    }
+
+    const payload: Record<string, any> = {};
+
+    for (const [key, value] of Object.entries(updatedFields)) {
+      const originalValue = originalValuesRef.current.get(key);
+
+      const normalizedOriginal =
+        (key === "startDate" || key === "endDate") && originalValue
+          ? originalValue.toISOString().split("T")[0]
+          : originalValue;
+
+      const normalizedCurrent =
+        (key === "startDate" || key === "endDate") && value
+          ? value.toISOString().split("T")[0]
+          : value;
+
+      if (normalizedCurrent !== normalizedOriginal) {
+        payload[key] = value;
+      }
+    }
+
+    if (Object.keys(payload).length === 0) {
+      console.log("No se detectaron cambios.");
+      return;
+    }
+
+    try {
+      const response = await authFetch(`${url}/projects/${projectId}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      });
+
+      if (!response) {
+        router.push("/router");
+        return;
+      }
+
+      console.log("PATCH exitoso", payload);
+
+      for (const key of Object.keys(payload)) {
+        originalValuesRef.current.set(key, updatedFields[key]);
+      }
+      setTriggerRefresh((prev) => !prev);
+    } catch (error) {
+      console.error("Error al hacer PATCH:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!startDate || !endDate || !client || !information || !progress) return;
+    const map = new Map<string, any>();
+    map.set("startDate", startDate);
+    map.set("endDate", endDate);
+    map.set("client", client);
+    map.set("progress", progress);
+    map.set("information", information);
+    originalValuesRef.current = map;
+  }, []);
 
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <div className="flex flex-col gap-8">
           <DatesCard
-            startDate={selectedProject.startDate}
-            endDate={selectedProject.endDate}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            editable={editable}
+            patchData={patchData}
+          />
+
+          <ClientCard
+            client={client}
+            setClient={setClient}
+            patchData={patchData}
             editable={editable}
           />
-          <ClientCard client={selectedProject.client} editable={editable} />
         </div>
 
-        <DescriptionCard
-          description={selectedProject.information}
+        <InformationCard
+          information={information}
+          setInformation={setInformation}
+          patchData={patchData}
           editable={editable}
         />
+
         <TechStackCard
-          stack={selectedProject.technologies}
+          stack={technologies}
           techs={techs}
+          projectId={projectId}
           editable={editable}
+          setTriggerRefresh={setTriggerRefresh}
         />
 
         <div className="col-span-2 rounded-xl shadow">
           <TeamCard
+            projectId={projectId}
             employees={employees}
-            onFeedbackClick={(memberName: string) => {
-              setSelectedMember(memberName);
-              setIsModalOpen(true);
-            }}
+            onFeedbackClick={onFeedbackClick}
             editable={editable}
+            setTriggerRefresh={setTriggerRefresh}
           />
         </div>
 
         <ProgressCard
-          progress={selectedProject.progress}
-          onProgressChange={onProgressChange}
+          progress={progress}
+          setProgress={setProgress}
+          patchData={patchData}
           editable={editable}
         />
       </div>
-
-      <ModalFeedback
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        memberName={selectedMember || ""}
-      />
+      {isModalOpen && (
+        <ModalFeedback
+          onClose={onClose}
+          selectedEmployeeId={selectedEmployeeId}
+          selectedEmployeeName={selectedEmployeeName}
+        />
+      )}
     </div>
   );
 }

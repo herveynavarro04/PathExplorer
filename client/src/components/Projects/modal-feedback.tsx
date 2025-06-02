@@ -1,31 +1,61 @@
-
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
+import { authFetch } from "@utils/authFetch";
+import { useRouter } from "next/navigation";
+import { validation } from "@utils/validation";
 
 type ModalFeedbackProps = {
-  isOpen: boolean;
   onClose: () => void;
-  memberName: string;
+  selectedEmployeeId: string;
+  selectedEmployeeName: string;
 };
 
 export default function ModalFeedback({
-  isOpen,
   onClose,
-  memberName,
+  selectedEmployeeId,
+  selectedEmployeeName,
 }: ModalFeedbackProps) {
-  const [feedback, setFeedback] = useState("");
+  const [information, setInformation] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const modalRef = useRef(null);
+  const router = useRouter();
+  const url = "http://localhost:8080/api";
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-    setTimeout(() => {
+  const handleSubmit = async () => {
+    const res = validation();
+    if (!res) {
+      router.push("/login");
+      return;
+    }
+
+    try {
+      const response = await authFetch(
+        `${url}/feedback/${selectedEmployeeId}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ information }),
+        }
+      );
+      if (!response) {
+        router.push("/login");
+        return;
+      }
+
+      console.log(response);
+
+      setSubmitted(true);
+
+      setTimeout(() => {
+        setSubmitted(false);
+        setInformation("");
+        onClose();
+      }, 3000);
+    } catch (error) {
+      console.error("Failed to update skills:", error);
       setSubmitted(false);
-      setFeedback("");
-      onClose();
-    }, 1500);
+    }
   };
 
   useEffect(() => {
@@ -44,8 +74,6 @@ export default function ModalFeedback({
     };
   }, [onClose]);
 
-  if (!isOpen) return null;
-
   return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[1000] flex items-center justify-center">
       <div
@@ -53,14 +81,14 @@ export default function ModalFeedback({
         className="bg-[#f3e8ff] dark:bg-[#311a42] p-6 rounded-xl w-96 text-center shadow-xl"
       >
         <h2 className="text-lg font-bold text-[#65417f] dark:text-white mb-2">
-          Retroalimentación para {memberName}
+          Retroalimentación para {selectedEmployeeName}
         </h2>
 
         {!submitted ? (
           <>
             <textarea
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
+              value={information}
+              onChange={(e) => setInformation(e.target.value)}
               placeholder="Escribe tu comentario..."
               className="w-full h-24 border text-black dark:text-white rounded-md p-2 mb-4"
             />

@@ -4,24 +4,37 @@ import { useState } from "react";
 import { cn } from "lib/utils";
 import { FaRegEdit, FaCheck, FaTimes } from "react-icons/fa";
 
+interface ClientCardProps {
+  client: string;
+  setClient: (value: string) => void;
+  editable?: boolean;
+  patchData: (updatedFields: Record<string, any>) => void;
+}
+
 export default function ClientCard({
   client,
+  setClient,
+  patchData,
   editable = true,
-}: {
-  client: string;
-  editable?: boolean;
-}) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [clientName, setClientName] = useState(client);
-  const [tempClient, setTempClient] = useState(client);
+}: ClientCardProps) {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [tempClient, setTempClient] = useState<string>(client);
 
-  const handleSave = () => {
-    setClientName(tempClient);
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = async () => {
+    await patchData({
+      client: tempClient,
+    });
+
+    setClient(tempClient);
     setIsEditing(false);
   };
 
   const handleCancel = () => {
-    setTempClient(clientName);
+    setTempClient(client);
     setIsEditing(false);
   };
 
@@ -48,7 +61,7 @@ export default function ClientCard({
             </>
           ) : (
             <button
-              onClick={() => setIsEditing(true)}
+              onClick={handleEdit}
               className="text-gray-500 hover:text-[#65417f] dark:text-gray-300 dark:hover:text-white"
             >
               <FaRegEdit size={15} />
@@ -69,7 +82,7 @@ export default function ClientCard({
             className="text-center text-2xl font-bold rounded-md px-2 py-1 bg-gray-100 dark:bg-[#443153] text-gray-900 dark:text-white focus:outline-none focus:ring focus:ring-[#65417f]"
           />
         ) : (
-          <span className="text-2xl">{clientName}</span>
+          <span className="text-2xl">{client}</span>
         )}
       </div>
     </div>
