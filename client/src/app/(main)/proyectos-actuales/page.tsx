@@ -40,6 +40,7 @@ interface GetEmployeesByProjectResponseDto {
   employeeName: string;
   employeeId: string;
   chargeability: number;
+  mimeType?: string;
 }
 
 export default function Home() {
@@ -226,13 +227,21 @@ export default function Home() {
 
   return (
     <div>
+      <div >
+      <button
+        onClick={() => router.back()}
+        className="text-md text-[#65417f] hover:font-semibold mb-1"
+      >
+        ← Regresar
+      </button>
+    </div>
       <div
         key={selectedProject?.projectId}
         className={`mx-auto w-full transition-opacity duration-300 ${
           !fadeIn ? "opacity-0" : "opacity-100"
         }`}
       >
-        <div className="flex justify-between items-center mb-9 px-4">
+        <div className="flex justify-between items-center mb-2 px-4">
           <ProjectViewer
             projects={projects}
             selectedProject={selectedProject}
@@ -244,11 +253,11 @@ export default function Home() {
 
           {progress === 100 && (
             <button
-              className="bg-[#65417f] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
-              onClick={() => setIsFinalizeModalOpen(true)}
-            >
-              Marcar como finalizado
-            </button>
+        className="bg-[#65417f] text-white px-6 py-2 rounded-md hover:bg-opacity-90 transition whitespace-nowrap"
+        onClick={() => setIsFinalizeModalOpen(true)}
+      >
+        Marcar como finalizado
+      </button>
           )}
 
           {isFinalizeModalOpen && (
