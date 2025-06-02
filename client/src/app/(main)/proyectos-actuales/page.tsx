@@ -43,66 +43,64 @@ interface GetEmployeesByProjectResponseDto {
 }
 
 export default function Home() {
-  const [projects, setProjects] =
-    useState<ProjectInfoPreviewResponseDto[]>(null);
-  const [techs, setTechs] = useState<TechDto[]>(null);
-  const [employees, setEmployees] =
-    useState<GetEmployeesByProjectResponseDto[]>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
-  const [loadingProjTech, setLodingProjTech] = useState<boolean>(true);
-  const [loadingEmployees, setLoadingEmployees] = useState<boolean>(true);
-  const [projectId, setProjectId] = useState<string>("");
-  const [information, setInformation] = useState<string>("");
-  const [client, setClient] = useState<string>("");
-  const [progress, setProgress] = useState<number>(0);
-  const [startDate, setStartDate] = useState<Date>(null);
-  const [endDate, setEndDate] = useState<Date>(null);
-  const [active, setActive] = useState<boolean>(true);
-  const [triggerRefresh, setTriggerRefresh] = useState<boolean>(false);
+  const [projects, setProjects] = useState<
+    ProjectInfoPreviewResponseDto[] | null
+  >(null);
+  const [techs, setTechs] = useState<TechDto[] | null>(null);
+  const [employees, setEmployees] = useState<
+    GetEmployeesByProjectResponseDto[] | null
+  >(null);
+  const [loading, setLoading] = useState(true);
+  const [loadingProjects, setLoadingProjects] = useState(true);
+  const [loadingProjTech, setLodingProjTech] = useState(true);
+  const [loadingEmployees, setLoadingEmployees] = useState(true);
+  const [projectId, setProjectId] = useState("");
+  const [information, setInformation] = useState("");
+  const [client, setClient] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [active, setActive] = useState(true);
+  const [triggerRefresh, setTriggerRefresh] = useState(false);
   const [selectedProject, setSelectedProject] =
     useState<ProjectInfoPreviewResponseDto | null>(null);
-  const [isFinalizeModalOpen, setIsFinalizeModalOpen] =
-    useState<boolean>(false);
-  const [fadeIn, setFadeIn] = useState<boolean>(false);
-  const [changeRefresh, setChangeRefresh] = useState<boolean>(false);
+  const [isFinalizeModalOpen, setIsFinalizeModalOpen] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
+  const [changeRefresh, setChangeRefresh] = useState(false);
   const isFirstProjectRefresh = useRef(true);
   const [pendingProjectId, setPendingProjectId] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const router = useRouter();
   const url = "http://localhost:8080/api";
 
   const patchDeleteProject = async () => {
     const res = validation();
-    if (!res) {
-      router.push("/login");
-      return;
-    }
+    if (!res) return router.push("/login");
+
     try {
       const response = await authFetch(`${url}/projects/${projectId}`, {
         method: "PATCH",
-        body: JSON.stringify({
-          active: false,
-        }),
+        body: JSON.stringify({ active: false }),
       });
-      if (!response) {
-        router.push("/login");
-        return;
-      }
-      setTriggerRefresh((prev) => !prev);
-      setSelectedProject(null);
+      if (!response) return router.push("/login");
+
+      setDeleteConfirmation(true);
+      setIsTransitioning(true);
+      setFadeIn(false);
+
+      setTimeout(() => {
+        setTriggerRefresh((prev) => !prev);
+      }, 300);
     } catch (error) {
-      console.error("Error patching the progress", error);
+      console.error("Error patching the project", error);
     }
   };
 
   useEffect(() => {
     const res = validation();
-    if (!res) {
-      router.push("/login");
-      return;
-    }
+    if (!res) return router.push("/login");
 
     const currentProjectId = selectedProject?.projectId;
 
@@ -115,10 +113,7 @@ export default function Home() {
           authFetch<GetProjectsTechResponseDto>(`${url}/projects/techs`),
         ]);
 
-        if (!projectsRes || !techsRes) {
-          router.push("/login");
-          return;
-        }
+        if (!projectsRes || !techsRes) return router.push("/login");
 
         const projects = projectsRes.employeeProjects
           .map((p) => ({
@@ -126,10 +121,17 @@ export default function Home() {
             startDate: new Date(p.startDate),
             endDate: new Date(p.endDate),
           }))
-          .filter((project) => project.active);
+          .filter((p) => p.active);
 
-        const updatedProject =
-          projects.find((p) => p.projectId === currentProjectId) || projects[0];
+        let updatedProject;
+        if (deleteConfirmation) {
+          updatedProject = projects[0];
+          setDeleteConfirmation(false);
+        } else {
+          updatedProject =
+            projects.find((p) => p.projectId === currentProjectId) ||
+            projects[0];
+        }
 
         setProjects(projects);
         setTechs(techsRes.ProjectsTechs);
@@ -147,10 +149,7 @@ export default function Home() {
   useEffect(() => {
     if (!selectedProject) return;
     const res = validation();
-    if (!res) {
-      router.push("/login");
-      return;
-    }
+    if (!res) return router.push("/login");
 
     setLoadingEmployees(true);
 
@@ -159,21 +158,20 @@ export default function Home() {
         const employeesRes = await authFetch<
           GetEmployeesByProjectResponseDto[]
         >(`${url}/projects/${selectedProject.projectId}/employees`);
-        if (!employeesRes) {
-          router.push("/login");
-          return;
-        }
+        if (!employeesRes) return router.push("/login");
+
         setEmployees(employeesRes);
         setLoadingEmployees(false);
       } catch (error) {
-        console.error("Error loading employees for selected project", error);
+        console.error("Error loading employees", error);
       }
     };
+
     loadEmployees();
   }, [selectedProject]);
 
   useEffect(() => {
-    if (!employees) return;
+    if (!employees || !selectedProject) return;
     setProjectId(selectedProject.projectId);
     setClient(selectedProject.client);
     setInformation(selectedProject.information);
@@ -188,6 +186,7 @@ export default function Home() {
       setTimeout(() => setFadeIn(true), 25);
     }
   }, [loadingEmployees, loadingProjTech, loadingProjects]);
+
   useEffect(() => {
     if (isFirstProjectRefresh.current) {
       isFirstProjectRefresh.current = false;
@@ -199,7 +198,7 @@ export default function Home() {
 
     const timeout = setTimeout(() => {
       if (pendingProjectId) {
-        const newProject = projects.find(
+        const newProject = projects?.find(
           (p) => p.projectId === pendingProjectId
         );
         setSelectedProject(newProject);
@@ -226,67 +225,65 @@ export default function Home() {
   }
 
   return (
-    <>
-      <div>
-        <div
-          key={selectedProject?.projectId}
-          className={`mx-auto w-full transition-opacity duration-300 ${
-            !fadeIn ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          <div className="flex justify-between items-center mb-9 px-4">
-            <ProjectViewer
-              projects={projects}
-              selectedProject={selectedProject}
-              setEmployees={setEmployees}
-              setChangeRefresh={setChangeRefresh}
-              setPendingProjectId={setPendingProjectId}
-              active={active}
-            />
-
-            {progress === 100 && (
-              <button
-                className="bg-[#65417f] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
-                onClick={() => setIsFinalizeModalOpen(true)}
-              >
-                Marcar como finalizado
-              </button>
-            )}
-
-            {isFinalizeModalOpen && (
-              <EndProjectModal
-                projectName={selectedProject?.projectName || "el proyecto"}
-                onCancel={() => setIsFinalizeModalOpen(false)}
-                onConfirm={() => {
-                  patchDeleteProject();
-                  setIsFinalizeModalOpen(false);
-                  console.log("Proyecto finalizado");
-                }}
-              />
-            )}
-          </div>
-
-          <DisplayViewer
-            key={projectId}
-            projectId={projectId}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            client={client}
-            setClient={setClient}
-            information={information}
-            setInformation={setInformation}
-            progress={progress}
-            setProgress={setProgress}
-            technologies={selectedProject.technologies}
-            techs={techs}
-            employees={employees}
-            setTriggerRefresh={setTriggerRefresh}
-            editable={true}
+    <div>
+      <div
+        key={selectedProject?.projectId}
+        className={`mx-auto w-full transition-opacity duration-300 ${
+          !fadeIn ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        <div className="flex justify-between items-center mb-9 px-4">
+          <ProjectViewer
+            projects={projects}
+            selectedProject={selectedProject}
+            setEmployees={setEmployees}
+            setChangeRefresh={setChangeRefresh}
+            setPendingProjectId={setPendingProjectId}
+            active={active}
           />
+
+          {progress === 100 && (
+            <button
+              className="bg-[#65417f] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
+              onClick={() => setIsFinalizeModalOpen(true)}
+            >
+              Marcar como finalizado
+            </button>
+          )}
+
+          {isFinalizeModalOpen && (
+            <EndProjectModal
+              projectName={selectedProject?.projectName || "el proyecto"}
+              onCancel={() => setIsFinalizeModalOpen(false)}
+              onConfirm={() => {
+                patchDeleteProject();
+                setIsFinalizeModalOpen(false);
+                console.log("Proyecto finalizado");
+              }}
+            />
+          )}
         </div>
+
+        <DisplayViewer
+          key={projectId}
+          projectId={projectId}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          client={client}
+          setClient={setClient}
+          information={information}
+          setInformation={setInformation}
+          progress={progress}
+          setProgress={setProgress}
+          technologies={selectedProject.technologies}
+          techs={techs}
+          employees={employees}
+          setTriggerRefresh={setTriggerRefresh}
+          editable={true}
+        />
       </div>
-    </>
+    </div>
   );
 }
