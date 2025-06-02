@@ -231,12 +231,11 @@ export default function UserDetailsRegisterModal({
   }
 
   return ReactDOM.createPortal(
-    <div
-      className={`mx-auto w-full max-w-[75rem] h-full transition-opacity duration-500 ${
-        fadeIn ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6">
+<div
+  className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6 transition-opacity duration-500 ${
+    fadeIn ? "opacity-100" : "opacity-0"
+  }`}
+>
         <div
           ref={modalRef}
           className="w-full max-w-5xl bg-[#d0bfdb] dark:bg-[#311a42] rounded-xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-xl text-gray-800 dark:text-white"
@@ -247,8 +246,8 @@ export default function UserDetailsRegisterModal({
                 <h2 className="font-semibold text-lg mb-4">
                   Información Personal
                 </h2>
-                <div className="flex flex-col items-center gap-4">
-                  <div className="w-[180px] h-[180px] rounded-full overflow-hidden">
+                <div className="flex flex-col items-center gap-8">
+                  <div className="w-60 h-60 rounded-full overflow-hidden">
                     <Image
                       src={
                         userData.profilePicture && userData.mimeType
@@ -284,14 +283,14 @@ export default function UserDetailsRegisterModal({
                       Nivel
                     </label>
                     <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                      {userData.level}
+                      {userData.level ? userData.level : "No especificado"}
                     </div>
                   </div>
 
                 </div>
                 <button
                   onClick={() => setShowFeedback(true)}
-                  className="mt-4 w-full px-4 py-2 text-sm font-semibold bg-[#65417f] text-white rounded-lg hover:bg-opacity-90"
+                  className="mt-16 w-full px-4 py-2 text-sm font-semibold bg-[#65417f] text-white rounded-lg hover:bg-opacity-90"
                 >
                   Ver opiniones pasadas
                 </button>
@@ -389,8 +388,7 @@ export default function UserDetailsRegisterModal({
             </div>
           )}
         </div>
-      </div>
-    </div>,
+      </div>,
     document.body
   );
 }

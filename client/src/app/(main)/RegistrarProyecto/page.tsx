@@ -64,6 +64,9 @@ export default function RegisterProjectPage() {
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
   const [employees, setEmployees] = useState<GetEmployeesResponseDto[]>([]);
   const [fadeIn, setFadeIn] = useState(false);
+  const isLimitEmployeesValid = limitEmployees !== "" && Number(limitEmployees) >= 1;
+  
+
 
   useEffect(() => {
     const res = validation();
@@ -215,6 +218,14 @@ export default function RegisterProjectPage() {
 
   return (
     <>
+          <div >
+      <button
+        onClick={() => router.back()}
+        className="text-lg text-[#65417f] hover:font-semibold mb-4"
+      >
+        ← Regresar
+      </button>
+    </div>
       <div
         className={`mx-auto w-full max-w-[970px] transition-opacity duration-500 ${
           fadeIn ? "opacity-100" : "opacity-0"
@@ -293,7 +304,6 @@ export default function RegisterProjectPage() {
 
             <input
         type="number"
-        min={0}
         placeholder="Límite de Empleados"
         value={limitEmployees}
         onChange={(e) => {
@@ -321,6 +331,11 @@ export default function RegisterProjectPage() {
         }}
         className="w-full p-3 border rounded-md bg-[#f3edf7] dark:bg-[#4b2e67] text-gray-900 dark:text-white"
       />
+      {limitEmployees !== "" && Number(limitEmployees) < 1 && (
+  <p className="text-red-600 mt-1 text-sm">
+    El valor debe ser mayor o igual a 1.
+  </p>
+)}
             {limitEmployees !== "" && Number(limitEmployees) > 0 && (
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
                 Asignar empleados es opcional. Puedes dejar el proyecto abierto
@@ -429,12 +444,17 @@ export default function RegisterProjectPage() {
               />
             </div>
 
-            <button
-              type="submit"
-              className="w-full py-3 px-4 bg-[#65417f] text-white rounded-md hover:bg-[#5a366e] text-sm font-semibold"
-            >
-              Registrar Proyecto
-            </button>
+          <button
+            type="submit"
+            disabled={!isLimitEmployeesValid}
+            className={`w-full py-3 px-4 rounded-md text-sm font-semibold transition
+              ${isLimitEmployeesValid
+                ? "bg-[#65417f] text-white hover:bg-[#5a366e] cursor-pointer"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"}
+            `}
+          >
+            Registrar Proyecto
+          </button>
           </form>
         </div>
       </div>

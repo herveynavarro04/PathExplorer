@@ -196,11 +196,10 @@ export default function UserDetailsModal({
 
   return ReactDOM.createPortal(
     <div
-      className={`mx-auto w-full max-w-[75rem] h-full transition-opacity duration-500 ${
-        fadeIn ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6">
+  className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6 transition-opacity duration-500 ${
+    fadeIn ? "opacity-100" : "opacity-0"
+  }`}
+>
         <div
           ref={modalRef}
           className="w-full max-w-5xl bg-[#d0bfdb] dark:bg-[#311a42] rounded-xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-xl text-gray-800 dark:text-white"
@@ -208,17 +207,18 @@ export default function UserDetailsModal({
           <div className="rounded-xl bg-white dark:bg-[#412859] p-6">
             <h2 className="font-semibold text-lg mb-4">Información Personal</h2>
             <div className="flex flex-col items-center gap-4">
-              <Image
-                src={
-                  userData.profilePicture && userData.mimeType
-                    ? `data:${userData.mimeType};base64,${userData.profilePicture}`
-                    : "/profile.png"
-                }
-                alt="Foto de perfil"
-                width={180}
-                height={180}
-                className="rounded-full object-cover"
-              />
+          <div className="w-36 sm:w-50 aspect-square relative rounded-full overflow-hidden">
+            <Image
+              src={
+                userData.profilePicture && userData.mimeType
+                  ? `data:${userData.mimeType};base64,${userData.profilePicture}`
+                  : "/profile.png"
+              }
+              alt="Foto de perfil"
+              fill
+              className="object-cover"
+            />
+          </div>
 
               <div className="w-full">
                 <label className="text-sm font-medium block mb-1">Nombre</label>
@@ -303,8 +303,7 @@ export default function UserDetailsModal({
             )}
           </div>
         </div>
-      </div>
-    </div>,
+      </div>,
     document.body
   );
 }
