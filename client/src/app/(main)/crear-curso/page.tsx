@@ -26,6 +26,15 @@ export default function RegistrarCurso() {
   const [showEmployees, setShowEmployees] = useState(false);
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const router = useRouter();
+  
+  const [fadeIn, setFadeIn] = useState(false);
+
+useEffect(() => {
+  const timeout = setTimeout(() => {
+    setFadeIn(true);
+  }, 10);
+  return () => clearTimeout(timeout);
+}, []);
 
 
   useEffect(() => {
@@ -121,7 +130,11 @@ export default function RegistrarCurso() {
   };
 
   return (
-    <>
+    <div
+    className={`transition-opacity duration-500 ${
+      fadeIn ? "opacity-100" : "opacity-0"
+    }`}
+  >
     <div className="max-w-full mx-auto w-full px-4">
       <button
         type="button"
@@ -191,6 +204,6 @@ export default function RegistrarCurso() {
         />
       )}
     </div>
-    </>
+    </div>
   );
 }

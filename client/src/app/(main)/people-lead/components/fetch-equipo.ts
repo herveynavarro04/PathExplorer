@@ -5,6 +5,7 @@ export async function getEquipo() {
         role: "Diseñador UI",
         cargability: "95%",
         level: "10",
+        position: " UI Designer",
         courses: [
           { name: "Diseño de Interfaces", date: "2023-02-10", duration: "30 semanas", description: "Curso de diseño de interfaces modernas", institution: "Platzi", url: "https://platzi.com/ui-design" },
           { name: "UX Avanzado", date: "2022-11-20", duration: "25 semanas", description: "Curso de experiencia de usuario", institution: "Domestika", url: "https://domestika.org/ux" },
@@ -26,6 +27,7 @@ export async function getEquipo() {
         role: "Diseñadora UX",
         cargability: "92%",
         level: "9",
+        position: " UX Designer",
         courses: [
           { name: "Research para UX", date: "2023-01-15", duration: "8 semanas", description: "Investigación cualitativa y cuantitativa", institution: "Coursera", url: "https://www.coursera.org/research-ux" },
           { name: "Design Thinking", date: "2023-04-10", duration: "12 semanas", description: "Solución de problemas creativos", institution: "IDEO", url: "https://www.ideo.com" },
@@ -47,6 +49,7 @@ export async function getEquipo() {
         role: "Full Stack Developer",
         cargability: "88%",
         level: "8",
+        position: " Full Stack Developer",
         courses: [
           { name: "Node.js Avanzado", date: "2023-02-15", duration: "10 semanas", description: "Desarrollo de APIs con Express", institution: "Udemy", url: "https://udemy.com/node-avanzado" },
           { name: "React y TypeScript", date: "2023-01-25", duration: "12 semanas", description: "Apps modernas con tipado fuerte", institution: "Platzi", url: "https://platzi.com/react-ts" },
