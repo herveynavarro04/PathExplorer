@@ -125,7 +125,7 @@ export default function Home() {
             startDate: new Date(p.startDate),
             endDate: new Date(p.endDate),
           }))
-          .filter((project) => project.active);
+          .filter((project) => !project.active);
 
         const updatedProject =
           projects.find((p) => p.projectId === currentProjectId) || projects[0];
@@ -242,27 +242,6 @@ export default function Home() {
               setPendingProjectId={setPendingProjectId}
               active={active}
             />
-
-            {progress === 100 && (
-              <button
-                className="bg-[#65417f] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
-                onClick={() => setIsFinalizeModalOpen(true)}
-              >
-                Marcar como finalizado
-              </button>
-            )}
-
-            {isFinalizeModalOpen && (
-              <EndProjectModal
-                projectName={selectedProject?.projectName || "el proyecto"}
-                onCancel={() => setIsFinalizeModalOpen(false)}
-                onConfirm={() => {
-                  patchDeleteProject();
-                  setIsFinalizeModalOpen(false);
-                  console.log("Proyecto finalizado");
-                }}
-              />
-            )}
           </div>
 
           <DisplayViewer
