@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getEquipo } from "../../people-lead/components/fetch-equipo"; // ajusta esta ruta si es necesario
-import MemberCard from "../components/member-card";
+import MemberCard from "../components/MemberCard";
 
 
 export default function MemberPage() {
