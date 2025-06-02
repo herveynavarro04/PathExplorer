@@ -73,8 +73,6 @@ const TechSkillsCard = ({ skills, userSkills, url }: TechSkillsCardProps) => {
 
   useEffect(() => {
     const patchData = async () => {
-      if (!triggerSave) return;
-
       try {
         await authFetch(`${url}/skills/employee`, {
           method: "PATCH",

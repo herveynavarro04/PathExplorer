@@ -15,30 +15,36 @@ interface GetEmployeesByProjectResponseDto {
 }
 
 interface TeamCardProps {
+  projectId: string;
   employees: GetEmployeesByProjectResponseDto[];
-  onFeedbackClick: (memberName: string) => void;
+  onFeedbackClick: (employeeId: string, employeeName: string) => void;
+  setTriggerRefresh: (triggerRefresh: boolean) => void;
+
   editable?: boolean;
 }
 
 export default function TeamCard({
+  projectId,
   employees,
   onFeedbackClick,
+  setTriggerRefresh,
   editable = true,
 }: TeamCardProps) {
   const membersPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
   const [isEditing, setIsEditing] = useState(false);
-  const [memberToDelete, setMemberToDelete] = useState<string | null>(null);
-
+  const [employeeIdTodelete, setEmployeeIdToDelete] = useState<string>(null);
+  const [employeeNameToDelete, setEmployeeNameToDelete] =
+    useState<string>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const totalPages = Math.ceil(employees.length / membersPerPage);
   const startIdx = (currentPage - 1) * membersPerPage;
   const currentMembers = employees.slice(startIdx, startIdx + membersPerPage);
 
-  const handleDeleteConfirm = () => {
-    if (memberToDelete) {
-      console.log("Deleting member:", memberToDelete);
-    }
-    setMemberToDelete(null);
+  const handleDeleteInfo = (employeeId: string, employeeName: string) => {
+    setEmployeeIdToDelete(employeeId);
+    setEmployeeNameToDelete(employeeName);
+    setShowModal(true);
   };
 
   return (
@@ -53,13 +59,6 @@ export default function TeamCard({
           <div className="flex items-center gap-2">
             {isEditing ? (
               <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsEditing(false)}
-                  className="rounded-lg bg-[#65417f] px-2 py-[5px] font-medium text-white hover:bg-opacity-90"
-                >
-                  <FaCheck size={14} />
-                </button>
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
@@ -90,7 +89,9 @@ export default function TeamCard({
                 </h4>
                 {editable && isEditing && (
                   <button
-                    onClick={() => setMemberToDelete(member.employeeName)}
+                    onClick={() =>
+                      handleDeleteInfo(member.employeeId, member.employeeName)
+                    }
                     className="text-red-500 hover:text-red-700"
                   >
                     <FaTimes size={12} />
@@ -114,7 +115,9 @@ export default function TeamCard({
               <p className="text-sm pb-3">{member.chargeability}</p>
               <button
                 className="text-sm text-[#5a3bb3] dark:text-white mt-1 hover:bg-[#ece5f1] dark:hover:bg-[#FFFFFF1A] rounded-[10px] p-2"
-                onClick={() => onFeedbackClick(member.employeeName)}
+                onClick={() =>
+                  onFeedbackClick(member.employeeId, member.employeeName)
+                }
               >
                 + Añadir retroalimentación
               </button>
@@ -147,11 +150,15 @@ export default function TeamCard({
         )}
       </div>
 
-      {editable && memberToDelete && (
+      {showModal && (
         <DeleteMemberModal
-          memberName={memberToDelete}
-          onCancel={() => setMemberToDelete(null)}
-          onConfirm={handleDeleteConfirm}
+          projectId={projectId}
+          employeeIdToDelete={employeeIdTodelete}
+          setEmployeeIdToDelete={setEmployeeIdToDelete}
+          employeeNameToDelete={employeeNameToDelete}
+          setEmployeeNameToDelete={setEmployeeNameToDelete}
+          setShowModal={setShowModal}
+          setTriggerRefresh={setTriggerRefresh}
         />
       )}
     </div>
