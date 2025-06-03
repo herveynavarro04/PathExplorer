@@ -5,6 +5,7 @@ import { EmployeeInterestEntity } from 'src/common/entities/employeeInterests.en
 import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
 import { EmployeeCoursesEntity } from 'src/common/entities/employeeCourses.entity';
 import { EmployeeProfilePicture } from './employeeProfilePicture.entity';
+import { EmployeeAssigned } from 'src/common/entities/employeeAssigned.entity';
 
 @Entity('employee')
 export class EmployeeEntity {
@@ -62,6 +63,13 @@ export class EmployeeEntity {
   })
   @IsOptional()
   employeeCoursesLink?: EmployeeCoursesEntity[];
+
+  @OneToMany(() => EmployeeAssigned, (link) => link.employee, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @IsOptional()
+  employeeAssigned?: EmployeeCoursesEntity[];
 
   @OneToOne(() => EmployeeProfilePicture, (link) => link.employee, {
     cascade: true,

@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { JwtGuard } from 'src/common/Guards/jwt.guards';
+import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { GetAvailableResponseDto } from './dto/response/getAvailableProjects.response.dto';
 import { GetProjectsTechResponseDto } from './dto/response/getProjectsTech.response.dto';
 import { ProjectsInfoResponseDto } from './dto/response/projectsInfo.response.dto';

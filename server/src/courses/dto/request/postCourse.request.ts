@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class PostCourseRequestDto {
   @IsString()
@@ -22,4 +22,8 @@ export class PostCourseRequestDto {
   @IsBoolean()
   @IsNotEmpty()
   mandatory: boolean;
+
+  @IsArray()
+  @IsNotEmpty()
+  employeesAssigned: string[];
 }

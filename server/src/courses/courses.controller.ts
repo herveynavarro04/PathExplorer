@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CoursesService } from './service/courses.service';
-import { JwtGuard } from 'src/common/Guards/jwt.guards';
+import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { Request } from 'express';
 import { PostCourseRequestDto } from './dto/request/postCourse.request';
 import { PostCourseResponseDto } from './dto/response/postCourseResponse.dto';

@@ -9,12 +9,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { PostCourseRequestDto } from '../dto/request/postCourse.request';
 import { PostCourseResponseDto } from '../dto/response/postCourseResponse.dto';
 import { CoursesEntity } from '../entity/courses.entity';
+import { employeeCoursesService } from './employeeCourses.service';
 
 @Injectable()
 export class CoursesService {
   constructor(
     @InjectRepository(CoursesEntity)
     private coursesRepository: Repository<CoursesEntity>,
+    private employeeCourseService: employeeCoursesService,
   ) {}
 
   async postCourse(
@@ -32,6 +34,12 @@ export class CoursesService {
       };
       this.coursesRepository.save(newCourse);
       Logger.log('Course created succesfully', 'CourseService');
+      if (newCoursePayload.employeesAssigned) {
+        await this.employeeCourseService.assignEmployeesCourse(
+          newCoursePayload.employeesAssigned,
+          courseId,
+        );
+      }
       return {
         courseId: courseId,
         createdAt: new Date(),

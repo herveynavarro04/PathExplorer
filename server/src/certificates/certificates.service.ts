@@ -13,6 +13,8 @@ import { CertificatesFilesEntity } from './entities/certificatesFiles.entity';
 import { GetCertificateByIdResponseDto } from './dto/response/getCertificateById.response.dto';
 import { GetCertificatesResponseDto } from './dto/response/getCertificates.response.dto';
 import { DeleteCertificateResponseDto } from './dto/response/deleteCertificate.response.dto';
+import { UpdateCertificateResponseDto } from './dto/response/updateCertificate.response.dto';
+import { UpdateCertificateStatusRequestDto } from './dto/request/updatePayload.request.dto';
 @Injectable()
 export class CertificatesService {
   constructor(
@@ -45,6 +47,34 @@ export class CertificatesService {
       return {
         certificateId: certificateId,
         createdAt: new Date(),
+      };
+    } catch (error) {
+      Logger.error(
+        'Error during certificate registration',
+        error.stack,
+        'CertificateService',
+      );
+      throw new InternalServerErrorException('Failed to create certificate');
+    }
+  }
+
+  async updateCertificateStatus(
+    certificateId: string,
+    updatePayload: UpdateCertificateStatusRequestDto,
+  ): Promise<UpdateCertificateResponseDto> {
+    try {
+      await this.certificatesRepository.update(
+        {
+          certificateId: certificateId,
+        },
+        {
+          status: updatePayload.status,
+        },
+      );
+      Logger.log('Certificate succesfully updated', 'CertificatesService');
+      return {
+        certificateId: certificateId,
+        updatedAt: new Date(),
       };
     } catch (error) {
       Logger.error(

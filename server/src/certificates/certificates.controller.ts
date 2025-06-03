@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   Res,
@@ -15,10 +16,12 @@ import { CertificatesService } from './certificates.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 import { PostCertificateRequestDto } from './dto/request/postCertificate.request.dto';
-import { JwtGuard } from 'src/common/Guards/jwt.guards';
+import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { GetCertificateByIdResponseDto } from './dto/response/getCertificateById.response.dto';
 import { GetCertificatesResponseDto } from './dto/response/getCertificates.response.dto';
 import { DeleteCertificateResponseDto } from './dto/response/deleteCertificate.response.dto';
+import { UpdateCertificateStatusRequestDto } from './dto/request/updatePayload.request.dto';
+import { UpdateCertificateResponseDto } from './dto/response/updateCertificate.response.dto';
 
 @Controller('certificates')
 export class CertificatesController {
@@ -40,12 +43,29 @@ export class CertificatesController {
     );
   }
 
+  @Patch(':certificateId')
+  @UseGuards(JwtGuard)
+  async updateCertificateStatus(
+    @Param('certificateId') certificateId: string,
+    @Body() updatePayload: UpdateCertificateStatusRequestDto,
+  ): Promise<UpdateCertificateResponseDto> {
+    return this.updateCertificateStatus(certificateId, updatePayload);
+  }
+
   @Get()
   @UseGuards(JwtGuard)
   async getCertificates(
     @Req() req: Request,
   ): Promise<GetCertificatesResponseDto> {
     const employeeId = req.user['employeeId'];
+    return this.certificateService.getCertificates(employeeId);
+  }
+
+  @Get(':employeeId')
+  @UseGuards(JwtGuard)
+  async getCertificatesByEmployeeId(
+    @Param('employeeId') employeeId: string,
+  ): Promise<GetCertificatesResponseDto> {
     return this.certificateService.getCertificates(employeeId);
   }
 

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
-import { JwtGuard } from 'src/common/Guards/jwt.guards';
+import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { UpdateEmployeeRequestDto } from './dto/request/updateEmployee.request.dto';
 import { GetEmployeeInfoResponseDto } from './dto/response/getEmployeeInfo.response.dto';
 import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
