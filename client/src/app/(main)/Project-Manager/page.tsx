@@ -32,11 +32,6 @@ export default function Home() {
   const url = "http://localhost:8080/api";
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 10);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
     const res = validation();
     if (!res) {
       router.push("/login");

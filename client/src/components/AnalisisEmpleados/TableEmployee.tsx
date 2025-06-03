@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "components/ui/table";
 import { useState } from "react";
-import UserDetailsModal from "./UserDetailsModal";
+import UserDetailsModal from "./UserDetailsModalManager";
 
 interface GetEmployeesResponseDto {
   employeeId: string;

@@ -1,33 +1,20 @@
+// components/ProjectViewer.tsx
 "use client";
 
 import Select from "react-select";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-interface ProjectInfoPreviewResponseDto {
+interface ProjectInfo {
   projectId: string;
   projectName: string;
-  information: string;
-  status?: string;
-  active?: boolean;
-  technologies?: TechDto[];
-  client?: string;
-  startDate?: Date;
-  endDate?: Date;
-  progress?: number;
 }
 
-interface TechDto {
-  technologyId: string;
-  technologyName: string;
-}
-
-type ProjectViewerProps = {
-  projects: ProjectInfoPreviewResponseDto[];
-  selectedProject: ProjectInfoPreviewResponseDto;
-  setChangeRefresh: (changeRefresh: boolean) => void;
-  setPendingProjectId: (projectId: string) => void;
-  active: boolean;
+type Props = {
+  projects: ProjectInfo[];
+  selectedProject: ProjectInfo;
+  setChangeRefresh: (v: boolean) => void;
+  setPendingProjectId: (id: string) => void;
 };
 
 export default function ProjectViewer({
@@ -35,14 +22,16 @@ export default function ProjectViewer({
   selectedProject,
   setChangeRefresh,
   setPendingProjectId,
-  active,
-}: ProjectViewerProps) {
+}: Props) {
   const { theme } = useTheme();
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
     setOptions(
-      projects.map((p) => ({ label: p.projectName, value: p.projectId }))
+      projects.map((p) => ({
+        label: p.projectName,
+        value: p.projectId,
+      }))
     );
   }, [projects]);
 
@@ -54,7 +43,7 @@ export default function ProjectViewer({
       boxShadow: state.isFocused ? "0 0 0 1px #65417f" : "none",
       borderWidth: "1px",
       "&:hover": { borderColor: "#65417f" },
-      fontSize: "1.9rem",
+      fontSize: "1.2rem",
       borderRadius: "0.75rem",
       paddingLeft: "2px",
       paddingRight: "2px",
@@ -98,22 +87,13 @@ export default function ProjectViewer({
   };
 
   return (
-    <div className="w-full flex items-center justify-between gap-6 pb-2">
-      <p className="font-extrabold text-black text-2xl whitespace-nowrap shrink-0">
-        {active ? "Proyectos Actuales" : "Proyectos Finalizados"}
-      </p>
-
+    <div className="w-full flex pb-2">
       <Select
         options={options}
         value={options.find((o) => o.value === selectedProject?.projectId)}
-        onChange={(selectedOption) => {
-          if (
-            !selectedOption ||
-            selectedOption.value === selectedProject?.projectId
-          )
-            return;
-
-          setPendingProjectId(selectedOption.value);
+        onChange={(option) => {
+          if (!option || option.value === selectedProject?.projectId) return;
+          setPendingProjectId(option.value);
           setChangeRefresh((prev) => !prev);
         }}
         styles={customStyles}

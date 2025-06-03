@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "components/ui/table";
 import { useState } from "react";
-import UserDetailsRegisterModal from "./UserDetailsRegisterModal";
+import UserDetailsModalRegister from "./UserDetailsModalRegister";
 
 interface GetEmployeesResponseDto {
   employeeId: string;
@@ -36,15 +36,12 @@ export function EmployeesTable({
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [sortKey, setSortKey] = useState<
-    | "interestCount"
-    | "skillCount"
-    | "employee_name"
+    "interestCount" | "skillCount" | "employee_name"
   >(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const totalPages = Math.ceil(employees.length / itemsPerPage);
-
   const availableEmployees = employees.filter(
     (e) => !selectedEmployees.some((se) => se.employeeId === e.employeeId)
   );
@@ -55,10 +52,7 @@ export function EmployeesTable({
   );
 
   const handleSort = (
-    key:
-      | "interestCount"
-      | "skillCount"
-      | "employee_name"
+    key: "interestCount" | "skillCount" | "employee_name"
   ) => {
     if (sortKey === key) {
       setSortAsc((prev) => !prev);
@@ -101,10 +95,7 @@ export function EmployeesTable({
 
   function renderHeader(
     label: string,
-    key:
-      | "interestCount"
-      | "skillCount"
-      | "employee_name"
+    key: "interestCount" | "skillCount" | "employee_name"
   ) {
     return (
       <TableHead
@@ -200,7 +191,7 @@ export function EmployeesTable({
       </div>
 
       {selectedUser && (
-        <UserDetailsRegisterModal
+        <UserDetailsModalRegister
           employeeId={selectedUser}
           onClose={() => {
             setSelectedUser(null);

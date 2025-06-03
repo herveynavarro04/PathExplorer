@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import Image from "next/image";
-import ProjectUserCard from "components/AnalisisEmpleados/ProjectUserCard";
-import TechSkillsUser from "components/AnalisisEmpleados/TechSkillsUser";
-import SoftSkillsUser from "components/AnalisisEmpleados/SoftSkillsUser";
+import ProjectUserCard from "./ProjectUserCard";
+import TechSkillsUser from "./TechSkillsUser";
+import SoftSkillsUser from "./SoftSkillsUser";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { authFetch } from "@utils/authFetch";
@@ -15,7 +15,6 @@ interface DetailsModalProps {
   onClose: () => void;
   employeeId: string;
   onLoadComplete?: () => void;
-  onSelect?: (employeeId: string) => void;
 }
 
 interface GetEmployeeInfoResponseDto {
@@ -55,11 +54,10 @@ interface GetPastProjectsResponseDto {
   position: string;
 }
 
-export default function UserDetailsRegisterModal({
+export default function UserDetailsModalManager({
   onClose,
   employeeId,
   onLoadComplete,
-  onSelect,
 }: DetailsModalProps) {
   const [userData, setUserData] = useState<GetEmployeeInfoResponseDto | null>(
     null
@@ -80,22 +78,17 @@ export default function UserDetailsRegisterModal({
   const router = useRouter();
   const url = "http://localhost:8080/api";
 
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [feedbackList, setFeedbackList] = useState<any[]>([]);
-
   console.log(employeeId);
 
   if (typeof window === "undefined") return null;
 
   const handlePrevProject = () => {
-    if (!projects || projects.length === 0) return;
     setCurrentProjectIndex((prev) =>
       prev === 0 ? projects.length - 1 : prev - 1
     );
   };
 
   const handleNextProject = () => {
-    if (!projects || projects.length === 0) return;
     setCurrentProjectIndex((prev) =>
       prev === projects.length - 1 ? 0 : prev + 1
     );
@@ -189,35 +182,6 @@ export default function UserDetailsRegisterModal({
   }, []);
 
   useEffect(() => {
-    const loadFeedback = async () => {
-      const res = validation();
-      if (!res) {
-        router.push("/login");
-        return;
-      }
-
-      try {
-        const response = await authFetch<any[]>(
-          `${url}/feedback/${employeeId}`
-        );
-        if (!response) throw new Error("No response from feedback endpoint");
-
-        setFeedbackList(response);
-        setFeedbackList(
-          response.sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          )
-        );
-      } catch (error) {
-        console.error("Error fetching feedback", error);
-      }
-    };
-
-    loadFeedback();
-  }, [employeeId]);
-
-  useEffect(() => {
     if (!loadingUserData && !loadingSkills && !loadingProjects) {
       setLoading(false);
       if (onLoadComplete) onLoadComplete();
@@ -231,105 +195,66 @@ export default function UserDetailsRegisterModal({
   }
 
   return ReactDOM.createPortal(
-<div
-  className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6 transition-opacity duration-500 ${
-    fadeIn ? "opacity-100" : "opacity-0"
-  }`}
->
+    <div
+      className={`mx-auto w-full max-w-[75rem] h-full transition-opacity duration-500 ${
+        fadeIn ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6">
         <div
           ref={modalRef}
           className="w-full max-w-5xl bg-[#d0bfdb] dark:bg-[#311a42] rounded-xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-xl text-gray-800 dark:text-white"
         >
           <div className="rounded-xl bg-white dark:bg-[#412859] p-6">
-            {!showFeedback ? (
-              <>
-                <h2 className="font-semibold text-lg mb-4">
-                  Información Personal
-                </h2>
-                <div className="flex flex-col items-center gap-8">
-                  <div className="w-60 h-60 rounded-full overflow-hidden">
-                    <Image
-                      src={
-                        userData.profilePicture && userData.mimeType
-                          ? `data:${userData.mimeType};base64,${userData.profilePicture}`
-                          : "/profile.png"
-                      }
-                      alt="Foto de perfil"
-                      width={180}
-                      height={180}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
+            <h2 className="font-semibold text-lg mb-4">Información Personal</h2>
+            <div className="flex flex-col items-center gap-4">
+              <Image
+                src={
+                  userData.profilePicture && userData.mimeType
+                    ? `data:${userData.mimeType};base64,${userData.profilePicture}`
+                    : "/profile.png"
+                }
+                alt="Foto de perfil"
+                width={180}
+                height={180}
+                className="rounded-full object-cover"
+              />
 
-                  <div className="w-full">
-                    <label className="text-sm font-medium block mb-1">
-                      Nombre
-                    </label>
-                    <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                      {userData.firstName + " " + userData.lastName}
-                    </div>
-                  </div>
-                  <div className="w-full">
-                    <label className="text-sm font-medium block mb-1">
-                      Correo electrónico
-                    </label>
-                    <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                      {userData.email}
-                    </div>
-                  </div>
-
-                  <div className="w-full">
-                    <label className="text-sm font-medium block mb-1">
-                      Nivel
-                    </label>
-                    <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                      {userData.level ? userData.level : "No especificado"}
-                    </div>
-                  </div>
-
+              <div className="w-full">
+                <label className="text-sm font-medium block mb-1">Nombre</label>
+                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                  {userData.firstName + " " + userData.lastName}
                 </div>
-                <button
-                  onClick={() => setShowFeedback(true)}
-                  className="mt-16 w-full px-4 py-2 text-sm font-semibold bg-[#65417f] text-white rounded-lg hover:bg-opacity-90"
-                >
-                  Ver opiniones pasadas
-                </button>
-              </>
-            ) : (
-              <>
-                <h2 className="font-semibold text-lg mb-4">
-                  Opiniones Pasadas
-                </h2>
-                <div className="flex flex-col gap-4 h-[36rem] overflow-y-auto">
-                  {feedbackList.length === 0 ? (
-                    <p className="text-sm">
-                      Este empleado no tiene retroalimentaciones registradas.
-                    </p>
-                  ) : (
-                    feedbackList.map((f, index) => (
-                      <div
-                        key={index}
-                        className="bg-gray-100 dark:bg-[#503866] rounded-md p-3"
-                      >
-                        <p className="text-sm font-medium mb-1 text-black">
-                          {f.reviserFirstName} {f.reviserLastName}
-                        </p>
-                        <span className="text-xs text-gray-600 dark:text-gray-300 mb-2">
-                          {new Date(f.createdAt).toLocaleDateString()}
-                        </span>
-                        <p className="text-sm">{f.information}</p>
-                      </div>
-                    ))
-                  )}
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium block mb-1">
+                  Correo electrónico
+                </label>
+                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                  {userData.email}
                 </div>
-                <button
-                  onClick={() => setShowFeedback(false)}
-                  className="mt-4 w-full px-4 py-2 text-sm font-semibold bg-[#65417f] text-white rounded-lg hover:bg-opacity-90"
-                >
-                  Volver a Información Personal
-                </button>
-              </>
-            )}
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium block mb-1">Puesto</label>
+                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                  {userData.position}
+                </div>
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium block mb-1">Nivel</label>
+                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                  {userData.level}
+                </div>
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium block mb-1">
+                  Cargabilidad
+                </label>
+                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                  {userData.chargeability}
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -377,18 +302,49 @@ export default function UserDetailsRegisterModal({
               </div>
             )}
           </div>
-          {onSelect && (
-            <div className="">
-              <button
-                onClick={() => onSelect(employeeId)}
-                className="px-5 py-2 bg-[#65417f] text-white rounded-md font-semibold hover:bg-[#5a366e]"
-              >
-                Agregar al Proyecto
-              </button>
-            </div>
-          )}
         </div>
-      </div>,
+      </div>
+    </div>,
     document.body
   );
 }
+
+//   useEffect(() => {
+//   const loadAllData = async () => {
+//     const res = validation();
+//     if (!res) {
+//       router.push("/login");
+//       return;
+//     }
+
+//     try {
+//       const [
+//         userResponse,
+//         skillsResponse,
+//         projectsResponse,
+//       ] = await Promise.all([
+//         authFetch<GetEmployeeInfoResponseDto>(`${url}/employee/${employeeId}`),
+//         authFetch<SkillsResponseDto>(`${url}/skills/${employeeId}`),
+//         authFetch<GetPastProjectsResponseDto[]>(`${url}/projects/past/${employeeId}`),
+//       ]);
+
+//       if (!userResponse || !skillsResponse || !projectsResponse) {
+//         router.push("/login");
+//         return;
+//       }
+
+//       setUserData(userResponse);
+//       setTechSkills(skillsResponse.technicalSkills);
+//       setSoftSkills(skillsResponse.softSkills);
+//       setProjects(projectsResponse);
+
+//       setLoadingUserData(false);
+//       setLoadingSkills(false);
+//       setLoadingProjects(false);
+//     } catch (error) {
+//       console.error("Error fetching data", error);
+//     }
+//   };
+
+//   loadAllData();
+// }, []);
