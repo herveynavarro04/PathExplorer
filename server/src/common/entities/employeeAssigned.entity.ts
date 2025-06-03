@@ -19,5 +19,5 @@ export class EmployeeAssigned {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'employee_id' })
-  employee: EmployeeEntity;
+  employee?: EmployeeEntity;
 }

@@ -10,7 +10,7 @@ export class PeopleLeadEntity {
   createdAt: Date;
 
   @Column({ name: 'updated_at' })
-  updatedAt: string;
+  updatedAt: Date;
 
   @Column({ name: 'validation_date' })
   validationDate: Date;
