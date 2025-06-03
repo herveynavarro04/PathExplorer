@@ -32,7 +32,12 @@ const GoalCard = ({ information, term, completed, status }: GoalCardProps) => {
             {information}
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            Estado: {completed ? "Meta Completada" : "Meta en Progreso"}
+            Estado:{" "}
+            {status === "approved"
+              ? "Aprobada"
+              : status === "pending"
+                ? "Pendiente"
+                : "Rechazada"}
           </p>
         </div>
       </div>

@@ -49,7 +49,10 @@ export class CertificatesController {
     @Param('certificateId') certificateId: string,
     @Body() updatePayload: UpdateCertificateStatusRequestDto,
   ): Promise<UpdateCertificateResponseDto> {
-    return this.updateCertificateStatus(certificateId, updatePayload);
+    return this.certificateService.updateCertificateStatus(
+      certificateId,
+      updatePayload,
+    );
   }
 
   @Get()
