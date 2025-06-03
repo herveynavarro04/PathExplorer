@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class GetPeopleLeadEmployeesResponseDto {
   @IsString()
@@ -16,4 +16,13 @@ export class GetPeopleLeadEmployeesResponseDto {
   @IsNumber()
   @IsNotEmpty()
   level: number;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  profilePicture: Buffer | string;
+
+  @IsString()
+  @IsOptional()
+  mimeType?: string;
 }
