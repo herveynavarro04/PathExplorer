@@ -58,13 +58,17 @@ export class PeopleLeadService {
       const employeeInfo = await this.employeeAssignedRepository.find({
         where: { peopleLeadId: peopleLeadId },
         select: ['employeeId'],
-        relations: ['employee'],
+        relations: ['employee', 'employee.profilePicture'],
       });
       const employees = employeeInfo.map((link) => ({
         employeeId: link.employeeId,
         firstName: link.employee.firstName,
         lastName: link.employee.lastName,
         level: link.employee.level,
+        profilePicture:
+          link.employee.profilePicture?.imageData?.toString('base64') ||
+          process.env.DEFAULT_PROFILE_IMAGE,
+        mimeType: link.employee.profilePicture?.mimeType || null,
       }));
       Logger.log(
         'People Lead employees succesfully fetched',
