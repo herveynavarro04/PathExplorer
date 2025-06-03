@@ -45,6 +45,15 @@ export class CoursesController {
     return this.employeeCourseService.getEmployeeCourses(employeeId);
   }
 
+  @Get('people-lead')
+  @UseGuards(JwtGuard)
+  async getPeopleLeadCourses(
+    @Req() req: Request,
+  ): Promise<GetEmployeeCoursesDto> {
+    const employeeId = req.user['employeeId'];
+    return this.coursesService.getPeopleLeadCourses(employeeId);
+  }
+
   @Get(':courseId')
   @UseGuards(JwtGuard)
   async getCourseInfo(

@@ -240,6 +240,14 @@ export class EmployeeProjectsService {
         { projectId: projectId, employeeId: employeeId },
         { status: 'finished' },
       );
+      await this.projectsRepository.update(
+        {
+          projectId: projectId,
+        },
+        {
+          full: false,
+        },
+      );
       Logger.log(
         'employee succesfully removed from project',
         'EmployeeProjectsService',
