@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class GetCoursePreviewDto {
   @IsString()
@@ -14,8 +14,8 @@ export class GetCoursePreviewDto {
   information: string;
 
   @IsString()
-  @IsNotEmpty()
-  status: boolean;
+  @IsOptional()
+  status?: boolean;
 
   @IsBoolean()
   @IsNotEmpty()
