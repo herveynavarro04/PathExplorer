@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class FindEmployeebyEmailResponseDto {
   @IsString()
@@ -24,4 +24,8 @@ export class FindEmployeebyEmailResponseDto {
   @IsString()
   @IsNotEmpty()
   rol: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  active: boolean;
 }

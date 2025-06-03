@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class ValidateEmployeeResponseDto {
   @IsString()
@@ -24,4 +24,8 @@ export class ValidateEmployeeResponseDto {
   @IsString()
   @IsNotEmpty()
   rol: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  active: boolean;
 }

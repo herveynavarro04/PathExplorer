@@ -52,6 +52,27 @@ export class EmployeeService {
     }
   }
 
+  async checkIfPeopleLead(employeeId: string): Promise<boolean> {
+    try {
+      const employeeInfo = await this.employeesRepository.findOne({
+        where: { employeeId: employeeId },
+        relations: ['employeeAssigned'],
+      });
+      Logger.log('PeopleLead verification', 'EmployeeService');
+      if (employeeInfo.employeeAssigned.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      Logger.error(
+        'Error during peopleLead verification',
+        error.stack,
+        'EmployeeService',
+      );
+      throw new InternalServerErrorException('Failed to verify peopleLead');
+    }
+  }
+
   async getAvailableEmployees(
     employeeId: string,
   ): Promise<GetEmployeesListResponseDto> {
@@ -61,6 +82,7 @@ export class EmployeeService {
         .leftJoin('employee.employeeInterestLink', 'interest')
         .leftJoin('employee.employeeSkillLink', 'skill')
         .where('employee.employeeId != :employeeId', { employeeId })
+        .andWhere('employee.active = true')
         .andWhere((qb) => {
           const subQuery = qb
             .subQuery()

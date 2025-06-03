@@ -36,6 +36,9 @@ export class EmployeeEntity {
   @Column({ name: 'updated_at' })
   updatedAt: Date;
 
+  @Column({ name: 'active' })
+  active: boolean;
+
   @OneToMany(() => EmployeeProjectEntity, (link) => link.employee, {
     cascade: true,
     onDelete: 'CASCADE',

@@ -46,6 +46,7 @@ export class AuthService {
       updatedAt: null,
       firstName: employeePayload.firstName,
       lastName: employeePayload.lastName,
+      active: true,
     };
     await this.employeeService.registerEmployee(register);
     return {
@@ -63,7 +64,7 @@ export class AuthService {
     }
 
     const isPasswordValid = await bcrypt.compare(password, employee.password);
-    if (isPasswordValid) {
+    if (isPasswordValid && employee.active === true) {
       delete employee.password;
       return employee;
     } else {
@@ -76,10 +77,14 @@ export class AuthService {
       employeePayload.email,
       employeePayload.password,
     );
+    const isPeopleLead = await this.employeeService.checkIfPeopleLead(
+      employee.employeeId,
+    );
     const token = this.jwtService.sign({
       employeeId: employee.employeeId,
       email: employee.email,
       rol: employee.rol,
+      isPeopleLead: isPeopleLead,
     });
     return {
       accessToken: token,
