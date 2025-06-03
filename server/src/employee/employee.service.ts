@@ -5,20 +5,23 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
 import { HashingService } from 'src/Utilities/hashing.utilities';
+import { ImageService } from 'src/Utilities/imageService.utilities';
+import { Repository } from 'typeorm';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { UpdateEmployeeRequestDto } from './dto/request/updateEmployee.request.dto';
+import { UpdateEmployeeStatusRequestDto } from './dto/request/updateEmployeeStatus.request.dto';
+import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
+import { GetAllEmployeesResponseDto } from './dto/response/getAllEmployees.response.dto';
 import { FindEmployeebyEmailResponseDto } from './dto/response/getEmployeeByEmail.response.dto';
 import { GetEmployeeInfoResponseDto } from './dto/response/getEmployeeInfo.response.dto';
+import { GetEmployeesListResponseDto } from './dto/response/getEmployeesList.response.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
+import { UpdateEmployeeStatusResponseDto } from './dto/response/updateEmployeeStatus.response.dto';
 import { EmployeeEntity } from './entities/employee.entity';
 import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
-import { ImageService } from 'src/Utilities/imageService.utilities';
-import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
-import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
-import { GetEmployeesListResponseDto } from './dto/response/getEmployeesList.response.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -70,6 +73,71 @@ export class EmployeeService {
         'EmployeeService',
       );
       throw new InternalServerErrorException('Failed to verify peopleLead');
+    }
+  }
+
+  async updateEmployeeStatus(
+    employeeId: string,
+    updatePayload: UpdateEmployeeStatusRequestDto,
+  ): Promise<UpdateEmployeeStatusResponseDto> {
+    try {
+      await this.employeesRepository.update(
+        {
+          employeeId: employeeId,
+        },
+        {
+          active: updatePayload.status,
+          updatedAt: new Date(),
+        },
+      );
+      Logger.log('Employee status succesfully updated!', 'EmployeeService');
+      return {
+        employeeId: employeeId,
+        updatedAt: new Date(),
+      };
+    } catch (error) {
+      Logger.error(
+        'Error during employee status update',
+        error.stack,
+        'EmployeeService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to update employee status',
+      );
+    }
+  }
+
+  async getAllEmployees(): Promise<GetAllEmployeesResponseDto[]> {
+    try {
+      const employeesInfo = await this.employeesRepository.find({
+        select: [
+          'employeeId',
+          'firstName',
+          'lastName',
+          'level',
+          'email',
+          'rol',
+          'active',
+        ],
+      });
+      const employees = employeesInfo.map((link) => ({
+        employeeId: link.employeeId,
+        firstName: link.firstName,
+        lastName: link.lastName,
+        level: link.level,
+        email: link.email,
+        rol: link.rol,
+        active: link.active,
+      }));
+      Logger.log('All employees succesfully fetched', 'EmployeeService');
+      return employees;
+    } catch (error) {
+      Logger.error(
+        'Error during employees fetching',
+        error.stack,
+        'EmployeeService',
+      );
+      throw new InternalServerErrorException('Failed to fetch all employees');
     }
   }
 

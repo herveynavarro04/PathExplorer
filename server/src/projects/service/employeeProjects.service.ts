@@ -427,7 +427,11 @@ export class EmployeeProjectsService {
   ): Promise<GetProjectApplicants[]> {
     try {
       const applicantsInfo = await this.employeeProjectRepository.find({
-        where: { projectId: projectId, status: 'pending' },
+        where: {
+          projectId: projectId,
+          status: 'pending',
+          employee: { active: true },
+        },
         relations: [
           'employee',
           'employee.employeeSkillLink',

@@ -19,6 +19,9 @@ import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.respons
 import { EmployeeService } from './employee.service';
 import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
 import { GetEmployeesListResponseDto } from './dto/response/getEmployeesList.response.dto';
+import { GetAllEmployeesResponseDto } from './dto/response/getAllEmployees.response.dto';
+import { UpdateEmployeeStatusResponseDto } from './dto/response/updateEmployeeStatus.response.dto';
+import { UpdateEmployeeStatusRequestDto } from './dto/request/updateEmployeeStatus.request.dto';
 
 @Controller('employee')
 export class EmployeeController {
@@ -31,6 +34,12 @@ export class EmployeeController {
   ): Promise<GetEmployeeInfoResponseDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeService.getEmployeeInfo(employeeId);
+  }
+
+  @Get('all')
+  @UseGuards(JwtGuard)
+  async getAllEmployees(): Promise<GetAllEmployeesResponseDto[]> {
+    return this.employeeService.getAllEmployees();
   }
 
   @Patch()
@@ -86,5 +95,14 @@ export class EmployeeController {
     @Param('employeeId') employeeId: string,
   ): Promise<GetEmployeeInfoResponseDto> {
     return this.employeeService.getEmployeeInfo(employeeId);
+  }
+
+  @Patch(':employeeId/status')
+  @UseGuards(JwtGuard)
+  async updateEmployeeStatus(
+    @Param('employeeId') employeeId: string,
+    @Body() updatePayload: UpdateEmployeeStatusRequestDto,
+  ): Promise<UpdateEmployeeStatusResponseDto> {
+    return this.employeeService.updateEmployeeStatus(employeeId, updatePayload);
   }
 }
