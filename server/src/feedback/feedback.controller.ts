@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
-import { JwtGuard } from 'src/common/Guards/jwt.guards';
+import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { PostFeedbackRequestDto } from './dto/request/postFeedback.request.dto';
 import { PostFeedbackResponseDto } from './dto/response/postFeedback.response.dto';
 import { Request } from 'express';

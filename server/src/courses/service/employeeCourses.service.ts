@@ -88,6 +88,28 @@ export class employeeCoursesService {
     }
   }
 
+  public async assignEmployeesCourse(
+    employeeArray: string[],
+    courseId: string,
+  ): Promise<void> {
+    try {
+      const employeeCourses = employeeArray.map((employeeId) => ({
+        employeeId,
+        courseId,
+      }));
+      await this.employeeCoursesRepository.save(employeeCourses);
+    } catch (error) {
+      Logger.error(
+        'Error during assigning employees to course',
+        error.stack,
+        'EmployeeCoursesService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to assign employees to course',
+      );
+    }
+  }
+
   async completeCourse(
     courseId: string,
     employeeId: string,

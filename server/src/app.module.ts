@@ -11,6 +11,7 @@ import { CoursesModule } from './courses/courses.module';
 import { CertificatesModule } from './certificates/certificates.module';
 import { AgentModule } from './agent/agent.module';
 import { FeedbackModule } from './feedback/feedback.module';
+import { PeopleLeadModule } from './people-lead/people-lead.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { FeedbackModule } from './feedback/feedback.module';
     CertificatesModule,
     AgentModule,
     FeedbackModule,
+    PeopleLeadModule,
   ],
 })
 export class AppModule {}

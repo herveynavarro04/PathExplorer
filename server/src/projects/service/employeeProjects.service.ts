@@ -20,6 +20,7 @@ import { PostProjectEmployeesRequestDto } from '../dto/request/postProjectEmploy
 import { GetProjectApplicants } from '../dto/response/getProjectApplicants.response.dto';
 import { UpdateApplicantStatusRequestDto } from '../dto/request/updateApplicantStatus.request.dto';
 import { UpdateApplicantStatusResponseDto } from '../dto/response/updateApplicantStatus.response.dto';
+import { GetManagerNotFullProjectsResponseDto } from '../dto/response/getManagerNotFullProjects.response.dto';
 
 @Injectable()
 export class EmployeeProjectsService {
@@ -388,7 +389,7 @@ export class EmployeeProjectsService {
         {
           status: updatePayload.status,
           validatedAt: new Date(),
-          position: updatePayload.position,
+          position: updatePayload?.position || null,
         },
       );
       Logger.log('applicants status updated', 'EmployeeProjectsService');
@@ -449,6 +450,39 @@ export class EmployeeProjectsService {
         'EmployeeProjectsService',
       );
       throw new InternalServerErrorException('Failed to fetch applicants');
+    }
+  }
+
+  async getManagerNotFullProjects(
+    employeeId: string,
+  ): Promise<GetManagerNotFullProjectsResponseDto[]> {
+    try {
+      const projectsInfo = await this.employeeProjectRepository.find({
+        where: { employeeId: employeeId, project: { full: false } },
+        relations: ['project'],
+        select: ['projectId'],
+      });
+      const projects = projectsInfo.map((pr) => ({
+        projectId: pr.projectId,
+        projectName: pr.project?.projectName,
+      }));
+      Logger.log(
+        'Manager not full projects fetched',
+        'EmployeeProjectsService',
+      );
+      return projects;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      Logger.error(
+        'Error during manager not full projects fetching transaction',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException(
+        'Failed to fetch manager not full projects',
+      );
     }
   }
 

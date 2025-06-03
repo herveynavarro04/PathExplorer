@@ -1,6 +1,6 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
-import { JwtGuard } from 'src/common/Guards/jwt.guards';
+import { JwtGuard } from 'src/auth/Guards/jwt.guards';
 import { ProjectRecomendationsResponseDto } from '../dto/response/projectRecomendations.response.dto';
 import { AgentService } from '../services/agent.service';
 
