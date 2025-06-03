@@ -404,7 +404,7 @@ export default function UserDetailsModalApplication({
                   type="text"
                   required
                   placeholder="posición"
-                  value={position}
+                  value={position ?? ""}
                   onChange={(e) => setPosition(e.target.value)}
                   className="ml-2 p-1 rounded border text-sm"
                 />
