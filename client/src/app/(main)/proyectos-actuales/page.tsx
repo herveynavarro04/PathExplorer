@@ -227,14 +227,14 @@ export default function Home() {
 
   return (
     <div>
-      <div >
-      <button
-        onClick={() => router.back()}
-        className="text-md text-[#65417f] hover:font-semibold mb-1"
-      >
-        ← Regresar
-      </button>
-    </div>
+      <div>
+        <button
+          onClick={() => router.back()}
+          className="text-md text-[#65417f] hover:font-semibold mb-1"
+        >
+          ← Regresar
+        </button>
+      </div>
       <div
         key={selectedProject?.projectId}
         className={`mx-auto w-full transition-opacity duration-300 ${
@@ -245,7 +245,6 @@ export default function Home() {
           <ProjectViewer
             projects={projects}
             selectedProject={selectedProject}
-            setEmployees={setEmployees}
             setChangeRefresh={setChangeRefresh}
             setPendingProjectId={setPendingProjectId}
             active={active}
@@ -253,11 +252,11 @@ export default function Home() {
 
           {progress === 100 && (
             <button
-        className="bg-[#65417f] text-white px-6 py-2 rounded-md hover:bg-opacity-90 transition whitespace-nowrap"
-        onClick={() => setIsFinalizeModalOpen(true)}
-      >
-        Marcar como finalizado
-      </button>
+              className="bg-[#65417f] text-white px-6 py-2 rounded-md hover:bg-opacity-90 transition whitespace-nowrap"
+              onClick={() => setIsFinalizeModalOpen(true)}
+            >
+              Marcar como finalizado
+            </button>
           )}
 
           {isFinalizeModalOpen && (

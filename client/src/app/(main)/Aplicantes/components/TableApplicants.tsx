@@ -9,46 +9,46 @@ import {
   TableRow,
 } from "components/ui/table";
 import { useState } from "react";
-import UserDetailsRegisterModal from "./UserDetailsRegisterModal";
+import UserDetailsModalApplication from "./UserDetailsModalApplication";
 
 interface GetEmployeesResponseDto {
   employeeId: string;
   email: string;
   firstName: string;
   lastName: string;
-  chargeability: number;
-  position: string;
+  appliedAt: Date;
   skillCount: number;
   interestCount: number;
 }
 
 interface GetManagerEmployeesResponseProps {
   employees: GetEmployeesResponseDto[];
+  selectEmployeeId: string;
+  setSelectEmployeeId: (selectEmployeeId: string) => void;
+  handleSubmitApplication: (updatedFields: Record<string, any>) => void;
   onEmployeeSelect?: (employeeId: string) => void;
-  selectedEmployeeIds?: string[];
+  selectedEmployees?: { employeeId: string; position: string }[];
+  onClose: () => void;
 }
 
-export function EmployeesTable({
+export default function TopAnalysis({
   employees,
+  selectEmployeeId,
+  setSelectEmployeeId,
+  handleSubmitApplication,
   onEmployeeSelect,
-  selectedEmployeeIds,
+  onClose,
+  selectedEmployees = [],
 }: GetManagerEmployeesResponseProps) {
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const [modalLoading, setModalLoading] = useState(false);
   const [sortKey, setSortKey] = useState<
-    | "position"
-    | "chargeability"
-    | "interestCount"
-    | "skillCount"
-    | "employee_name"
+    "interestCount" | "skillCount" | "employee_name" | "appliedAt"
   >(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 9;
   const totalPages = Math.ceil(employees.length / itemsPerPage);
-
   const availableEmployees = employees.filter(
-    (e) => !selectedEmployeeIds?.includes(e.employeeId)
+    (e) => !selectedEmployees.some((se) => se.employeeId === e.employeeId)
   );
 
   const paginatedRaw = availableEmployees.slice(
@@ -57,12 +57,7 @@ export function EmployeesTable({
   );
 
   const handleSort = (
-    key:
-      | "position"
-      | "chargeability"
-      | "interestCount"
-      | "skillCount"
-      | "employee_name"
+    key: "interestCount" | "skillCount" | "employee_name" | "appliedAt"
   ) => {
     if (sortKey === key) {
       setSortAsc((prev) => !prev);
@@ -73,10 +68,7 @@ export function EmployeesTable({
   };
 
   const handleEmployeeClick = (employeeId: string) => {
-    if (modalLoading) return;
-
-    setModalLoading(true);
-    setSelectedUser(employeeId);
+    setSelectEmployeeId(employeeId);
   };
 
   const paginatedemployees = [...paginatedRaw].sort((a, b) => {
@@ -88,6 +80,9 @@ export function EmployeesTable({
     if (sortKey === "employee_name") {
       valA = `${a.firstName} ${a.lastName}`;
       valB = `${b.firstName} ${b.lastName}`;
+    } else if (sortKey === "appliedAt") {
+      valA = new Date(a.appliedAt).getTime();
+      valB = new Date(b.appliedAt).getTime();
     } else {
       valA = a[sortKey];
       valB = b[sortKey];
@@ -105,12 +100,7 @@ export function EmployeesTable({
 
   function renderHeader(
     label: string,
-    key:
-      | "position"
-      | "chargeability"
-      | "interestCount"
-      | "skillCount"
-      | "employee_name"
+    key: "interestCount" | "skillCount" | "employee_name" | "appliedAt"
   ) {
     return (
       <TableHead
@@ -146,14 +136,13 @@ export function EmployeesTable({
   return (
     <div className="w-full min-h-[30rem] rounded-[10px] bg-white dark:bg-[#311a42] px-7.5 py-6 max-w-[75rem] mx-auto">
       <h2 className="mb-4 text-body-2xlg font-bold text-dark dark:text-white">
-        Empleados Activos
+        Aplicantes
       </h2>
       <Table>
         <TableHeader>
           <TableRow className="border-none uppercase [&>th]:text-center dark:hover:bg-transparent">
             {renderHeader("Nombre", "employee_name")}
-            {renderHeader("Puesto", "position")}
-            {renderHeader("Cargabilidad", "chargeability")}
+            {renderHeader("Aplicación", "appliedAt")}
             {renderHeader("Intereses", "interestCount")}
             {renderHeader("Habilidades", "skillCount")}
           </TableRow>
@@ -169,17 +158,26 @@ export function EmployeesTable({
               <TableCell className="text-left">
                 {employee.firstName + " " + employee.lastName}
               </TableCell>
-              <TableCell>{employee.position}</TableCell>
-              <TableCell>{employee.chargeability}</TableCell>
-              <TableCell>{employee.interestCount}</TableCell>
-              <TableCell>{employee.skillCount}</TableCell>
+              <TableCell className="text-center">
+                {new Date(employee.appliedAt).toLocaleDateString("es-MX", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </TableCell>
+              <TableCell className="text-center">
+                {employee.interestCount}
+              </TableCell>
+              <TableCell className="text-center">
+                {employee.skillCount}
+              </TableCell>
             </TableRow>
           ))}
 
-          {Array.from({ length: 5 - paginatedemployees.length }).map(
+          {Array.from({ length: 9 - paginatedemployees.length }).map(
             (_, index) => (
               <TableRow key={`empty-${index}`}>
-                <TableCell colSpan={5} className="h-[56px]">
+                <TableCell colSpan={9} className="h-[56px]">
                   &nbsp;
                 </TableCell>
               </TableRow>
@@ -209,18 +207,14 @@ export function EmployeesTable({
         </button>
       </div>
 
-      {selectedUser && (
-        <UserDetailsRegisterModal
-          employeeId={selectedUser}
-          onClose={() => {
-            setSelectedUser(null);
-            setModalLoading(false);
-          }}
-          onLoadComplete={() => setModalLoading(false)}
+      {selectEmployeeId && (
+        <UserDetailsModalApplication
+          employeeId={selectEmployeeId}
+          handleSubmitApplication={handleSubmitApplication}
+          onClose={onClose}
           onSelect={(employeeId) => {
             if (onEmployeeSelect) onEmployeeSelect(employeeId);
-            setSelectedUser(null);
-            setModalLoading(false);
+            setSelectEmployeeId(null);
           }}
         />
       )}

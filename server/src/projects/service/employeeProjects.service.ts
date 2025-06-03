@@ -466,7 +466,10 @@ export class EmployeeProjectsService {
   ): Promise<GetManagerNotFullProjectsResponseDto[]> {
     try {
       const projectsInfo = await this.employeeProjectRepository.find({
-        where: { employeeId: employeeId, project: { full: false } },
+        where: {
+          employeeId: employeeId,
+          project: { full: false, active: true },
+        },
         relations: ['project'],
         select: ['projectId'],
       });

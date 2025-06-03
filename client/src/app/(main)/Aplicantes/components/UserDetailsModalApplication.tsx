@@ -10,11 +10,12 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { authFetch } from "@utils/authFetch";
 import { validation } from "@utils/validation";
+import DeleteModal from "./DeleteModal";
 
 interface DetailsModalProps {
   onClose: () => void;
   employeeId: string;
-  onLoadComplete?: () => void;
+  handleSubmitApplication: (updatedFields: Record<string, any>) => void;
   onSelect?: (employeeId: string) => void;
 }
 
@@ -55,11 +56,10 @@ interface GetPastProjectsResponseDto {
   position: string;
 }
 
-export default function UserDetailsRegisterModal({
+export default function UserDetailsModalApplication({
   onClose,
   employeeId,
-  onLoadComplete,
-  onSelect,
+  handleSubmitApplication,
 }: DetailsModalProps) {
   const [userData, setUserData] = useState<GetEmployeeInfoResponseDto | null>(
     null
@@ -69,7 +69,6 @@ export default function UserDetailsRegisterModal({
   const [projects, setProjects] = useState<GetPastProjectsResponseDto[] | null>(
     null
   );
-
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [loading, setLoading] = useState<boolean>(true);
@@ -79,11 +78,17 @@ export default function UserDetailsRegisterModal({
   const [fadeIn, setFadeIn] = useState(false);
   const router = useRouter();
   const url = "http://localhost:8080/api";
-
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackList, setFeedbackList] = useState<any[]>([]);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const [position, setPosition] = useState<string>(null);
 
   console.log(employeeId);
+
+  const onCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
 
   if (typeof window === "undefined") return null;
 
@@ -107,12 +112,12 @@ export default function UserDetailsRegisterModal({
         modalRef.current &&
         !modalRef.current.contains(event.target as Node)
       ) {
-        onClose();
+        if (!showDeleteModal) onClose();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
+  }, [onClose, showDeleteModal]);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -220,7 +225,6 @@ export default function UserDetailsRegisterModal({
   useEffect(() => {
     if (!loadingUserData && !loadingSkills && !loadingProjects) {
       setLoading(false);
-      if (onLoadComplete) onLoadComplete();
 
       setTimeout(() => setFadeIn(true), 25);
     }
@@ -278,28 +282,13 @@ export default function UserDetailsRegisterModal({
                       {userData.email}
                     </div>
                   </div>
-                  <div className="w-full">
-                    <label className="text-sm font-medium block mb-1">
-                      Puesto
-                    </label>
-                    <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                      {userData.position}
-                    </div>
-                  </div>
+
                   <div className="w-full">
                     <label className="text-sm font-medium block mb-1">
                       Nivel
                     </label>
                     <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
                       {userData.level}
-                    </div>
-                  </div>
-                  <div className="w-full">
-                    <label className="text-sm font-medium block mb-1">
-                      Cargabilidad
-                    </label>
-                    <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                      {userData.chargeability}
                     </div>
                   </div>
                 </div>
@@ -392,18 +381,68 @@ export default function UserDetailsRegisterModal({
               </div>
             )}
           </div>
-          {onSelect && (
-            <div className="">
+          <div className="w-[60rem] flex justify-between">
+            {showConfirmation ? (
+              <form
+                className="flex gap-[2rem]"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  await handleSubmitApplication({
+                    status: "approved",
+                    position,
+                  });
+                  onClose();
+                }}
+              >
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-[#65417f] text-white rounded-md font-semibold hover:bg-[#5a366e]"
+                >
+                  Confirmar
+                </button>
+                <input
+                  type="text"
+                  required
+                  placeholder="posición"
+                  value={position}
+                  onChange={(e) => setPosition(e.target.value)}
+                  className="ml-2 p-1 rounded border text-sm"
+                />
+              </form>
+            ) : (
+              <div className="flex gap-[2rem]">
+                <button
+                  onClick={() => setShowConfirmation(true)}
+                  className="px-5 py-2 bg-[#65417f] text-white rounded-md font-semibold hover:bg-[#5a366e]"
+                >
+                  Agregar al Proyecto
+                </button>
+                <button
+                  onClick={() => setShowDeleteModal(true)}
+                  className="px-5 py-2 bg-[#d22727] text-white rounded-md font-semibold hover:bg-[#bc3131]"
+                >
+                  Rechazar la aplicación
+                </button>
+              </div>
+            )}
+            <div>
               <button
-                onClick={() => onSelect(employeeId)}
+                onClick={() => onClose()}
                 className="px-5 py-2 bg-[#65417f] text-white rounded-md font-semibold hover:bg-[#5a366e]"
               >
-                Agregar al Proyecto
+                Cancelar
               </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
+      {showDeleteModal && (
+        <DeleteModal
+          onCloseDeleteModal={onCloseDeleteModal}
+          onClose={onClose}
+          handleSubmitApplication={handleSubmitApplication}
+        />
+      )}
     </div>,
     document.body
   );
