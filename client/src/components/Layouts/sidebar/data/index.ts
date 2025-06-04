@@ -6,9 +6,8 @@ export const NAV_DATA = [
     items: [
       {
         title: "Dashboard",
-        url:"/dashboard",
+        url: "/dashboard",
         icon: Icons.HomeIcon,
-        
       },
       {
         title: "Perfil",
@@ -20,7 +19,7 @@ export const NAV_DATA = [
         url: "/Aplicacion",
         icon: Icons.ArrowLeftIcon,
       },
-      
+
       {
         title: "Mis Proyectos",
         url: "/my-projects",
@@ -36,8 +35,11 @@ export const NAV_DATA = [
         url: "/people-lead",
         icon: Icons.Calendar,
       },
+      {
+        title: "Administrador",
+        url: "/admin",
+        icon: Icons.GlobeIcon,
+      },
     ],
   },
-  
 ];
-
