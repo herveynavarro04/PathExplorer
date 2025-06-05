@@ -7,7 +7,6 @@ import CourseForm from "./CourseForm";
 import { validation } from "@utils/validation";
 import { useRouter } from "next/navigation";
 import { authFetch } from "@utils/authFetch";
-import LoadingPage from "components/LoadingPage";
 
 interface GetCoursePreviewDto {
   courseId: string;
@@ -63,12 +62,12 @@ const Page = () => {
   };
 
   const handleCourseUpdated = (courseId: string) => {
-  setCourses((prevCourses) =>
-    prevCourses.map((course) =>
-      course.courseId === courseId ? { ...course, status: true } : course
-    )
-  );
-};
+    setCourses((prevCourses) =>
+      prevCourses.map((course) =>
+        course.courseId === courseId ? { ...course, status: true } : course
+      )
+    );
+  };
 
   useEffect(() => {
     const laodCourses = async () => {
@@ -141,12 +140,12 @@ const Page = () => {
           </div>
 
           {selectedCourse && (
-        <CourseModal
-          courseId={selectedCourse}
-          handleOnClose={() => setSelectedCourse(null)}
-          onCourseUpdated={handleCourseUpdated} 
-        />
-      )}
+            <CourseModal
+              courseId={selectedCourse}
+              handleOnClose={() => setSelectedCourse(null)}
+              onCourseUpdated={handleCourseUpdated}
+            />
+          )}
         </div>
         <div className="w-full bg-transparent mt-8">
           <div className="flex justify-center gap-4">
