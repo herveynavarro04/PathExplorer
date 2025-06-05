@@ -18,7 +18,6 @@ import { GetEmployeeCoursesDto } from './dto/response/getEmployeeCourses.dto';
 import { GetCourseInfoDto } from './dto/response/getCourseInfo.dto';
 import { UpdateEmployeeCourseResponseDto } from './dto/response/updateEmployeeCourse.response.dto';
 import { UpdateEmployeeCourseRequestDto } from './dto/request/updateEmployeeCourse.request.dto';
-
 @Controller('courses')
 export class CoursesController {
   constructor(
@@ -62,6 +61,16 @@ export class CoursesController {
   ): Promise<GetCourseInfoDto> {
     const employeeId = req.user['employeeId'];
     return this.employeeCourseService.getCourseInfo(employeeId, courseId);
+  }
+
+  @Get('/PeopleLead/:courseId')
+  @UseGuards(JwtGuard)
+  async getCourseInfoGeneral(
+    @Req() req: Request,
+    @Param('courseId') courseId: string,
+  ): Promise<GetCourseInfoDto> {
+    const employeeId = req.user['employeeId'];
+    return this.coursesService.getCourseInfoById(employeeId, courseId);
   }
 
   @Patch('update/:courseId')

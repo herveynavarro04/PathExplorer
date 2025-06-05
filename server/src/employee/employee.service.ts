@@ -59,10 +59,11 @@ export class EmployeeService {
     try {
       const employeeInfo = await this.employeesRepository.findOne({
         where: { employeeId: employeeId },
-        relations: ['employeeAssigned'],
+        relations: ['peopleLead'],
       });
+
       Logger.log('PeopleLead verification', 'EmployeeService');
-      if (employeeInfo.employeeAssigned.length > 0) {
+      if (employeeInfo.peopleLead?.length > 0) {
         return true;
       }
       return false;

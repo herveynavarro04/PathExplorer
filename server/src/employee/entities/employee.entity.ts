@@ -72,11 +72,18 @@ export class EmployeeEntity {
     onDelete: 'CASCADE',
   })
   @IsOptional()
-  employeeAssigned?: EmployeeCoursesEntity[];
+  employeeAssigned?: EmployeeAssigned[];
 
   @OneToOne(() => EmployeeProfilePicture, (link) => link.employee, {
     cascade: true,
   })
   @IsOptional()
   profilePicture?: EmployeeProfilePicture;
+
+  @OneToMany(() => EmployeeAssigned, (assigned) => assigned.peopleLead, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @IsOptional()
+  peopleLead?: EmployeeAssigned[];
 }

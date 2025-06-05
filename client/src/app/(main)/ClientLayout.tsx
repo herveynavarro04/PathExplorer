@@ -16,9 +16,52 @@ export default function ClientLayout({
   const pathname = usePathname();
   const router = useRouter();
 
+  const routesByRole: Record<string, string[]> = {
+    ADMIN: ["/admin"],
+    MANAGER: [
+      "/dashboard",
+      "/path",
+      "/Cursos",
+      "/Certificados",
+      "/historial",
+      "/profile",
+      "/Project-Manager",
+      "/proyectos-actuales",
+      "/proyectos-finalizados",
+      "/Aplicantes",
+      "/RegistrarProyecto",
+      "/people-lead",
+      "/crear-curso",
+      "/mis-cursos-people-lead",
+      "/miembro",
+    ],
+    STAFF: [
+      "/dashboard",
+      "/profile",
+      "/Cursos",
+      "/Certificados",
+      "/path",
+      "/historial",
+      "/Aplicacion",
+      "/my-projects",
+      "/people-lead",
+      "/crear-curso",
+      "/mis-cursos-people-lead",
+      "/miembro",
+    ],
+  };
+
+  const isRouteAllowed = (rol: string | null, pathname: string): boolean => {
+    const allowedRoutes = routesByRole[rol || ""] || [];
+    return allowedRoutes.some((allowedPath) =>
+      pathname.startsWith(allowedPath)
+    );
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     const rol = localStorage.getItem("rol");
+    const isPeopleLead = localStorage.getItem("peopleLead") === "true";
 
     if (!token && pathname !== "/login") {
       router.push("/login");
@@ -26,16 +69,23 @@ export default function ClientLayout({
       return;
     }
 
+    const peopleLeadRoutes = [
+      "/people-lead",
+      "/crear-curso",
+      "/mis-cursos-people-lead",
+      "/miembro",
+    ];
+
     if (
-      rol === "manager" &&
-      ["/Aplicacion", "/my-projects"].includes(pathname)
+      peopleLeadRoutes.some((route) => pathname.startsWith(route)) &&
+      (!["STAFF", "MANAGER"].includes(rol || "") || !isPeopleLead)
     ) {
       router.push("/dashboard");
       setAuthorized(false);
       return;
     }
 
-    if (rol === "STAFF" && pathname === "/Project-Manager") {
+    if (pathname !== "/login" && !isRouteAllowed(rol, pathname)) {
       router.push("/dashboard");
       setAuthorized(false);
       return;

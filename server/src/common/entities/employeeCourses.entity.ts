@@ -10,13 +10,13 @@ export class EmployeeCoursesEntity {
   @PrimaryColumn({ name: 'course_id' })
   courseId: string;
 
-  @PrimaryColumn({ name: 'completed' })
+  @Column({ name: 'status', type: 'boolean' })
   status: boolean;
 
-  @Column({ name: 'created_at', type: 'date' })
+  @Column({ name: 'created_at' })
   createdAt: Date;
 
-  @Column({ name: 'updated_at', type: 'date' })
+  @Column({ name: 'updated_at' })
   updatedAt: Date;
 
   @ManyToOne(() => EmployeeEntity, (employee) => employee.employeeCoursesLink, {

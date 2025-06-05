@@ -96,6 +96,7 @@ export class employeeCoursesService {
       const employeeCourses = employeeArray.map((employeeId) => ({
         employeeId,
         courseId,
+        status: false,
       }));
       await this.employeeCoursesRepository.save(employeeCourses);
     } catch (error) {

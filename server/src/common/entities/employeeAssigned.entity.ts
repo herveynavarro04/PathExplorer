@@ -1,4 +1,5 @@
 import { EmployeeEntity } from 'src/employee/entities/employee.entity';
+import { PeopleLeadEntity } from 'src/people-lead/entity/peopleLead.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('employee_assigned')
@@ -20,4 +21,10 @@ export class EmployeeAssigned {
   })
   @JoinColumn({ name: 'employee_id' })
   employee?: EmployeeEntity;
+
+  @ManyToOne(() => PeopleLeadEntity, (employee) => employee.employeeAssigned, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'people_lead_id' })
+  peopleLead?: PeopleLeadEntity;
 }
