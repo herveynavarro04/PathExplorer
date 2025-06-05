@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import MemberProfileCard from "./components/MemberProfileCard";
 import CertificatesCard from "./components/certificates-card";
-import GoalsCard from "./components/gaols-card";
+import GoalsCard from "./components/goals-card";
 import { authFetch } from "@utils/authFetch";
 import { useSelectedEmployee } from "context/SelectedEmployeeContext";
 
