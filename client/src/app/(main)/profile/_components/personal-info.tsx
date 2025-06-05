@@ -44,6 +44,8 @@ export function PersonalInfoForm({
 
   const [showPasswordField, setShowPasswordField] = useState(false);
 
+  const url = "http://localhost:8080/api";
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -83,7 +85,7 @@ const resolvedImageSrc = (() => {
       formData.append("password", password);
     }
 
-    await fetch("http://localhost:8080/api/employee", {
+    await fetch(`${url}/employee`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -93,7 +95,7 @@ const resolvedImageSrc = (() => {
 
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const updated = await fetch("http://localhost:8080/api/employee", {
+    const updated = await fetch(`${url}/employee`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -203,7 +205,7 @@ const resolvedImageSrc = (() => {
               <button
               type="button"
               onClick={async () => {
-                await fetch("http://localhost:8080/api/employee/delete/picture", {
+                await fetch(`${url}/employee/delete/picture`, {
                   method: "PATCH",
                   headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
