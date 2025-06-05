@@ -10,6 +10,8 @@ interface PeopleLeadApplyModalProps {
 const PeopleLeadApplyModal = ({ setOpen, onApply }: PeopleLeadApplyModalProps) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
 
   const closeModal = () => {
     setIsVisible(false);
@@ -59,10 +61,13 @@ const PeopleLeadApplyModal = ({ setOpen, onApply }: PeopleLeadApplyModalProps) =
             Cancelar
           </button>
           <button
-            onClick={() => {
-              onApply();
-              closeModal();
-            }}
+           disabled={submitting}
+           onClick={async () => {
+            setSubmitting(true);
+            await onApply();
+            setSubmitting(false);
+            closeModal();
+          }}
             className="px-4 py-2 text-sm font-semibold bg-[#65417f] text-white rounded-md hover:bg-opacity-90 transition"
           >
             Confirmar

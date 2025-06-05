@@ -9,6 +9,7 @@ import { authFetch } from "@utils/authFetch";
 import Breadcrumb from "components/Breadcrumbs/Breadcrumb";
 import ChargeabilityCard from "./ChargeabilityCard";
 import PeopleLeadApplyModal from "./_components/PeopleLeadApplyModal";
+import toast from "react-hot-toast";
 
 type ProfileData = {
   firstName: string;
@@ -45,6 +46,7 @@ const Page = () => {
   const [fadeIn, setFadeIn] = useState(false);
   const [reloadTrigger, setReloadTrigger] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
+  const [hasApplied, setHasApplied] = useState(false);
 
   const url = "http://localhost:8080/api";
 
@@ -97,9 +99,41 @@ const Page = () => {
     setProfile((prev) => ({ ...prev, ...newData }));
   };
 
-  const handleApply = () => {
-    alert("¡Solicitud enviada con éxito!");
-  };
+  const showSuccessToast = (message: string) => {
+  const toast = document.createElement("div");
+  toast.textContent = message;
+  toast.className =
+    "toast-success fixed top-6 right-6 z-50 bg-white text-gray-800 font-semibold px-5 py-3 rounded-lg shadow-lg animate-fade-in";
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("animate-fade-out");
+  }, 3800);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 4500);
+};
+
+const handleApply = async () => {
+  try {
+    const response = await authFetch(`${url}/people-lead`, {
+      method: "POST",
+    });
+
+    if (!response) {
+      showSuccessToast("❌ Error al enviar solicitud");
+      return;
+    }
+
+    showSuccessToast("✅ ¡Solicitud enviada con éxito!");
+    setHasApplied(true);
+  } catch (error) {
+    console.error("Error applying:", error);
+    showSuccessToast("⚠️ Error inesperado");
+  }
+};
+
 
   if (loading || !profile || !skills || !userSkills) {
     return <div className="min-h-screen bg-[#d0bfdb]" />;
@@ -121,7 +155,7 @@ const Page = () => {
       >
         <div className="flex items-center justify-between mb-4">
           <Breadcrumb pageName="Perfil" />
-          {profile.level && profile.level >= 5 && profile.level <= 9 && (
+          {profile.level >= 5 && (
             <button
               className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
               type="button"
