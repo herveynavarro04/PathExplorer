@@ -11,6 +11,7 @@ import { PostCourseResponseDto } from '../dto/response/postCourseResponse.dto';
 import { CoursesEntity } from '../entity/courses.entity';
 import { employeeCoursesService } from './employeeCourses.service';
 import { GetEmployeeCoursesDto } from '../dto/response/getEmployeeCourses.dto';
+import { GetCourseInfoDto } from '../dto/response/getCourseInfo.dto';
 
 @Injectable()
 export class CoursesService {
@@ -52,6 +53,42 @@ export class CoursesService {
         'CourseService',
       );
       throw new InternalServerErrorException('Failed to create course');
+    }
+  }
+
+  async getCourseInfoById(
+    employeeId: string,
+    courseId: string,
+  ): Promise<GetCourseInfoDto> {
+    try {
+      const course = await this.coursesRepository.findOne({
+        where: { courseId, employeeId },
+      });
+
+      if (!course) {
+        throw new InternalServerErrorException('Course not found');
+      }
+
+      const courseInfo: GetCourseInfoDto = {
+        title: course.title,
+        duration: course.duration,
+        information: course.information,
+        status: false,
+        url: course.url,
+        mandatory: course.mandatory,
+        createdAt: course.createdAt,
+      };
+
+      Logger.log('General course info successfully fetched', 'CoursesService');
+
+      return courseInfo;
+    } catch (error) {
+      Logger.error(
+        'Error during general course info fetching',
+        error.stack,
+        'CoursesService',
+      );
+      throw new InternalServerErrorException('Failed to fetch course info');
     }
   }
 

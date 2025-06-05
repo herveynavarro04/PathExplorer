@@ -70,10 +70,7 @@ export class CoursesController {
     @Param('courseId') courseId: string,
   ): Promise<GetCourseInfoDto> {
     const employeeId = req.user['employeeId'];
-    return this.employeeCourseService.getCourseInfoGeneral(
-      employeeId,
-      courseId,
-    );
+    return this.coursesService.getCourseInfoById(employeeId, courseId);
   }
 
   @Patch('update/:courseId')

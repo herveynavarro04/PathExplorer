@@ -4,7 +4,6 @@ import { EmployeeInterestEntity } from 'src/common/entities/employeeInterests.en
 import { HashingService } from 'src/Utilities/hashing.utilities';
 import { EmployeeEntity } from './entities/employee.entity';
 import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entity';
-import { PeopleLeadEntity } from 'src/common/entities/PeopleLeadEntity'; // ✅ importa aquí
 import { EmployeeService } from './employee.service';
 import { EmployeeController } from './employee.controller';
 import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
@@ -17,7 +16,6 @@ import { ImageService } from 'src/Utilities/imageService.utilities';
       EmployeeProjectEntity,
       EmployeeInterestEntity,
       EmployeeProfilePicture,
-      PeopleLeadEntity,
     ]),
   ],
   providers: [EmployeeService, HashingService, ImageService],
