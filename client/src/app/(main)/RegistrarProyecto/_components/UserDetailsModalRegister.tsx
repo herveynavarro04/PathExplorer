@@ -246,20 +246,20 @@ export default function UserDetailsModalRegister({
                 <h2 className="font-semibold text-lg mb-4">
                   Información Personal
                 </h2>
-                <div className="flex flex-col items-center gap-4">
-                  <div className="w-[180px] h-[180px] rounded-full overflow-hidden">
-                    <Image
-                      src={
-                        userData.profilePicture && userData.mimeType
-                          ? `data:${userData.mimeType};base64,${userData.profilePicture}`
-                          : "/profile.png"
-                      }
-                      alt="Foto de perfil"
-                      width={180}
-                      height={180}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
+                <div className="flex flex-col items-center gap-8">
+                  <div className="w-30 h-30 md:w-65 md:h-65 rounded-full overflow-hidden mb-3">
+                                    <Image
+                                      src={
+                                        userData.profilePicture && userData.mimeType
+                                          ? `data:${userData.mimeType};base64,${userData.profilePicture}`
+                                          : "/profile.png"
+                                      }
+                                      alt="Foto de perfil"
+                                      width={180}
+                                      height={180}
+                                      className="object-cover w-full h-full"
+                                    />
+                                  </div>
 
                   <div className="w-full">
                     <label className="text-sm font-medium block mb-1">
@@ -289,7 +289,7 @@ export default function UserDetailsModalRegister({
                 </div>
                 <button
                   onClick={() => setShowFeedback(true)}
-                  className="mt-4 w-full px-4 py-2 text-sm font-semibold bg-[#65417f] text-white rounded-lg hover:bg-opacity-90"
+                  className="mt-8 w-full px-4 py-2 text-sm font-semibold bg-[#65417f] text-white rounded-lg hover:bg-opacity-90"
                 >
                   Ver opiniones pasadas
                 </button>
