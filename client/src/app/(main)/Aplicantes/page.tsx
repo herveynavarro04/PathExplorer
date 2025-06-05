@@ -173,17 +173,36 @@ export default function Applicants() {
     }
   };
 
-  return (
+return (
+  <>
     <div
+      className={`mx-auto w-full transition-opacity duration-300 ${
+        !fadeIn ? "opacity-0" : "opacity-100"
+      }`}
       key={selectedProject?.projectId}
-      className={`mx-auto w-full transition-opacity duration-300 ${!fadeIn ? "opacity-0" : "opacity-100"}`}
     >
-      <ProjectViewer
-        projects={projects}
-        selectedProject={selectedProject}
-        setChangeRefresh={setChangeRefresh}
-        setPendingProjectId={setPendingProjectId}
-      />
+     <div className="flex items-center justify-between mb-4 w-full">
+  <div>
+    <button
+      onClick={() => router.back()}
+      className="flex items-center gap-2 text-[#65417f] hover:font-semibold"
+    >
+      <span className="text-xl">←</span>
+      <span className="text-lg">Regresar</span>
+    </button>
+  </div>
+
+  <div className="ml-auto">
+    <ProjectViewer
+      projects={projects}
+      selectedProject={selectedProject}
+      setChangeRefresh={setChangeRefresh}
+      setPendingProjectId={setPendingProjectId}
+    />
+  </div>
+</div>
+
+
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-20 2xl:gap-7.5">
         <div className="col-span-12 grid">
           <TopAnalysis
@@ -196,5 +215,7 @@ export default function Applicants() {
         </div>
       </div>
     </div>
-  );
+  </>
+);
+
 }
