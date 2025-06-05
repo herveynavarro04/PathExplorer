@@ -33,7 +33,7 @@ export class CoursesService {
         updatedAt: null,
         ...newCoursePayload,
       };
-      this.coursesRepository.save(newCourse);
+      await this.coursesRepository.save(newCourse);
       Logger.log('Course created succesfully', 'CourseService');
       if (newCoursePayload.employeesAssigned) {
         await this.employeeCourseService.assignEmployeesCourse(
