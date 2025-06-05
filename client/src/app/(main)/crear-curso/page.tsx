@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import EmployeesCard from "./_components/EmployeesCard";
 import CourseForm from "./_components/CourseForm";
 import { useRouter } from "next/navigation";
@@ -35,8 +36,9 @@ export default function RegistrarCurso() {
   >([]);
   const [showEmployees, setShowEmployees] = useState<boolean>(false);
   const [addEmployees, setAddEmployees] = useState<string[]>([]);
-  const router = useRouter();
   const [fadeIn, setFadeIn] = useState(false);
+  const router = useRouter();
+
   const url = `http://localhost:8080/api`;
 
   const onClose = () => {
@@ -54,7 +56,7 @@ export default function RegistrarCurso() {
     setTimeout(() => {
       onClose();
       setFadeIn(true);
-    }, 600);
+    }, 600); // tiempo igual a duración del fade
   };
 
   const handleToggleEmployee = (employeeId: string) => {
@@ -81,6 +83,7 @@ export default function RegistrarCurso() {
         body: JSON.stringify(postRequestUpdated),
       });
       console.log(response);
+      resetWithFade(); // Fade-out y reset después del POST
     } catch (error) {
       console.error("Error posting courses", error);
     }
@@ -116,52 +119,59 @@ export default function RegistrarCurso() {
     return () => clearTimeout(timeout);
   }, []);
 
-  useEffect(() => {
-    console.log(addEmployees);
-  }, [addEmployees]);
-
   const employeeSelected = (employeeId: string) =>
     addEmployees.includes(employeeId);
-  return (
-    <div
-      className={`transition-opacity duration-500 ${
-        fadeIn ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      <div className="max-w-full mx-auto w-full px-4">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="text-lg text-[#65417f] hover:font-semibold mb-4"
-        >
-          ← Regresar
-        </button>
-      </div>
-      <CourseForm
-        handleSubmit={handleSubmit}
-        showEmployees={showEmployees}
-        setShowEmployees={setShowEmployees}
-        addEmployees={addEmployees}
-        title={title}
-        setTitle={setTitle}
-        information={information}
-        setInformation={setInformation}
-        urlCourse={urlCourse}
-        setUrlCourse={setUrlCourse}
-        mandatory={mandatory}
-        setMandatory={setMandatory}
-        duration={duration}
-        setDuration={setDuration}
-        resetWithFade={resetWithFade}
-      />
 
-      {showEmployees && (
-        <EmployeesCard
-          employees={employees}
-          handleToggleEmployee={handleToggleEmployee}
-          employeeSelected={employeeSelected}
+  return (
+    <div>
+      <div
+        className={`transition-opacity duration-500 ${
+          fadeIn ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div className="max-w-full mx-auto w-full px-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="text-lg text-[#65417f] hover:font-semibold mb-4"
+          >
+            ← Regresar
+          </button>
+        </div>
+
+        <CourseForm
+          handleSubmit={handleSubmit}
+          showEmployees={showEmployees}
+          setShowEmployees={setShowEmployees}
+          addEmployees={addEmployees}
+          title={title}
+          setTitle={setTitle}
+          information={information}
+          setInformation={setInformation}
+          urlCourse={urlCourse}
+          setUrlCourse={setUrlCourse}
+          mandatory={mandatory}
+          setMandatory={setMandatory}
+          duration={duration}
+          setDuration={setDuration}
+          resetWithFade={resetWithFade}
         />
-      )}
+
+        {showEmployees && (
+          <motion.div
+            key="employeesCard"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <EmployeesCard
+              employees={employees}
+              handleToggleEmployee={handleToggleEmployee}
+              employeeSelected={employeeSelected}
+            />
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }

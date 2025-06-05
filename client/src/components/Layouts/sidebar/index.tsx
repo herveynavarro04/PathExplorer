@@ -12,8 +12,13 @@ import { useSidebarContext } from "./sidebar-context";
 export function Sidebar() {
   const pathname = usePathname();
   const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
+
   const rol =
     typeof window !== "undefined" ? localStorage.getItem("rol") : null;
+  const isPeopleLead =
+    typeof window !== "undefined"
+      ? localStorage.getItem("peopleLead") === "true"
+      : false;
 
   return (
     <>
@@ -61,15 +66,42 @@ export function Sidebar() {
           <div className="custom-scrollbar mt-6 flex-1 overflow-y-auto pr-3 min-[850px]:mt-10">
             {NAV_DATA.map((section) => {
               const filteredItems = section.items.filter((item) => {
-                if (rol === "STAFF" && item.title === "Project Manager")
-                  return false;
                 if (
-                  rol === "manager" &&
-                  ["Aplicación a Proyectos", "Mis Proyectos"].includes(
-                    item.title
-                  )
+                  rol === "STAFF" &&
+                  ["Project Manager", "Administrador"].includes(item.title)
                 )
                   return false;
+
+                if (
+                  rol === "MANAGER" &&
+                  [
+                    "Aplicación a Proyectos",
+                    "Mis Proyectos",
+                    "Administrador",
+                  ].includes(item.title)
+                )
+                  return false;
+
+                if (
+                  rol === "ADMIN" &&
+                  [
+                    "Dashboard",
+                    "Perfil",
+                    "Aplicación a Proyectos",
+                    "Mis Proyectos",
+                    "Project Manager",
+                    "People Lead",
+                  ].includes(item.title)
+                )
+                  return false;
+
+                if (
+                  ["STAFF", "MANAGER"].includes(rol) &&
+                  item.title === "People Lead" &&
+                  !isPeopleLead
+                )
+                  return false;
+
                 return true;
               });
 

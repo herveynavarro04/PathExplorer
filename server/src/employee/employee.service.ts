@@ -21,6 +21,7 @@ import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.response.dto';
 import { UpdateEmployeeStatusResponseDto } from './dto/response/updateEmployeeStatus.response.dto';
 import { EmployeeEntity } from './entities/employee.entity';
+import { PeopleLeadEntity } from 'src/common/entities/PeopleLeadEntity';
 import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
 
 @Injectable()
@@ -34,6 +35,8 @@ export class EmployeeService {
     private employeeProjects: Repository<EmployeeProjectEntity>,
     @InjectRepository(EmployeeProfilePicture)
     private employeeProfilePicturesRepository: Repository<EmployeeProfilePicture>,
+    @InjectRepository(PeopleLeadEntity)
+    private peopleLeadRepository: Repository<PeopleLeadEntity>,
   ) {}
 
   async registerEmployee(
@@ -55,17 +58,44 @@ export class EmployeeService {
     }
   }
 
+  // async checkIfPeopleLead(employeeId: string): Promise<boolean> {
+  //   try {
+  //     const employeeInfo = await this.employeesRepository.findOne({
+  //       where: { employeeId: employeeId },
+  //       relations: ['employeeAssigned'],
+  //     });
+
+  //     Logger.log(JSON.stringify(employeeInfo, null, 2), 'EmployeeService');
+  //     Logger.log('PeopleLead verification', 'EmployeeService');
+  //     if (employeeInfo.employeeAssigned.length > 0) {
+  //       return true;
+  //     }
+  //     return false;
+  //   } catch (error) {
+  //     Logger.error(
+  //       'Error during peopleLead verification',
+  //       error.stack,
+  //       'EmployeeService',
+  //     );
+  //     throw new InternalServerErrorException('Failed to verify peopleLead');
+  //   }
+  // }
+
   async checkIfPeopleLead(employeeId: string): Promise<boolean> {
     try {
-      const employeeInfo = await this.employeesRepository.findOne({
-        where: { employeeId: employeeId },
-        relations: ['employeeAssigned'],
+      const peopleLead = await this.peopleLeadRepository.findOne({
+        where: {
+          employeeId: employeeId,
+          status: 'approved',
+        },
       });
-      Logger.log('PeopleLead verification', 'EmployeeService');
-      if (employeeInfo.employeeAssigned.length > 0) {
-        return true;
-      }
-      return false;
+
+      Logger.log(
+        `People lead check for ${employeeId}: ${!!peopleLead}`,
+        'EmployeeService',
+      );
+
+      return !!peopleLead;
     } catch (error) {
       Logger.error(
         'Error during peopleLead verification',

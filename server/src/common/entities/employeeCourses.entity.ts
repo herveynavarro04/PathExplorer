@@ -10,7 +10,7 @@ export class EmployeeCoursesEntity {
   @PrimaryColumn({ name: 'course_id' })
   courseId: string;
 
-  @PrimaryColumn({ name: 'completed' })
+  @Column({ name: 'status', type: 'boolean', default: false })
   status: boolean;
 
   @Column({ name: 'created_at', type: 'date' })

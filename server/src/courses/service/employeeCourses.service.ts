@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EmployeeCoursesEntity } from 'src/common/entities/employeeCourses.entity';
+import { CoursesEntity } from '../entity/courses.entity';
 import { Repository } from 'typeorm';
 import { GetCourseInfoDto } from '../dto/response/getCourseInfo.dto';
 import { GetEmployeeCoursesDto } from '../dto/response/getEmployeeCourses.dto';
@@ -15,6 +16,8 @@ export class employeeCoursesService {
   constructor(
     @InjectRepository(EmployeeCoursesEntity)
     private employeeCoursesRepository: Repository<EmployeeCoursesEntity>,
+    @InjectRepository(CoursesEntity)
+    private coursesRepository: Repository<CoursesEntity>,
   ) {}
 
   async getEmployeeCourses(employeeId: string): Promise<GetEmployeeCoursesDto> {
@@ -88,6 +91,45 @@ export class employeeCoursesService {
     }
   }
 
+  async getCourseInfoGeneral(
+    employeeId: string,
+    courseId: string,
+  ): Promise<GetCourseInfoDto> {
+    try {
+      const course = await this.coursesRepository.findOne({
+        where: { courseId, employeeId },
+      });
+
+      if (!course) {
+        throw new InternalServerErrorException('Course not found');
+      }
+
+      const courseInfo: GetCourseInfoDto = {
+        title: course.title,
+        duration: course.duration,
+        information: course.information,
+        status: false,
+        url: course.url,
+        mandatory: course.mandatory,
+        createdAt: course.createdAt,
+      };
+
+      Logger.log(
+        'General course info successfully fetched',
+        'EmployeeCoursesService',
+      );
+
+      return courseInfo;
+    } catch (error) {
+      Logger.error(
+        'Error during general course info fetching',
+        error.stack,
+        'EmployeeCoursesService',
+      );
+      throw new InternalServerErrorException('Failed to fetch course info');
+    }
+  }
+
   public async assignEmployeesCourse(
     employeeArray: string[],
     courseId: string,
@@ -96,6 +138,7 @@ export class employeeCoursesService {
       const employeeCourses = employeeArray.map((employeeId) => ({
         employeeId,
         courseId,
+        status: false,
       }));
       await this.employeeCoursesRepository.save(employeeCourses);
     } catch (error) {

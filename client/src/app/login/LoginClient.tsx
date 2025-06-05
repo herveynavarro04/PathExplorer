@@ -53,7 +53,9 @@ const LoginClient = () => {
           localStorage.setItem("token", accessToken);
           const decoded: any = jwtDecode<JwtPayload>(accessToken);
           localStorage.setItem("rol", decoded.rol);
-          router.push("/dashboard");
+          localStorage.setItem("peopleLead", decoded.isPeopleLead);
+          if (decoded.rol === "ADMIN") router.push("/admin");
+          else router.push("/dashboard");
         }
       } catch (err) {
         console.error("Unexpected error", err);
