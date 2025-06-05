@@ -49,6 +49,8 @@ export default function MyProjectsPage() {
   const projectsPerPage = 6;
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const [finalizeFadeIn, setFinalizeFadeIn] = useState(false);
+
 
   let filteredProjects = projects;
   if (technologyFilter.length > 0) {
@@ -118,6 +120,12 @@ export default function MyProjectsPage() {
 
     loadData();
   }, [triggerRefresh, allTech]);
+
+  useEffect(() => {
+  if (addProjects.length === 0) {
+    setFinalizeFadeIn(false);
+  }
+}, [addProjects]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -287,7 +295,11 @@ export default function MyProjectsPage() {
           </div>
 
           <div className="flex flex-col min-h-[34rem]">
-            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5">
+            <div
+  className={`grid gap-4 sm:grid-cols-2 sm:gap-6 2xl:gap-7.5 transition-opacity duration-500 ${
+    finalizeFadeIn ? "opacity-0" : "opacity-100"
+  }`}
+>
               {currentProjects.map((project) => (
                 <ProjectCard
                   key={project.projectId}
@@ -339,9 +351,11 @@ export default function MyProjectsPage() {
                   <button
                     className="bg-[#65417f] hover:bg-[#5a366e] text-white px-4 py-2 rounded-lg w-full sm:w-auto"
                     onClick={() => {
-                      setTriggerPost((prev) => !prev);
-                      setLoading(true);
-                    }}
+  setFinalizeFadeIn(false); 
+  setTimeout(() => setFinalizeFadeIn(true), 50); 
+  setTriggerPost((prev) => !prev);
+  setLoading(true);
+}}
                   >
                     Finalizar aplicación
                   </button>
