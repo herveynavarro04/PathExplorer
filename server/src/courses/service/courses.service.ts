@@ -78,9 +78,7 @@ export class CoursesService {
         mandatory: course.mandatory,
         createdAt: course.createdAt,
       };
-
       Logger.log('General course info successfully fetched', 'CoursesService');
-
       return courseInfo;
     } catch (error) {
       Logger.error(
