@@ -62,7 +62,7 @@ export default function ApplicantTable() {
           <TableRow className="border-none uppercase text-sm text-[#6c63ff] dark:text-white">
             <TableHead className="text-left">Nombre</TableHead>
             <TableHead className="text-left">Correo</TableHead>
-            <TableHead className="text-center">Fecha</TableHead>
+            <TableHead className="text-center">Fecha de aplicación</TableHead>
             <TableHead className="text-center">Intereses</TableHead>
             <TableHead className="text-center">Habilidades</TableHead>
             <TableHead className="text-center">Aceptar/Rechazar</TableHead>
@@ -91,11 +91,11 @@ export default function ApplicantTable() {
                 <div className="flex items-center justify-center gap-2">
                   <button
                     onClick={() => setSelectedApplicant(applicant)}
-                    className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                    className="px-3 py-1 bg-[#65417f] text-white rounded hover:bg-[#7a4b9d]"
                   >
                     Aceptar
                   </button>
-                  <button className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                  <button className="px-3 py-1 bg-gray-3 text-gray-7 hover:text-white rounded hover:bg-red-600 border border-gray-6">
                     Rechazar
                   </button>
                 </div>
