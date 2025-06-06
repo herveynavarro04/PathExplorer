@@ -34,14 +34,14 @@ export class AuthService {
 
     const employeeId = uuidv4();
     const hashedPassword = await this.hashingService.hashPassword(
-      employeePayload.password,
+      process.env.DEFAULT_PASSWORD,
     );
     const register: EmployeeEntity = {
       employeeId: employeeId,
       email: employeePayload.email,
       password: hashedPassword,
       rol: employeePayload.rol,
-      level: 1,
+      level: employeePayload.level,
       createdAt: new Date(),
       updatedAt: null,
       firstName: employeePayload.firstName,

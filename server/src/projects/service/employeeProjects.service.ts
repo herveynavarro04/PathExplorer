@@ -21,6 +21,9 @@ import { GetProjectApplicants } from '../dto/response/getProjectApplicants.respo
 import { UpdateApplicantStatusRequestDto } from '../dto/request/updateApplicantStatus.request.dto';
 import { UpdateApplicantStatusResponseDto } from '../dto/response/updateApplicantStatus.response.dto';
 import { GetManagerNotFullProjectsResponseDto } from '../dto/response/getManagerNotFullProjects.response.dto';
+import { GetChargeabilityResponseDto } from '../dto/response/getChargeability.response.dto';
+import { UpdateChargeabilityRequestDto } from '../dto/request/updateChargeability.request.dto';
+import { UpdateChargeabilityResponseDto } from '../dto/response/updateChargeability.response.dto';
 
 @Injectable()
 export class EmployeeProjectsService {
@@ -607,6 +610,60 @@ export class EmployeeProjectsService {
       throw new InternalServerErrorException(
         'Failed to add projects to employee',
       );
+    }
+  }
+
+  async getChargeability(
+    employeeId: string,
+  ): Promise<GetChargeabilityResponseDto> {
+    try {
+      const chargeability = await this.employeeProjectRepository.findOne({
+        where: { employeeId: employeeId, status: 'approved' },
+        select: ['chargeability'],
+      });
+      Logger.log(
+        'Chargeability succesfully fetched!',
+        'EmployeeProjectsService',
+      );
+      return chargeability;
+    } catch (error) {
+      Logger.error(
+        'Error fetching chargeability',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException('Failed to fetch chargeability');
+    }
+  }
+
+  async updateChargeability(
+    employeeId: string,
+    projectId: string,
+    updatePayload: UpdateChargeabilityRequestDto,
+  ): Promise<UpdateChargeabilityResponseDto> {
+    try {
+      await this.employeeProjectRepository.update(
+        {
+          employeeId: employeeId,
+          projectId: projectId,
+        },
+        {
+          chargeability: updatePayload.newChargeability,
+        },
+      );
+      Logger.log('Chargeability updated!', 'EmployeeProjectService');
+      return {
+        employeeId: employeeId,
+        projectId: projectId,
+        updatedAt: new Date(),
+      };
+    } catch (error) {
+      Logger.error(
+        'Error updating chargeability',
+        error.stack,
+        'EmployeeProjectsService',
+      );
+      throw new InternalServerErrorException('Failed to update chargeability');
     }
   }
 
