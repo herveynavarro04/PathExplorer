@@ -30,6 +30,9 @@ import { GetProjectApplicants } from './dto/response/getProjectApplicants.respon
 import { UpdateApplicantStatusRequestDto } from './dto/request/updateApplicantStatus.request.dto';
 import { UpdateApplicantStatusResponseDto } from './dto/response/updateApplicantStatus.response.dto';
 import { GetManagerNotFullProjectsResponseDto } from './dto/response/getManagerNotFullProjects.response.dto';
+import { GetChargeabilityResponseDto } from './dto/response/getChargeability.response.dto';
+import { UpdateChargeabilityRequestDto } from './dto/request/updateChargeability.request.dto';
+import { UpdateChargeabilityResponseDto } from './dto/response/updateChargeability.response.dto';
 
 @Controller('projects')
 export class ProjectsController {
@@ -89,6 +92,29 @@ export class ProjectsController {
     return this.employeeProjectsService.getEmployeeAvailableProjects(
       employeeId,
     );
+  }
+
+  @Patch(':projectId/:employeeId/chargeability')
+  @UseGuards(JwtGuard)
+  async updateChargeability(
+    @Param('projectId') projectId: string,
+    @Param('employeeId') employeeId: string,
+    @Body() updatePayload: UpdateChargeabilityRequestDto,
+  ): Promise<UpdateChargeabilityResponseDto> {
+    return this.employeeProjectsService.updateChargeability(
+      employeeId,
+      projectId,
+      updatePayload,
+    );
+  }
+
+  @Get('chargeability')
+  @UseGuards(JwtGuard)
+  async getChargeability(
+    @Req() req: Request,
+  ): Promise<GetChargeabilityResponseDto> {
+    const employeeId = req.user['employeeId'];
+    return this.employeeProjectsService.getChargeability(employeeId);
   }
 
   @Patch('employee')
