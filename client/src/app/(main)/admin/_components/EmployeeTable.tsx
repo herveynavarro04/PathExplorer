@@ -97,14 +97,21 @@ export default function EmployeeTable() {
   }, []);
 
   const handleRegisterEmployee = async (
-    newEmp: Omit<Employee, "employeeId" | "active">
+    newEmp: Omit<Employee, "employeeId" | "active"> & { rol: string }
   ) => {
     const res = validation();
     if (!res) return router.push("/login");
     try {
-      const response = await authFetch<Employee>(`${url}/employees`, {
+      console.log("Payload enviado:", {
+  ...newEmp,
+  password: "default123",
+});
+      const response = await authFetch<{ employeeId: string }>(`${url}/auth/register`, {
         method: "POST",
-        body: JSON.stringify(newEmp),
+        body: JSON.stringify({
+          ...newEmp,
+          password: "dummy" 
+        }),
       });
       if (!response) return router.push("/login");
       setEmployees((prev) => [...prev, response]);
@@ -113,6 +120,7 @@ export default function EmployeeTable() {
       console.error("Error registering employee", err);
     }
   };
+
 
   const itemsPerPage = 10;
 
