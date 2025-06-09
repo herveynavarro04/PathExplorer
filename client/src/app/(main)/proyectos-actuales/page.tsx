@@ -62,7 +62,8 @@ export default function Home() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [active, setActive] = useState(true);
-  const [triggerRefresh, setTriggerRefresh] = useState(false);
+  const [triggerProjectsRefresh, setTriggerProjectsRefresh] = useState(false);
+  const [triggerEmployeesRefresh, setTriggerEmployeesRefresh] = useState(false);
   const [selectedProject, setSelectedProject] =
     useState<ProjectInfoPreviewResponseDto | null>(null);
   const [isFinalizeModalOpen, setIsFinalizeModalOpen] = useState(false);
@@ -72,7 +73,7 @@ export default function Home() {
   const [pendingProjectId, setPendingProjectId] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
-
+  const originalEmployeeOrder = useRef<string[]>([]);
   const router = useRouter();
   const url = "http://localhost:8080/api";
 
@@ -92,7 +93,7 @@ export default function Home() {
       setFadeIn(false);
 
       setTimeout(() => {
-        setTriggerRefresh((prev) => !prev);
+        setTriggerProjectsRefresh((prev) => !prev);
       }, 300);
     } catch (error) {
       console.error("Error patching the project", error);
@@ -145,7 +146,7 @@ export default function Home() {
     };
 
     loadInitialData();
-  }, [triggerRefresh]);
+  }, [triggerProjectsRefresh]);
 
   useEffect(() => {
     if (!selectedProject) return;
@@ -161,6 +162,9 @@ export default function Home() {
         >(`${url}/projects/${selectedProject.projectId}/employees`);
         if (!employeesRes) return router.push("/login");
 
+        // Asigna orden original por proyecto
+        originalEmployeeOrder.current = employeesRes.map((e) => e.employeeId);
+
         setEmployees(employeesRes);
         setLoadingEmployees(false);
       } catch (error) {
@@ -170,6 +174,35 @@ export default function Home() {
 
     loadEmployees();
   }, [selectedProject]);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+    const res = validation();
+    if (!res) return router.push("/login");
+
+    setLoadingEmployees(true);
+
+    const refreshEmployees = async () => {
+      try {
+        const employeesRes = await authFetch<
+          GetEmployeesByProjectResponseDto[]
+        >(`${url}/projects/${selectedProject.projectId}/employees`);
+        if (!employeesRes) return router.push("/login");
+
+        // Reordenar usando el orden original guardado
+        const orderedEmployees = originalEmployeeOrder.current
+          .map((id) => employeesRes.find((e) => e.employeeId === id))
+          .filter(Boolean) as GetEmployeesByProjectResponseDto[];
+
+        setEmployees(orderedEmployees);
+        setLoadingEmployees(false);
+      } catch (error) {
+        console.error("Error refreshing employees", error);
+      }
+    };
+
+    refreshEmployees();
+  }, [triggerEmployeesRefresh]);
 
   useEffect(() => {
     if (!employees || !selectedProject) return;
@@ -202,7 +235,7 @@ export default function Home() {
         const newProject = projects?.find(
           (p) => p.projectId === pendingProjectId
         );
-        setSelectedProject(newProject);
+        setSelectedProject(newProject || null);
       }
     }, 300);
 
@@ -288,7 +321,8 @@ export default function Home() {
           technologies={selectedProject.technologies}
           techs={techs}
           employees={employees}
-          setTriggerRefresh={setTriggerRefresh}
+          setTriggerProjectsRefresh={setTriggerProjectsRefresh}
+          setTriggerEmployeesRefresh={setTriggerEmployeesRefresh}
           editable={true}
         />
       </div>
