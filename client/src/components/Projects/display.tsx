@@ -40,7 +40,8 @@ interface DisplayViewerProps {
   technologies: TechDto[];
   techs: TechDto[];
   employees: GetEmployeesByProjectResponseDto[];
-  setTriggerRefresh: (triggerRefresh: boolean) => void;
+  setTriggerProjectsRefresh: (triggerProjectsRefresh: boolean) => void;
+  setTriggerEmployeesRefresh: (triggerEmployeesRefresh: boolean) => void;
 
   editable: boolean;
 }
@@ -59,7 +60,8 @@ export default function DisplayViewer({
   technologies,
   techs,
   employees,
-  setTriggerRefresh,
+  setTriggerProjectsRefresh,
+  setTriggerEmployeesRefresh,
   editable,
 }: DisplayViewerProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -128,7 +130,7 @@ export default function DisplayViewer({
       for (const key of Object.keys(payload)) {
         originalValuesRef.current.set(key, updatedFields[key]);
       }
-      setTriggerRefresh((prev) => !prev);
+      setTriggerProjectsRefresh((prev) => !prev);
     } catch (error) {
       console.error("Error al hacer PATCH:", error);
     }
@@ -178,7 +180,7 @@ export default function DisplayViewer({
           techs={techs}
           projectId={projectId}
           editable={editable}
-          setTriggerRefresh={setTriggerRefresh}
+          setTriggerProjectsRefresh={setTriggerProjectsRefresh}
         />
 
         <div className="col-span-2 rounded-xl shadow">
@@ -187,7 +189,7 @@ export default function DisplayViewer({
             employees={employees}
             onFeedbackClick={onFeedbackClick}
             editable={editable}
-            setTriggerRefresh={setTriggerRefresh}
+            setTriggerEmployeesRefresh={setTriggerEmployeesRefresh}
           />
         </div>
 

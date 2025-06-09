@@ -13,7 +13,7 @@ interface DeleteMemberModalProps {
   employeeNameToDelete: string;
   setEmployeeNameToDelete: (employeeNameToDelete: string) => void;
   setShowModal: (showModal: boolean) => void;
-  setTriggerRefresh: (triggerRefresh: boolean) => void;
+  setTriggerEmployeesRefresh: (triggerEmployeesRefresh: boolean) => void;
 }
 
 const DeleteMemberModal = ({
@@ -23,7 +23,7 @@ const DeleteMemberModal = ({
   employeeNameToDelete,
   setEmployeeNameToDelete,
   setShowModal,
-  setTriggerRefresh,
+  setTriggerEmployeesRefresh,
 }: DeleteMemberModalProps) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -51,7 +51,7 @@ const DeleteMemberModal = ({
       console.log(response);
 
       onClose();
-      setTriggerRefresh((prev) => !prev);
+      setTriggerEmployeesRefresh((prev) => !prev);
     } catch (error) {
       console.error("Failed to update skills:", error);
     }

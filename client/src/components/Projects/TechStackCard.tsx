@@ -12,7 +12,7 @@ interface TechStackCardProps {
   techs: TechDto[];
   projectId: string;
   editable: boolean;
-  setTriggerRefresh: (triggerRefresh: boolean) => void;
+  setTriggerProjectsRefresh: (triggerProjectsRefresh: boolean) => void;
 }
 
 interface TechDto {
@@ -25,7 +25,7 @@ export default function TechStackCard({
   techs,
   projectId,
   editable = true,
-  setTriggerRefresh,
+  setTriggerProjectsRefresh,
 }: TechStackCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -87,7 +87,7 @@ export default function TechStackCard({
       setIsEditing(false);
       setAddTechs([]);
       setDeleteTechs([]);
-      setTriggerRefresh((prev) => !prev);
+      setTriggerProjectsRefresh((prev) => !prev);
     } catch (error) {
       console.error("Failed to update skills:", error);
     }
