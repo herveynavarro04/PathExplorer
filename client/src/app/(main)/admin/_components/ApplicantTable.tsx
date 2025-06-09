@@ -281,15 +281,13 @@ export default function ApplicantTable() {
               </TableRow>
             ))}
 
-            {Array.from({ length: itemsPerPage - paginated.length }).map(
-              (_, index) => (
-                <TableRow key={`empty-${index}`}>
+              {Array.from({ length: itemsPerPage - paginated.length }).map((_, index) => (
+                <TableRow key={`empty-row-${currentPage}-${index}`}>
                   <TableCell colSpan={6} className="h-[56px]">
                     &nbsp;
                   </TableCell>
                 </TableRow>
-              )
-            )}
+              ))}
           </TableBody>
         </Table>
 
