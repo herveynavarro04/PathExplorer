@@ -14,7 +14,7 @@ import RegisterEmployeeModal from "./RegisterEmployeeModal";
 import { authFetch } from "@utils/authFetch";
 import { validation } from "@utils/validation";
 import { useRouter } from "next/navigation";
-import UserDetailsModalAdmin from "./UserDetailsModalAdmin";
+import UserDetailsModalAdmin from "./UserDetailsModalAdminEmployee";
 
 interface Employee {
   employeeId: string;

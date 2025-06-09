@@ -46,11 +46,9 @@ export class PeopleLeadController {
     @Param('peopleLeadId') employeeId: string,
     @Body() updatePayload: UpdatePeopleLeadApplicationStatusRequestDto,
   ): Promise<UpdatePeopleLeadApplicationStatusResponseDto> {
-    const peopleLeadId = req.user['employeeId'];
     return this.peopleLeadService.updatePeopleLeadApplicationStatus(
       employeeId,
       updatePayload,
-      peopleLeadId,
     );
   }
 
