@@ -86,7 +86,6 @@ export class PeopleLeadService {
   async updatePeopleLeadApplicationStatus(
     employeeId: string,
     updatePayload: UpdatePeopleLeadApplicationStatusRequestDto,
-    peopleLeadId: string,
   ): Promise<UpdatePeopleLeadApplicationStatusResponseDto> {
     try {
       await this.peopleLeadRepository.update(
@@ -104,7 +103,7 @@ export class PeopleLeadService {
         'PeopleLeadService',
       );
       if (updatePayload.employeesAssigned) {
-        this.assignEmployees(peopleLeadId, updatePayload.employeesAssigned);
+        this.assignEmployees(employeeId, updatePayload.employeesAssigned);
       }
       return {
         employeeId: employeeId,
