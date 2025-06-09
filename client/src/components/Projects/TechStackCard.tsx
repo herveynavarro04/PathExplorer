@@ -40,7 +40,7 @@ export default function TechStackCard({
   > | null>(null);
   const MAX_TECH = 20;
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   useEffect(() => {
     const techProjecthNames = new Set(stack.map((tech) => tech.technologyName));

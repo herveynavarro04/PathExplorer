@@ -26,7 +26,7 @@ const Page = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [filter, setFilter] = useState<boolean>(true);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const [loading, setLoading] = useState<boolean>(true);
   const [fadeIn, setFadeIn] = useState(false);
 

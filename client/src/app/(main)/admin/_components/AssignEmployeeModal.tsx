@@ -45,7 +45,7 @@ export default function AssignEmployeeModal({
   const [loading, setLoading] = useState(true);
   const [fadeIn, setFadeIn] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const router = useRouter();
 
   const onClose = () => {

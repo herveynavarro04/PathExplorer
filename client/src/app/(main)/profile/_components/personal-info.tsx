@@ -44,7 +44,7 @@ export function PersonalInfoForm({
 
   const [showPasswordField, setShowPasswordField] = useState(false);
 
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -59,19 +59,19 @@ export function PersonalInfoForm({
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-const resolvedImageSrc = (() => {
-  if (previewUrl && previewUrl.trim() !== "") {
-    return previewUrl;
-  } else if (
-    userData.url_pic &&
-    userData.mime_type &&
-    userData.url_pic.trim() !== ""
-  ) {
-    return `data:${userData.mime_type};base64,${userData.url_pic}`;
-  } else {
-    return "/profile.png";
-  }
-})();
+  const resolvedImageSrc = (() => {
+    if (previewUrl && previewUrl.trim() !== "") {
+      return previewUrl;
+    } else if (
+      userData.url_pic &&
+      userData.mime_type &&
+      userData.url_pic.trim() !== ""
+    ) {
+      return `data:${userData.mime_type};base64,${userData.url_pic}`;
+    } else {
+      return "/profile.png";
+    }
+  })();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -168,10 +168,12 @@ const resolvedImageSrc = (() => {
                 setPassword("");
                 setSelectedImage(null);
                 setPreviewUrl(
-                userData.url_pic && userData.mime_type && userData.url_pic.trim() !== ""
-                  ? `data:${userData.mime_type};base64,${userData.url_pic}`
-                  : "/profile.png"
-              );
+                  userData.url_pic &&
+                    userData.mime_type &&
+                    userData.url_pic.trim() !== ""
+                    ? `data:${userData.mime_type};base64,${userData.url_pic}`
+                    : "/profile.png"
+                );
               }}
             >
               Cancelar
@@ -203,23 +205,23 @@ const resolvedImageSrc = (() => {
 
             {isEditing && (userData.url_pic || selectedImage) && (
               <button
-              type="button"
-              onClick={async () => {
-                await fetch(`${url}/employee/delete/picture`, {
-                  method: "PATCH",
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                  },
-                });
-             
-                setSelectedImage(null);
-                setPreviewUrl("");
-                triggerReload();
-              }}
-              className="text-sm text-red-500 underline pt-1"
-            >
-              <TrashIcon />
-            </button>
+                type="button"
+                onClick={async () => {
+                  await fetch(`${url}/employee/delete/picture`, {
+                    method: "PATCH",
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                  });
+
+                  setSelectedImage(null);
+                  setPreviewUrl("");
+                  triggerReload();
+                }}
+                className="text-sm text-red-500 underline pt-1"
+              >
+                <TrashIcon />
+              </button>
             )}
           </div>
 

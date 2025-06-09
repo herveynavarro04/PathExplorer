@@ -37,7 +37,7 @@ export default function EmployeeTable() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
     null
   );
@@ -103,16 +103,19 @@ export default function EmployeeTable() {
     if (!res) return router.push("/login");
     try {
       console.log("Payload enviado:", {
-  ...newEmp,
-  password: "default123",
-});
-      const response = await authFetch<{ employeeId: string }>(`${url}/auth/register`, {
-        method: "POST",
-        body: JSON.stringify({
-          ...newEmp,
-          password: "dummy" 
-        }),
+        ...newEmp,
+        password: "default123",
       });
+      const response = await authFetch<{ employeeId: string }>(
+        `${url}/auth/register`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...newEmp,
+            password: "dummy",
+          }),
+        }
+      );
       if (!response) return router.push("/login");
       setEmployees((prev) => [...prev, response]);
       setShowModal(false);
@@ -120,7 +123,6 @@ export default function EmployeeTable() {
       console.error("Error registering employee", err);
     }
   };
-
 
   const itemsPerPage = 10;
 

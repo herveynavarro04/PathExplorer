@@ -39,8 +39,7 @@ export default function RegistrarCurso() {
   const [fadeIn, setFadeIn] = useState(false);
   const router = useRouter();
 
-  const url = `http://localhost:8080/api`;
-
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const onClose = () => {
     setAddEmployees([]);
     setShowEmployees(false);

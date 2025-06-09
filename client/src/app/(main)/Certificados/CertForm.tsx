@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
@@ -51,7 +49,7 @@ const CertForm: React.FC<CertFormProps> = ({ onClose, onSave }) => {
     formData.append("obtainedAt", new Date(obtainedAt).toISOString());
     formData.append("certificateFile", file);
 
-    const url = "http://localhost:8080/api";
+    const url = process.env.NEXT_PUBLIC_API_URL!;
 
     try {
       const response = await authFetch(`${url}/certificates`, {
@@ -60,8 +58,8 @@ const CertForm: React.FC<CertFormProps> = ({ onClose, onSave }) => {
       });
 
       if (response) {
-        onSave?.();        
-        closeAnimation();   
+        onSave?.();
+        closeAnimation();
       }
     } catch (error) {
       console.error("Upload failed:", error);
@@ -123,33 +121,36 @@ const CertForm: React.FC<CertFormProps> = ({ onClose, onSave }) => {
           </label>
 
           <label className="text-sm w-full">
-  Subir archivo (.pdf):
-  <div
-    onDragOver={(e) => e.preventDefault()}
-    onDrop={(e) => {
-      e.preventDefault();
-      if (e.dataTransfer.files.length) {
-        setFile(e.dataTransfer.files[0]);
-      }
-    }}
-    className="mt-2 p-6 border-2 border-dashed border-purple-400 rounded-lg text-center cursor-pointer bg-purple-50 hover:bg-purple-100 transition"
-    onClick={() => document.getElementById('fileUploadInput')?.click()}
-  >
-    {file ? (
-      <span className="text-purple-700 font-medium">{file.name}</span>
-    ) : (
-      <span className="text-purple-500">Arrastra el archivo aquí o haz clic para seleccionar</span>
-    )}
-  </div>
-  <input
-    id="fileUploadInput"
-    type="file"
-    accept=".pdf"
-    onChange={handleFileChange}
-    className="hidden"
-  />
-</label>
-
+            Subir archivo (.pdf):
+            <div
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (e.dataTransfer.files.length) {
+                  setFile(e.dataTransfer.files[0]);
+                }
+              }}
+              className="mt-2 p-6 border-2 border-dashed border-purple-400 rounded-lg text-center cursor-pointer bg-purple-50 hover:bg-purple-100 transition"
+              onClick={() =>
+                document.getElementById("fileUploadInput")?.click()
+              }
+            >
+              {file ? (
+                <span className="text-purple-700 font-medium">{file.name}</span>
+              ) : (
+                <span className="text-purple-500">
+                  Arrastra el archivo aquí o haz clic para seleccionar
+                </span>
+              )}
+            </div>
+            <input
+              id="fileUploadInput"
+              type="file"
+              accept=".pdf"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </label>
 
           <button
             type="submit"

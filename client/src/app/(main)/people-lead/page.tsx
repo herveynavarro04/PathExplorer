@@ -25,7 +25,7 @@ export default function Home() {
     GetPeopleLeadEmployeesResponseDto[]
   >([]);
   const [selectedEmployee, setSelectedEmployee] = useState<string[]>([]);
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 10);

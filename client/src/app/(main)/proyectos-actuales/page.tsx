@@ -75,7 +75,7 @@ export default function Home() {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const originalEmployeeOrder = useRef<string[]>([]);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   const patchDeleteProject = async () => {
     const res = validation();

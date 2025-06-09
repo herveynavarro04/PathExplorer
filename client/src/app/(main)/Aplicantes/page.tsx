@@ -41,7 +41,7 @@ export default function Applicants() {
   const [showNotProjects, setShowNotProjects] = useState<boolean>(false);
 
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const isFirstProjectRefresh = useRef(true);
 
   const onClose = () => {
@@ -173,49 +173,47 @@ export default function Applicants() {
     }
   };
 
-return (
-  <>
-    <div
-      className={`mx-auto w-full transition-opacity duration-300 ${
-        !fadeIn ? "opacity-0" : "opacity-100"
-      }`}
-      key={selectedProject?.projectId}
-    >
-     <div className="flex items-center justify-between mb-4 w-full">
-  <div>
-    <button
-      onClick={() => router.back()}
-      className="flex items-center gap-2 text-[#65417f] hover:font-semibold"
-    >
-      <span className="text-xl">←</span>
-      <span className="text-lg">Regresar</span>
-    </button>
-  </div>
+  return (
+    <>
+      <div
+        className={`mx-auto w-full transition-opacity duration-300 ${
+          !fadeIn ? "opacity-0" : "opacity-100"
+        }`}
+        key={selectedProject?.projectId}
+      >
+        <div className="flex items-center justify-between mb-4 w-full">
+          <div>
+            <button
+              onClick={() => router.back()}
+              className="flex items-center gap-2 text-[#65417f] hover:font-semibold"
+            >
+              <span className="text-xl">←</span>
+              <span className="text-lg">Regresar</span>
+            </button>
+          </div>
 
-  <div className="ml-auto">
-    <ProjectViewer
-      projects={projects}
-      selectedProject={selectedProject}
-      setChangeRefresh={setChangeRefresh}
-      setPendingProjectId={setPendingProjectId}
-    />
-  </div>
-</div>
+          <div className="ml-auto">
+            <ProjectViewer
+              projects={projects}
+              selectedProject={selectedProject}
+              setChangeRefresh={setChangeRefresh}
+              setPendingProjectId={setPendingProjectId}
+            />
+          </div>
+        </div>
 
-
-      <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-20 2xl:gap-7.5">
-        <div className="col-span-12 grid">
-          <TopAnalysis
-            employees={employees}
-            selectEmployeeId={selectEmployeeId}
-            setSelectEmployeeId={setSelectEmployeeId}
-            handleSubmitApplication={handleSubmitApplication}
-            onClose={onClose}
-          />
+        <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-20 2xl:gap-7.5">
+          <div className="col-span-12 grid">
+            <TopAnalysis
+              employees={employees}
+              selectEmployeeId={selectEmployeeId}
+              setSelectEmployeeId={setSelectEmployeeId}
+              handleSubmitApplication={handleSubmitApplication}
+              onClose={onClose}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  </>
-);
-
+    </>
+  );
 }

@@ -52,7 +52,7 @@ export default function TeamCard({
   const startIdx = (currentPage - 1) * membersPerPage;
   const currentMembers = employees.slice(startIdx, startIdx + membersPerPage); // mantener orden original
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   const handleDeleteInfo = (employeeId: string, employeeName: string) => {
     setEmployeeIdToDelete(employeeId);

@@ -70,7 +70,7 @@ export default function Home() {
   const [pendingProjectId, setPendingProjectId] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   const patchDeleteProject = async () => {
     const res = validation();
