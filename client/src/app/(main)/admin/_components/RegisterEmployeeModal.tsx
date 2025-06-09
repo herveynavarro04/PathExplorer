@@ -9,7 +9,8 @@ interface RegisterEmployeeModalProps {
     lastName: string;
     email: string;
     level: number;
-    role: string;
+    rol: string;
+    password: string;
   }) => void;
   onCancel: () => void;
 }
@@ -23,7 +24,7 @@ const RegisterEmployeeModal: React.FC<RegisterEmployeeModalProps> = ({
     lastName: "",
     email: "",
     level: 1,
-    role: "STAFF",
+    rol: "STAFF",
   });
 
   const handleChange = (
@@ -38,7 +39,10 @@ const RegisterEmployeeModal: React.FC<RegisterEmployeeModalProps> = ({
 
   const handleSubmit = () => {
     if (!formData.firstName || !formData.lastName || !formData.email) return;
-    onConfirm(formData);
+    onConfirm({
+    ...formData,
+    password: "dummy",
+  });
   };
 
   return ReactDOM.createPortal(
@@ -111,14 +115,14 @@ const RegisterEmployeeModal: React.FC<RegisterEmployeeModalProps> = ({
                 Rol
               </label>
               <select
-                name="role"
-                value={formData.role}
+                name="rol"
+                value={formData.rol}
                 onChange={handleChange}
                 className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-[#f3eafa] dark:bg-[#43265a] text-gray-900 dark:text-white"
               >
                 <option value="STAFF">STAFF</option>
                 <option value="PROJECT MANAGER">PROJECT MANAGER</option>
-                <option value="PROJECT MANAGER">ADMIN</option>
+                <option value="ADMIN">ADMIN</option>
               </select>
             </div>
           </div>
