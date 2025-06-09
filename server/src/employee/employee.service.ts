@@ -9,7 +9,6 @@ import { EmployeeProjectEntity } from 'src/common/entities/employeeProject.entit
 import { HashingService } from 'src/Utilities/hashing.utilities';
 import { ImageService } from 'src/Utilities/imageService.utilities';
 import { Repository } from 'typeorm';
-import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { UpdateEmployeeRequestDto } from './dto/request/updateEmployee.request.dto';
 import { UpdateEmployeeStatusRequestDto } from './dto/request/updateEmployeeStatus.request.dto';
 import { DeleteEmployeeResponseDto } from './dto/response/deleteEmployee.response.dto';
@@ -22,6 +21,7 @@ import { UpdateEmployeeResponseDto } from './dto/response/updateEmployee.respons
 import { UpdateEmployeeStatusResponseDto } from './dto/response/updateEmployeeStatus.response.dto';
 import { EmployeeEntity } from './entities/employee.entity';
 import { EmployeeProfilePicture } from './entities/employeeProfilePicture.entity';
+import { RegisterRequestDto } from 'src/auth/dto/request/register.request.dto';
 
 @Injectable()
 export class EmployeeService {
