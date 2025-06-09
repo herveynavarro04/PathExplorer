@@ -46,9 +46,8 @@ const Page = () => {
   const [reloadTrigger, setReloadTrigger] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [isPeopleLead, setIsPeopleLead] = useState<boolean>(false);
-  const [hasApplied, setHasApplied] = useState<boolean>(false); // 🔹 Nuevo estado
-
-  const url = "http://localhost:8080/api";
+  const [hasApplied, setHasApplied] = useState<boolean>(false);
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   useEffect(() => {
     const loadData = async () => {

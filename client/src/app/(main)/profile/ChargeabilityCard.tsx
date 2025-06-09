@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ShowcaseSection } from "components/Layouts/showcase-section";
 
@@ -6,7 +5,7 @@ export default function ChargeabilityCard() {
   const loadability = 30;
   const circumference = 2 * Math.PI * 45;
   const offset = circumference - (loadability / 100) * circumference;
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   return (
     <ShowcaseSection title="Cargabilidad actual" className="!pb-2 !pt-2">
@@ -49,10 +48,9 @@ export default function ChargeabilityCard() {
         </div>
 
         <div className="flex flex-col justify-center">
-
           <p className="text-xs text-gray-600 dark:text-gray-300 max-w-xs">
-            Parámetro utilizado para medir la carga de trabajo de un
-            empleado en relación a su tiempo total disponible y sus proyectos.
+            Parámetro utilizado para medir la carga de trabajo de un empleado en
+            relación a su tiempo total disponible y sus proyectos.
           </p>
         </div>
       </div>

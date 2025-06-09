@@ -47,7 +47,7 @@ export default function ApplicantTable() {
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   const handleClickApplicant = (applicantId: string) => {
     setEmployeeId(applicantId);

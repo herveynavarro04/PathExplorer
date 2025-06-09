@@ -76,7 +76,7 @@ export default function UserDetailsModalManager({
   const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
   const [fadeIn, setFadeIn] = useState(false);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   console.log(employeeId);
 
@@ -195,117 +195,116 @@ export default function UserDetailsModalManager({
   }
 
   return ReactDOM.createPortal(
-   <div
+    <div
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6 transition-opacity duration-500 ${
         fadeIn ? "opacity-100" : "opacity-0"
       }`}
     >
-    
-        <div
-          ref={modalRef}
-          className="w-full max-w-5xl bg-[#d0bfdb] dark:bg-[#311a42] rounded-xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-xl text-gray-800 dark:text-white"
-        >
-          <div className="rounded-xl bg-white dark:bg-[#412859] p-6">
-            <h2 className="font-semibold text-lg mb-4">Información Personal</h2>
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-30 h-30 md:w-50 md:h-50 rounded-full overflow-hidden mb-3">
-                                <Image
-                                  src={
-                                    userData.profilePicture && userData.mimeType
-                                      ? `data:${userData.mimeType};base64,${userData.profilePicture}`
-                                      : "/profile.png"
-                                  }
-                                  alt="Foto de perfil"
-                                  width={180}
-                                  height={180}
-                                  className="object-cover w-full h-full"
-                                />
-                              </div>
-
-              <div className="w-full">
-                <label className="text-sm font-medium block mb-1">Nombre</label>
-                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                  {userData.firstName + " " + userData.lastName}
-                </div>
-              </div>
-              <div className="w-full">
-                <label className="text-sm font-medium block mb-1">
-                  Correo electrónico
-                </label>
-                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                  {userData.email}
-                </div>
-              </div>
-              <div className="w-full">
-                <label className="text-sm font-medium block mb-1">Puesto</label>
-                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                  {userData.position}
-                </div>
-              </div>
-              <div className="w-full">
-                <label className="text-sm font-medium block mb-1">Nivel</label>
-                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                  {userData.level}
-                </div>
-              </div>
-              <div className="w-full">
-                <label className="text-sm font-medium block mb-1">
-                  Cargabilidad
-                </label>
-                <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
-                  {userData.chargeability}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <TechSkillsUser techSkills={techSkills} />
-            <SoftSkillsUser softSkills={softSkills} />
-
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold">Proyectos Pasados</h3>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handlePrevProject}
-                  className="p-2 rounded-full bg-[#b89fc9] hover:bg-[#a98ebd] text-white shadow-md"
-                >
-                  <FaChevronLeft />
-                </button>
-                <button
-                  onClick={handleNextProject}
-                  className="p-2 rounded-full bg-[#b89fc9] hover:bg-[#a98ebd] text-white shadow-md"
-                >
-                  <FaChevronRight />
-                </button>
-              </div>
-            </div>
-
-            {projects.length > 0 ? (
-              <ProjectUserCard
-                key={projects[currentProjectIndex].projectId}
-                projectId={projects[currentProjectIndex].projectId}
-                projectName={projects[currentProjectIndex].projectName}
-                startDate={projects[currentProjectIndex].startDate}
-                endDate={projects[currentProjectIndex].endDate}
-                client={projects[currentProjectIndex].client}
-                position={projects[currentProjectIndex].position}
-                manager={projects[currentProjectIndex].manager}
-                technologies={projects[currentProjectIndex].technologies.map(
-                  (t) => t.technologyName
-                )}
-                active={projects[currentProjectIndex].active}
+      <div
+        ref={modalRef}
+        className="w-full max-w-5xl bg-[#d0bfdb] dark:bg-[#311a42] rounded-xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-xl text-gray-800 dark:text-white"
+      >
+        <div className="rounded-xl bg-white dark:bg-[#412859] p-6">
+          <h2 className="font-semibold text-lg mb-4">Información Personal</h2>
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-30 h-30 md:w-50 md:h-50 rounded-full overflow-hidden mb-3">
+              <Image
+                src={
+                  userData.profilePicture && userData.mimeType
+                    ? `data:${userData.mimeType};base64,${userData.profilePicture}`
+                    : "/profile.png"
+                }
+                alt="Foto de perfil"
+                width={180}
+                height={180}
+                className="object-cover w-full h-full"
               />
-            ) : (
-              <div className="bg-white p-5 rounded-2xl min-h-[5rem]shadow-md border border-[#e5d6f1]">
-                <p className="text-center text-[#4b3b61] font-medium">
-                  No hay proyectos pasados disponibles.
-                </p>
+            </div>
+
+            <div className="w-full">
+              <label className="text-sm font-medium block mb-1">Nombre</label>
+              <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                {userData.firstName + " " + userData.lastName}
               </div>
-            )}
+            </div>
+            <div className="w-full">
+              <label className="text-sm font-medium block mb-1">
+                Correo electrónico
+              </label>
+              <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                {userData.email}
+              </div>
+            </div>
+            <div className="w-full">
+              <label className="text-sm font-medium block mb-1">Puesto</label>
+              <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                {userData.position}
+              </div>
+            </div>
+            <div className="w-full">
+              <label className="text-sm font-medium block mb-1">Nivel</label>
+              <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                {userData.level}
+              </div>
+            </div>
+            <div className="w-full">
+              <label className="text-sm font-medium block mb-1">
+                Cargabilidad
+              </label>
+              <div className="bg-gray-100 dark:bg-[#503866] px-3 py-2 rounded-md">
+                {userData.chargeability}
+              </div>
+            </div>
           </div>
         </div>
-      </div>,
+
+        <div className="flex flex-col gap-4">
+          <TechSkillsUser techSkills={techSkills} />
+          <SoftSkillsUser softSkills={softSkills} />
+
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold">Proyectos Pasados</h3>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handlePrevProject}
+                className="p-2 rounded-full bg-[#b89fc9] hover:bg-[#a98ebd] text-white shadow-md"
+              >
+                <FaChevronLeft />
+              </button>
+              <button
+                onClick={handleNextProject}
+                className="p-2 rounded-full bg-[#b89fc9] hover:bg-[#a98ebd] text-white shadow-md"
+              >
+                <FaChevronRight />
+              </button>
+            </div>
+          </div>
+
+          {projects.length > 0 ? (
+            <ProjectUserCard
+              key={projects[currentProjectIndex].projectId}
+              projectId={projects[currentProjectIndex].projectId}
+              projectName={projects[currentProjectIndex].projectName}
+              startDate={projects[currentProjectIndex].startDate}
+              endDate={projects[currentProjectIndex].endDate}
+              client={projects[currentProjectIndex].client}
+              position={projects[currentProjectIndex].position}
+              manager={projects[currentProjectIndex].manager}
+              technologies={projects[currentProjectIndex].technologies.map(
+                (t) => t.technologyName
+              )}
+              active={projects[currentProjectIndex].active}
+            />
+          ) : (
+            <div className="bg-white p-5 rounded-2xl min-h-[5rem]shadow-md border border-[#e5d6f1]">
+              <p className="text-center text-[#4b3b61] font-medium">
+                No hay proyectos pasados disponibles.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>,
     document.body
   );
 }

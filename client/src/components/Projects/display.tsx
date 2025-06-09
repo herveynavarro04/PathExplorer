@@ -72,7 +72,7 @@ export default function DisplayViewer({
     useState<string>(null);
   const originalValuesRef = useRef<Map<string, any>>(new Map());
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   const onFeedbackClick = (employeeId: string, employeeName: string) => {
     setSelectedEmployeeId(employeeId);

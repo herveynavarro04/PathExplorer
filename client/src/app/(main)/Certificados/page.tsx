@@ -27,7 +27,7 @@ const Page = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [fadeIn, setFadeIn] = useState(false);
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const certsPerPage = 6;
   const indexOfLast = currentPage * certsPerPage;
   const indexOfFirst = indexOfLast - certsPerPage;

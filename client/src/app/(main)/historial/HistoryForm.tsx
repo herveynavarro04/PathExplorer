@@ -49,7 +49,7 @@ const HistoryForm = ({
   const [triggerPatch, setTriggerPatch] = useState<boolean>(false);
   const [triggerPost, setTriggerPost] = useState<boolean>(false);
   const hasMounted = useRef(false);
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   const closeAnimation = () => {
     setIsVisible(false);

@@ -30,7 +30,7 @@ export default function MyProjectsPage() {
   const [triggerPost, setTriggerPost] = useState<boolean>(false);
   const [triggerRefresh, setTriggerRefresh] = useState<boolean>(false);
   const [fadeIn, setFadeIn] = useState(false);
-  const url = `http://localhost:8080/api`;
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);

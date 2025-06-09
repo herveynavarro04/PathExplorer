@@ -77,7 +77,7 @@ export default function UserDetailsModalApplication({
   const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
   const [fadeIn, setFadeIn] = useState(false);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackList, setFeedbackList] = useState<any[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);

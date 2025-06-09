@@ -78,7 +78,7 @@ export default function UserDetailsModalRegister({
   const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
   const [fadeIn, setFadeIn] = useState(false);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackList, setFeedbackList] = useState<any[]>([]);
 
@@ -248,18 +248,18 @@ export default function UserDetailsModalRegister({
                 </h2>
                 <div className="flex flex-col items-center gap-8">
                   <div className="w-30 h-30 md:w-65 md:h-65 rounded-full overflow-hidden mb-3">
-                                    <Image
-                                      src={
-                                        userData.profilePicture && userData.mimeType
-                                          ? `data:${userData.mimeType};base64,${userData.profilePicture}`
-                                          : "/profile.png"
-                                      }
-                                      alt="Foto de perfil"
-                                      width={180}
-                                      height={180}
-                                      className="object-cover w-full h-full"
-                                    />
-                                  </div>
+                    <Image
+                      src={
+                        userData.profilePicture && userData.mimeType
+                          ? `data:${userData.mimeType};base64,${userData.profilePicture}`
+                          : "/profile.png"
+                      }
+                      alt="Foto de perfil"
+                      width={180}
+                      height={180}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
 
                   <div className="w-full">
                     <label className="text-sm font-medium block mb-1">

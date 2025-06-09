@@ -23,7 +23,7 @@ const GoalsForm = ({ setOpenForm, setRefreshGoals }: GoalsFormProps) => {
   const formRef = useRef(null);
   const today = new Date().toISOString().split("T")[0];
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

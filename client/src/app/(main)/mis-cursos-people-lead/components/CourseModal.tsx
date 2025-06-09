@@ -31,7 +31,7 @@ const CourseModal = ({
   const modalRef = useRef(null);
   const [isVisible, setIsVisible] = useState(true);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const [loading, setloading] = useState<boolean>(true);
   const [fadeIn, setFadeIn] = useState(false);
 

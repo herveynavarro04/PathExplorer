@@ -37,7 +37,7 @@ const Historial: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>(false);
   const [fadeIn, setFadeIn] = useState(false);
   const router = useRouter();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingHistories, setLoadingHistories] = useState<boolean>(true);
   const [histories, setHistories] = useState<GetHistoryResponseDto[]>([]);

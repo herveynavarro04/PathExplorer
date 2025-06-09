@@ -46,7 +46,7 @@ interface GetManagerEmployeesResponseDto {
 export default function RegisterProjectPage() {
   const router = useRouter();
   const { theme } = useTheme();
-  const url = "http://localhost:8080/api";
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   const [projectName, setProjectName] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);

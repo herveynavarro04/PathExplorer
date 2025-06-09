@@ -26,8 +26,7 @@ const LoginClient = () => {
   const [trigger, setTrigger] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const router = useRouter();
-  const url = `http://localhost:8080/api`;
-
+  const url = process.env.NEXT_PUBLIC_API_URL!;
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) localStorage.removeItem("token");
