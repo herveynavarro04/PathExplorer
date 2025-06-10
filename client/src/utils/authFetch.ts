@@ -7,7 +7,6 @@ export const authFetch = async <T = any>(
   options: FetchOptions = {}
 ): Promise<T | false> => {
   const token = localStorage.getItem("token");
-
   const isFormData = options.body instanceof FormData;
 
   try {
@@ -21,7 +20,19 @@ export const authFetch = async <T = any>(
     });
 
     if (res.ok) {
-      return await res.json();
+      const text = await res.text();
+      try {
+        const json = text ? JSON.parse(text) : null;
+
+        if (json === null) {
+          return { employees: [] } as T;
+        }
+
+        return json;
+      } catch (error) {
+        console.error("Invalid JSON:", text);
+        return { employees: [] } as T;
+      }
     } else if (res.status === 500) return false;
     else {
       localStorage.removeItem("token");
