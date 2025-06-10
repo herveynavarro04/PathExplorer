@@ -9,7 +9,7 @@ interface CertModalProps {
     certificateId: string;
     information?: string;
     title: string;
-    obtainedAt?: string;
+    obtainedAt: string;
   };
   onClose: () => void;
 }
