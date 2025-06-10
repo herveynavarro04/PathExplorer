@@ -11,6 +11,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  Logger
 } from '@nestjs/common';
 import { CertificatesService } from './certificates.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -80,11 +81,14 @@ export class CertificatesController {
     return this.certificateService.deleteCertificate(certificateId);
   }
 
-  @Get(':certificateId')
+  @Get('cert/:certificateId')
   @UseGuards(JwtGuard)
   async getCertificateById(
     @Param('certificateId') certificateId: string,
   ): Promise<GetCertificateByIdResponseDto> {
+    console.log('DEBUG ID:', certificateId);
+
+      Logger.log('Recibiendo certificateId:', certificateId); // ✅ DEBUG
     return this.certificateService.getCertificateById(certificateId);
   }
 

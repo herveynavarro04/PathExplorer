@@ -15,7 +15,7 @@ const CertForm: React.FC<CertFormProps> = ({ onClose, onSave }) => {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [information, setInformation] = useState("");
-  const [obtainedAt, setObtainedAt] = useState("");
+  const [obtainedAt, setobtainedAt] = useState("");
 
   const closeAnimation = () => {
     setIsVisible(false);
@@ -115,7 +115,7 @@ const CertForm: React.FC<CertFormProps> = ({ onClose, onSave }) => {
               type="date"
               className="border mt-1 p-2 rounded w-full"
               value={obtainedAt}
-              onChange={(e) => setObtainedAt(e.target.value)}
+              onChange={(e) => setobtainedAt(e.target.value)}
               required
             />
           </label>

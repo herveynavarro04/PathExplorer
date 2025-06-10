@@ -61,13 +61,18 @@ const Page = () => {
   };
 
   const handleCertClick = async (certificate: Certificate) => {
+    console.log("Certificate clicked:", certificate);
     const fullData = await authFetch<Certificate>(
-      `${url}/certificates/${certificate.certificateId}`,
+      `${url}/certificates/cert/${certificate.certificateId}`,
       { method: "GET" }
     );
 
     if (fullData) {
+      
       setSelectedCert({ ...certificate, obtainedAt: fullData.obtainedAt });
+          console.log("Full certificate data:", fullData);
+
+
     } else {
       setSelectedCert(certificate);
     }
@@ -79,6 +84,7 @@ const Page = () => {
       `${url}/certificates`,
       { method: "GET" }
     );
+    console.log("Fetched certificates:", res);
     if (res) {
       const sorted = res.certificates.sort(
         (a, b) =>
