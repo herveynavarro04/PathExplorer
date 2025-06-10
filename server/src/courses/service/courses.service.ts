@@ -102,7 +102,7 @@ export class CoursesService {
       const courses = courseInfo.map((link) => ({
         courseId: link.courseId,
         title: link.title,
-        information: link.title,
+        information: link.information,
         mandatory: link.mandatory,
       }));
       Logger.log('PeopleLead courses succesfully fetched', 'CourseService');

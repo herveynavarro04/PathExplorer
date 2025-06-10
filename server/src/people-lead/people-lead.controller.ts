@@ -35,10 +35,6 @@ export class PeopleLeadController {
     return this.peopleLeadService.getPeopleLeadApplicants();
   }
 
-  // @Get()
-  // @JwtGuard(JwtGuard)
-  // async getAvailableEmployees(): Promise<>
-
   @Patch(':peopleLeadId')
   @UseGuards(JwtGuard)
   async updatePeopleLeadApplicationStatus(
