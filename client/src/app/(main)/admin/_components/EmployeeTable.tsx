@@ -41,6 +41,7 @@ export default function EmployeeTable() {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
     null
   );
+  const [triggerRefresh, setTriggerRefresh] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setFadeIn(true), 25);
@@ -94,7 +95,7 @@ export default function EmployeeTable() {
       }
     };
     fetchEmployees();
-  }, []);
+  }, [triggerRefresh]);
 
   const handleRegisterEmployee = async (
     newEmp: Omit<Employee, "employeeId" | "active"> & { rol: string }
@@ -118,6 +119,7 @@ export default function EmployeeTable() {
       );
       if (!response) return router.push("/login");
       setEmployees((prev) => [...prev, response]);
+      setTriggerRefresh((prev) => !prev);
       setShowModal(false);
     } catch (err) {
       console.error("Error registering employee", err);
