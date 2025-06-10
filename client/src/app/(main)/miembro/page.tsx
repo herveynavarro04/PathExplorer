@@ -14,6 +14,7 @@ export default function MemberPage() {
   const [member, setMember] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [fadeIn, setFadeIn] = useState(false);
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   useEffect(() => {
     const loadData = async () => {
@@ -24,7 +25,7 @@ export default function MemberPage() {
 
       try {
         const res = await authFetch<any>(
-          `http://localhost:8080/api/employee/${selectedEmployeeId}`
+          `${url}/employee/${selectedEmployeeId}`
         );
 
         console.log("📦 Response de empleado:", res);

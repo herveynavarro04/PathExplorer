@@ -21,6 +21,8 @@ export default function CertificatesCard() {
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const url = process.env.NEXT_PUBLIC_API_URL!;
+
   const itemsPerPage = 4;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = items
@@ -30,13 +32,38 @@ export default function CertificatesCard() {
 
   const { selectedEmployeeId } = useSelectedEmployee();
 
+const handleCertClick = async (certificateId: string) => {
+  try {
+    const original = items.find((c) => c.certificateId === certificateId);
+    if (!original) return;
+
+    const fullData = await authFetch<Partial<Certificate>>(
+      `${url}/certificates/cert/${certificateId}`,
+      { method: "GET" }
+    );
+
+    if (fullData) {
+      setSelectedCert({
+        ...original,
+        obtainedAt: fullData.obtainedAt || original.obtainedAt,
+      });
+    } else {
+      setSelectedCert(original);
+    }
+  } catch (error) {
+    console.error("Error fetching full certificate data", error);
+  }
+};
+
+  
+
   useEffect(() => {
     const fetchCertificates = async () => {
       if (!selectedEmployeeId) return;
 
       try {
         const response = await authFetch<{ certificates: Certificate[] }>(
-          `http://localhost:8080/api/certificates/${selectedEmployeeId}`
+          `${url}/certificates/${selectedEmployeeId}`
         );
 
         if (response && Array.isArray(response.certificates)) {
@@ -60,7 +87,7 @@ export default function CertificatesCard() {
     newStatus: "approved" | "rejected"
   ) => {
     const res = await authFetch(
-      `http://localhost:8080/api/certificates/${id}`,
+      `${url}/certificates/${id}`,
       {
         method: "PATCH",
         body: JSON.stringify({ status: newStatus }),
@@ -96,7 +123,8 @@ export default function CertificatesCard() {
                     <div className="flex justify-between items-center w-full">
                       <span>{item.title}</span>
                       <button
-                        onClick={() => setSelectedCert(item)}
+                        onClick={() => handleCertClick(item.certificateId)}
+
                         className="text-[#65417f] dark:text-white text-xs underline"
                       >
                         Ver más

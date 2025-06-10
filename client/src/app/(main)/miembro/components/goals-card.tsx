@@ -23,6 +23,7 @@ export default function GoalsCard() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = goals.slice(startIndex, startIndex + itemsPerPage);
   const totalPages = Math.ceil(goals.length / itemsPerPage);
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   const { selectedEmployeeId } = useSelectedEmployee();
 
@@ -32,7 +33,7 @@ export default function GoalsCard() {
 
       try {
         const response = await authFetch<{ goals: Goal[] }>(
-          `http://localhost:8080/api/goals/${selectedEmployeeId}`
+          `${url}/goals/${selectedEmployeeId}`
         );
 
         if (response && Array.isArray(response.goals)) {
@@ -55,7 +56,7 @@ export default function GoalsCard() {
     id: string,
     newStatus: "approved" | "rejected"
   ) => {
-    const res = await authFetch(`http://localhost:8080/api/goals/${id}`, {
+    const res = await authFetch(`${url}/goals/${id}`, {
       method: "PATCH",
       body: JSON.stringify({ status: newStatus }),
       headers: { "Content-Type": "application/json" },
