@@ -5,7 +5,6 @@ export default function ChargeabilityCard() {
   const loadability = 30;
   const circumference = 2 * Math.PI * 45;
   const offset = circumference - (loadability / 100) * circumference;
-  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   return (
     <ShowcaseSection title="Cargabilidad actual" className="!pb-2 !pt-2">
