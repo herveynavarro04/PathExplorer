@@ -157,7 +157,7 @@ const Page = () => {
         <div className="flex items-center justify-between mb-4">
           <Breadcrumb pageName="Perfil" />
 
-          {!isPeopleLead && !hasApplied && (
+          {!isPeopleLead && !hasApplied && profile.level >= 5 && (
             <button
               className="flex items-center justify-center rounded-lg bg-[#65417f] px-6 py-[7px] font-medium text-gray-2 hover:bg-opacity-80 dark:hover:bg-opacity-75"
               type="button"
