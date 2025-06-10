@@ -29,6 +29,7 @@ export default function MemberProfileCard({ member }: { member: Member }) {
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
   const [loadingFeedback, setLoadingFeedback] = useState(true);
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   useEffect(() => {
     if (!showFeedback || !selectedEmployeeId) return;
@@ -37,7 +38,7 @@ export default function MemberProfileCard({ member }: { member: Member }) {
       setLoadingFeedback(true);
       try {
         const res = await authFetch<Feedback[]>(
-          `http://localhost:8080/api/feedback/${selectedEmployeeId}`
+          `${url}/feedback/${selectedEmployeeId}`
         );
         if (res) {
           const sorted = res.sort(
