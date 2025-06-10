@@ -151,6 +151,9 @@ export class EmployeeService {
         .leftJoin('employee.employeeInterestLink', 'interest')
         .leftJoin('employee.employeeSkillLink', 'skill')
         .where('employee.employeeId != :employeeId', { employeeId })
+        .andWhere('employee.rol IN (:...roles)', {
+          roles: ['STAFF', 'MANAGER'],
+        })
         .andWhere('employee.active = true')
         .andWhere((qb) => {
           const subQuery = qb
