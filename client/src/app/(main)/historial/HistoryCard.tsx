@@ -64,14 +64,14 @@ const HistoryCard = ({
   return (
     <div
       className={cn(
-        "rounded-[10px] bg-[#f8f6fa] shadow-1 dark:bg-[#482a5e] dark:shadow-card relative h-[14rem]"
+        "rounded-[10px] bg-[#f8f6fa] shadow-1 dark:bg-[#482a5e] dark:shadow-card relative h-[15rem] flex flex-col"
       )}
     >
       <div className="border-b border-stroke px-4 py-4 font-medium text-dark dark:border-dark dark:text-white sm:px-6 xl:px-7.5">
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="text-lg font-semibold">{position}</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-300">
+        <div className="flex justify-between items-start gap-4 flex-wrap">
+          <div className="min-w-0">
+            <h2 className="text-lg font-semibold break-words">{position}</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-300 break-words">
               {company}
             </p>
           </div>
@@ -102,8 +102,8 @@ const HistoryCard = ({
         </div>
       </div>
 
-      <div className="p-4 sm:p-6 xl:p-10 text-sm text-gray-700 dark:text-gray-200 space-y-4">
-        <p>{information}</p>
+      <div className="p-4 sm:p-6 xl:p-10 text-sm text-gray-700 dark:text-gray-200 space-y-4 overflow-hidden break-words">
+        <p className="whitespace-pre-wrap">{information}</p>
         <div className="text-sm text-gray-500 dark:text-gray-400">
           {formatDateToMonthYear(startDate)} &ndash;{" "}
           {formatDateToMonthYear(endDate)}
