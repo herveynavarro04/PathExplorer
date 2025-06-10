@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import Image from "next/image";
@@ -24,6 +22,7 @@ export function Header() {
   const { toggleSidebar, isMobile } = useSidebarContext();
   const [user, setUser] = useState<UserProfile | null>(null);
   const router = useRouter();
+  const url = process.env.NEXT_PUBLIC_API_URL!;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -33,7 +32,7 @@ export function Header() {
         return;
       }
 
-      const userData = await authFetch("http://localhost:8080/api/employee", {
+      const userData = await authFetch(`${url}/employee`, {
         method: "GET",
       });
 
