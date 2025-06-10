@@ -23,7 +23,7 @@ const RegisterEmployeeModal: React.FC<RegisterEmployeeModalProps> = ({
     firstName: "",
     lastName: "",
     email: "",
-    level: 1,
+    level: "", // <-- string para evitar NaN
     rol: "STAFF",
   });
 
@@ -33,16 +33,26 @@ const RegisterEmployeeModal: React.FC<RegisterEmployeeModalProps> = ({
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "level" ? parseInt(value) : value,
+      [name]: value,
     }));
   };
 
   const handleSubmit = () => {
-    if (!formData.firstName || !formData.lastName || !formData.email) return;
+    const { firstName, lastName, email, level, rol } = formData;
+
+    if (!firstName || !lastName || !email || !level) return;
+
+    const parsedLevel = parseInt(level);
+    if (isNaN(parsedLevel) || parsedLevel < 1 || parsedLevel > 12) return;
+
     onConfirm({
-    ...formData,
-    password: "dummy",
-  });
+      firstName,
+      lastName,
+      email,
+      level: parsedLevel,
+      rol,
+      password: "dummy",
+    });
   };
 
   return ReactDOM.createPortal(
@@ -62,7 +72,7 @@ const RegisterEmployeeModal: React.FC<RegisterEmployeeModalProps> = ({
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-[#f3eafa]  dark:bg-[#43265a] text-gray-900 dark:text-white placeholder-gray-400"
+              className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-[#f3eafa] dark:bg-[#43265a] text-gray-900 dark:text-white placeholder-gray-400"
               placeholder="Ej. Carlos"
             />
           </div>
@@ -103,11 +113,12 @@ const RegisterEmployeeModal: React.FC<RegisterEmployeeModalProps> = ({
               <input
                 type="number"
                 name="level"
-                value={formData.level}
                 min={1}
                 max={12}
+                value={formData.level}
                 onChange={handleChange}
                 className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-[#f3eafa] dark:bg-[#43265a] text-gray-900 dark:text-white placeholder-gray-400"
+                placeholder="1-12"
               />
             </div>
             <div>
