@@ -132,7 +132,7 @@ const RegisterEmployeeModal: React.FC<RegisterEmployeeModalProps> = ({
                 className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-[#f3eafa] dark:bg-[#43265a] text-gray-900 dark:text-white"
               >
                 <option value="STAFF">STAFF</option>
-                <option value="PROJECT MANAGER">PROJECT MANAGER</option>
+                <option value="MANAGER">MANAGER</option>
                 <option value="ADMIN">ADMIN</option>
               </select>
             </div>
