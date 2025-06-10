@@ -181,7 +181,7 @@ export default function Applicants() {
         }`}
         key={selectedProject?.projectId}
       >
-        <div className="flex items-center justify-between mb-4 w-full">
+        <div className="flex items-center justify-between mb-20 w-full">
           <div>
             <button
               onClick={() => router.back()}

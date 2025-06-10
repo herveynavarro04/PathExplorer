@@ -45,7 +45,7 @@ export default function TopAnalysis({
   >(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const itemsPerPage = 6;
   const totalPages = Math.ceil(employees.length / itemsPerPage);
   const availableEmployees = employees.filter(
     (e) => !selectedEmployees.some((se) => se.employeeId === e.employeeId)
@@ -174,7 +174,7 @@ export default function TopAnalysis({
             </TableRow>
           ))}
 
-          {Array.from({ length: 9 - paginatedemployees.length }).map(
+          {Array.from({ length: 6 - paginatedemployees.length }).map(
             (_, index) => (
               <TableRow key={`empty-${index}`}>
                 <TableCell colSpan={9} className="h-[56px]">
