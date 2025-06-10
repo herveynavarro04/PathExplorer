@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
 interface DeleteModalProps {
   onCloseDeleteModal: () => void;
   handlePatchPeopleLead: (params: {
-    status: string;
-    employeesAssigned: string[];
-  }) => void;
+  status: string;
+  employeesAssigned: string[];
+}) => Promise<void>;
 }
 
 export default function DeleteModal({
